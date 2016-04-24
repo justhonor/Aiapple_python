@@ -6,6 +6,38 @@
 import urllib2
 import re
 import time
+import os
+import sys
+import termios
+
+
+def InputKeyIs(msg):
+    # 获取标准输入的描述符
+    fd = sys.stdin.fileno()
+
+    # 获取标准输入(终端)的设置
+    old_ttyinfo = termios.tcgetattr(fd)
+
+    # 配置终端
+    new_ttyinfo = old_ttyinfo[:]
+
+    # 使用非规范模式(索引3是c_lflag 也就是本地模式)
+    new_ttyinfo[3] &= ~termios.ICANON
+    # 关闭回显(输入不会被显示)
+    new_ttyinfo[3] &= ~termios.ECHO
+
+    # 输出信息
+    sys.stdout.write(msg)
+    sys.stdout.flush()
+    # 使设置生效
+    termios.tcsetattr(fd, termios.TCSANOW, new_ttyinfo)
+    # 从终端读取
+    a = os.read(fd, 7)
+    # 还原终端设置
+    termios.tcsetattr(fd, termios.TCSANOW, old_ttyinfo)
+
+    return a
+
 class qiubai:
         def __init__(self,page=1):
                 self.page=page
@@ -36,11 +68,15 @@ class qiubai:
 		#按键显示控制
 		jcrol = 1
 		for line in my_qiubai:
-			print line
-			if count >= 5 :
+			if count <= 5:
+				print line
+			print "this is line my_qiubai",len(my_qiubai)
+			print "this is count",count
+			if  count < len(my_qiubai)-1:
 				while jcrol:
-					if raw_input("回车继续")==" ":
+					if InputKeyIs("按j继续\n")=='j':
 						jcrol = 0
+						print line
 					
 			count += 1	
 			jcrol = 1
