@@ -43,6 +43,7 @@ class qiubai:
                 self.page=page
 
         def search(self,page):
+		global COUNTT
                 start = time.time()
                 my_headers = {
                            'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6',
@@ -68,16 +69,19 @@ class qiubai:
 		#按键显示控制
 		jcrol = 1
 		for line in my_qiubai:
-			if count <= 5:
+			#每一页先显示一条，之后再要求按键继续
+			if count < 1:
+				print '---------------------这是第%s条---------------------'%COUNTT
 				print line
-			print "this is line my_qiubai",len(my_qiubai)
-			print "this is count",count
-			if  count < len(my_qiubai)-1:
+			if (count >=1) and (count < len(my_qiubai)-1):
 				while jcrol:
-					if InputKeyIs("按j继续\n")=='j':
+					if InputKeyIs("---------------------请按j继续---------------------\n")=='j':
 						jcrol = 0
+						print '\t\t\t\t'
+						print '---------------------这是第%s条---------------------'%COUNTT
 						print line
 					
+			COUNTT += 1
 			count += 1	
 			jcrol = 1
 			
@@ -107,6 +111,7 @@ if __name__ == "__main__":
         print "糗百命令行版"
         print '输入"q"退出程序'
         print "-"*40
+        COUNTT = 1
         qb=qiubai()
         qb.query()
 
