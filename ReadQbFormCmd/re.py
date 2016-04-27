@@ -12,10 +12,27 @@ re_qb = re.compile(r'class="content">.*?<!--\d',re.DOTALL)
 my_qiubai = re_qb.findall(html)
 print "my_qiubai type",type(my_qiubai)
 print "my_qiubai len",len(my_qiubai)
-print my_qiubai[0]
 
-my = my.qiubai[0].pop('<')
-print my
+
+for line in my_qiubai:
+        head = "--------------------这是第%s条----------------------"
+        tail = "--------------------请按J继续-----------------------"
+  
+        #除去正则多余元素       \
+	lextra = "class=\"content\">"
+	rextra = "<!--1"
+        line = line.lstrip(lextra)
+	line = line.rstrip(rextra)
+	print line
+	line = "    " + line
+        #计算除头尾的行数
+        Line = len(line)/len(tail) + 2    
+          
+
+#print my_qiubai[0]
+
+#my = my.qiubai[0].pop('<')
+#print my
 #r = re.compile(r'>.*?<',re.DOTALL)
 #my = r.findall(str(my_qiubai))
 #print "my type",type(my_qiubai)

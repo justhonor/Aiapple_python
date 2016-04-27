@@ -38,6 +38,24 @@ def InputKeyIs(msg):
 
     return a
 
+def DisplayForm(st):
+	head = "--------------------这是第%s条----------------------"%COUNTT
+        tail = "--------------------请按J继续-----------------------"
+        
+        #除去正则多余元素
+	extra = "class=\"content\">"
+	for ext in extra:
+        	st = st.lstrip(extra)
+        #增加两个开始的空格
+	st ="    " + st
+        #计算除头尾的行数
+	line = len(st)/len(tail) + 2	
+
+        print head
+        
+
+
+
 class qiubai:
         def __init__(self,page=1):
                 self.page=page
@@ -56,28 +74,39 @@ class qiubai:
                 html  = resp.read()                             #得到html
                 print "html len",len(html)                                 
                 print "html type",type(html)                                 
+		#open('thefile.txt','w+').write(html)
                 readDone = time.time()-start
                 print "after read time%f"%(readDone)
 
 		#建立re_qb这种规则
-                re_qb = re.compile(r'class="content".*?<!--\d',re.DOTALL)
-
+                #re_qb = re.compile(r'class="content".*?<!--\d',re.DOTALL)#2016-4-25不能用了，官方改变了html
+                re_qb = re.compile(r'class="content".*?</',re.DOTALL)
+		
                 #用re_qb这种规则去匹配html得到新得my_qiubai
 		my_qiubai = re_qb.findall(html)
+		print "this is my_qiubai len:",len(my_qiubai)
 		#首先显示的条数控制
 		count = 0 
 		#按键显示控制
 		jcrol = 1
 		for line in my_qiubai:
 			#每一页先显示一条，之后再要求按键继续
+			
+			#除去正则多余元素       \
+          		lextra = "class=\"content\">"
+          		rextra = "</"
+          		line = line.lstrip(lextra)
+          		line = line.rstrip(rextra)
+
 			if count < 1:
 				print '---------------------这是第%s条---------------------'%COUNTT
 				print line
+				print "this is line type:",type(line)
 			if (count >=1) and (count < len(my_qiubai)-1):
 				while jcrol:
 					if InputKeyIs("---------------------请按j继续---------------------\n")=='j':
 						jcrol = 0
-						print '\t\t\t\t'
+						print '\t\t\t\t\t\t\t\t\n\n\n\n'
 						print '---------------------这是第%s条---------------------'%COUNTT
 						print line
 					
