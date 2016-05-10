@@ -42,16 +42,16 @@ def DisplayForm(st):
 	head = "--------------------这是第%s条----------------------"%COUNTT
         tail = "--------------------请按J继续-----------------------"
         
-        #除去正则多余元素
-	extra = "class=\"content\">"
-	for ext in extra:
-        	st = st.lstrip(extra)
         #增加两个开始的空格
 	st ="    " + st
-        #计算除头尾的行数
-	line = len(st)/len(tail) + 2	
 
-        print head
+        num = (len(head)/2-2)*3
+        for n in range(num,len(st),num):
+                if n >= num and n+num <= len(st):
+                        print "*     "+st[n-num:n]
+                elif n+num > len(st):
+                        print "*     "+st[n:len(st)]
+
         
 
 
@@ -69,14 +69,14 @@ class qiubai:
                           }
 		url  = "http://www.qiushibaike.com/8hr/page/%s" %page
                 req = urllib2.Request(url,headers=my_headers)   #以my_headers这种浏览器形式去申请一个对象
-                print "method:",req.get_method()                #使用get还是post呢？
+                #print "method:",req.get_method()                #使用get还是post呢？
                 resp  = urllib2.urlopen(req)                    #open这个申请对象
                 html  = resp.read()                             #得到html
-                print "html len",len(html)                                 
-                print "html type",type(html)                                 
+                #print "html len",len(html)                                 
+                #print "html type",type(html)                                 
 		#open('thefile.txt','w+').write(html)
                 readDone = time.time()-start
-                print "after read time%f"%(readDone)
+                #print "after read time%f"%(readDone)
 
 		#建立re_qb这种规则
                 #re_qb = re.compile(r'class="content".*?<!--\d',re.DOTALL)#2016-4-25不能用了，官方改变了html
@@ -100,22 +100,24 @@ class qiubai:
 
 			if count < 1:
 				print '---------------------这是第%s条---------------------'%COUNTT
-				print line
-				print "this is line type:",type(line)
+				#print line
+				DisplayForm(line)
+				#print "this is line type:",type(line)
 			if (count >=1) and (count < len(my_qiubai)-1):
 				while jcrol:
 					if InputKeyIs("---------------------请按j继续---------------------\n")=='j':
 						jcrol = 0
 						print '\t\t\t\t\t\t\t\t\n\n\n\n'
 						print '---------------------这是第%s条---------------------'%COUNTT
-						print line
+						#print line
+						DisplayForm(line)
 					
 			COUNTT += 1
 			count += 1	
 			jcrol = 1
 			
                 reDone = time.time()-readDone
-                print "after show time %f"%(time.time()-reDone)
+                #print "after show time %f"%(time.time()-reDone)
                 s = raw_input("回车继续")
                 if s == "q":
                         exit()
