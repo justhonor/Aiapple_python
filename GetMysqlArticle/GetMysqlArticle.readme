@@ -1,0 +1,13 @@
+#This is GetMysqlArticle.readme
+
+Introduction
+	This is a crawler using for get all about MySQL articles from TAOBAO-Database-kernal team.
+	The official Blog address: http://mysql.taobao.org/monthly/
+	Download those articles in the format of html which named by ariticle title.
+
+Example
+
+Test
+
+Notes
+
