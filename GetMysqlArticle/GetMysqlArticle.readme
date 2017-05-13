@@ -5,6 +5,15 @@ Introduction
 	The official Blog address: http://mysql.taobao.org/monthly/
 	Download those articles in the format of html which named by ariticle title.
 
+	version: 0.0.1	
+		Classify the ariticles and chose the title include "MySQL".
+		Write those titles to ariticle.html with their link using html grammar.
+
+	version: 0.0.2
+		Download those articles into local.
+
+	version: 0.0.3 
+		Using mutil process to acclerate the speed of Donwloading . 
 Example
 
 Test
