@@ -1,0 +1,694 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="zh-cn" dir="ltr">
+<head>
+<title>MySQL内核月报 2014.09 - 淘宝数据库研发组</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="MediaWiki 1.16.5" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="淘宝数据库研发组 (zh-cn)" />
+<link title="Creative Commons" type="application/rdf+xml" href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09&amp;action=creativecommons" rel="meta" />
+<link rel="copyright" href="http://www.gnu.org/copyleft/fdl.html" />
+<link rel="alternate" type="application/atom+xml" title="淘宝数据库研发组的Atom订阅" href="/index.php?title=%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9&amp;feed=atom" />
+<link rel="stylesheet" href="/skins/common/shared.css?270" media="screen" />
+<link rel="stylesheet" href="/skins/common/commonPrint.css?270" media="print" />
+<link rel="stylesheet" href="/skins/monobook/main.css?270" media="screen" />
+<!--[if lt IE 5.5000]><link rel="stylesheet" href="/skins/monobook/IE50Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 5.5000]><link rel="stylesheet" href="/skins/monobook/IE55Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 6]><link rel="stylesheet" href="/skins/monobook/IE60Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" href="/skins/monobook/IE70Fixes.css?270" media="screen" /><![endif]-->
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Common.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" />
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Print.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" media="print" />
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Monobook.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" />
+<link rel="stylesheet" href="/index.php?title=-&amp;action=raw&amp;maxage=18000&amp;gen=css" />
+<script>
+var skin="monobook",
+stylepath="/skins",
+wgUrlProtocols="http\\:\\/\\/|https\\:\\/\\/|ftp\\:\\/\\/|irc\\:\\/\\/|gopher\\:\\/\\/|telnet\\:\\/\\/|nntp\\:\\/\\/|worldwind\\:\\/\\/|mailto\\:|news\\:|svn\\:\\/\\/",
+wgArticlePath="/index.php?title=$1",
+wgScriptPath="",
+wgScriptExtension=".php",
+wgScript="/index.php",
+wgVariantArticlePath=false,
+wgActionPaths={},
+wgServer="http://mysql.taobao.org",
+wgCanonicalNamespace="",
+wgCanonicalSpecialPageName=false,
+wgNamespaceNumber=0,
+wgPageName="MySQL内核月报_2014.09",
+wgTitle="MySQL内核月报 2014.09",
+wgAction="view",
+wgArticleId=119,
+wgIsArticle=true,
+wgUserName=null,
+wgUserGroups=null,
+wgUserLanguage="zh-cn",
+wgContentLanguage="zh-cn",
+wgBreakFrames=false,
+wgCurRevisionId=848,
+wgVersion="1.16.5",
+wgEnableAPI=true,
+wgEnableWriteAPI=true,
+wgSeparatorTransformTable=["", ""],
+wgDigitTransformTable=["", ""],
+wgMainPageTitle="首页",
+wgFormattedNamespaces={"-2": "媒体", "-1": "特殊", "0": "", "1": "讨论", "2": "用户", "3": "用户讨论", "4": "淘宝数据库研发组", "5": "淘宝数据库研发组讨论", "6": "文件", "7": "文件讨论", "8": "MediaWiki", "9": "MediaWiki讨论", "10": "模板", "11": "模板讨论", "12": "帮助", "13": "帮助讨论", "14": "分类", "15": "分类讨论"},
+wgNamespaceIds={"媒体": -2, "特殊": -1, "": 0, "讨论": 1, "用户": 2, "用户讨论": 3, "淘宝数据库研发组": 4, "淘宝数据库研发组讨论": 5, "文件": 6, "文件讨论": 7, "mediawiki": 8, "mediawiki讨论": 9, "模板": 10, "模板讨论": 11, "帮助": 12, "帮助讨论": 13, "分类": 14, "分类讨论": 15, "对话": 1, "用户对话": 3, "图像": 6, "档案": 6, "image": 6, "image_talk": 7, "图像对话": 7, "图像讨论": 7, "档案对话": 7, "档案讨论": 7, "文件对话": 7, "模板对话": 11, "帮助对话": 13, "分类对话": 15},
+wgSiteName="淘宝数据库研发组",
+wgCategories=[],
+wgRestrictionEdit=[],
+wgRestrictionMove=[];
+</script><script src="/skins/common/wikibits.js?270"></script>
+<script src="/skins/common/ajax.js?270"></script>
+<script src="/index.php?title=-&amp;action=raw&amp;gen=js&amp;useskin=monobook&amp;270"></script>
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-MySQL内核月报_2014_09 skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content" >
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">MySQL内核月报 2014.09</h1>
+	<div id="bodyContent">
+		<h3 id="siteSub">出自淘宝数据库研发组</h3>
+		<div id="contentSub"></div>
+		<div id="jump-to-nav">跳转到： <a href="#column-one">导航</a>, <a href="#searchInput">搜索</a></div>
+		<!-- start content -->
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>目录</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7GTID_.E5.92.8C_DELAYED"><span class="tocnumber">1</span> <span class="toctext">MySQL·　捉虫动态·GTID 和 DELAYED</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#MySQL.C2.B7.E3.80.80.E9.99.90.E5.88.B6.E6.94.B9.E8.BF.9B.C2.B7GTID.E5.92.8C.E5.8D.87.E7.BA.A7"><span class="tocnumber">2</span> <span class="toctext">MySQL·　限制改进·GTID和升级</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7GTID_.E5.92.8C_binlog_checksum"><span class="tocnumber">3</span> <span class="toctext">MySQL·　捉虫动态·GTID 和 binlog_checksum</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#MySQL.C2.B7.E3.80.80.E5.BC.95.E6.93.8E.E5.B7.AE.E5.BC.82.C2.B7create_time_in_status"><span class="tocnumber">4</span> <span class="toctext">MySQL·　引擎差异·create_time in status</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#MySQL.C2.B7.E3.80.80.E5.8F.82.E6.95.B0.E6.95.85.E4.BA.8B.C2.B7thread_concurrency"><span class="tocnumber">5</span> <span class="toctext">MySQL·　参数故事·thread_concurrency</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7auto_increment"><span class="tocnumber">6</span> <span class="toctext">MySQL·　捉虫动态·auto_increment</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="#MariaDB.C2.B7_.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7Extended_Keys"><span class="tocnumber">7</span> <span class="toctext">MariaDB· 性能优化·Extended Keys</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="#MariaDB.C2.B7.E4.B8.BB.E5.A4.87.E5.A4.8D.E5.88.B6.C2.B7CREATE_OR_REPLACE"><span class="tocnumber">8</span> <span class="toctext">MariaDB·主备复制·CREATE OR REPLACE</span></a></li>
+<li class="toclevel-1 tocsection-9"><a href="#TokuDB.C2.B7_.E5.8F.82.E6.95.B0.E6.95.85.E4.BA.8B.C2.B7.E6.95.B0.E6.8D.AE.E5.AE.89.E5.85.A8.E5.92.8C.E6.80.A7.E8.83.BD"><span class="tocnumber">9</span> <span class="toctext">TokuDB·  参数故事·数据安全和性能</span></a></li>
+<li class="toclevel-1 tocsection-10"><a href="#TokuDB.C2.B7_HA.E6.96.B9.E6.A1.88.C2.B7TokuDB.E7.83.AD.E5.A4.87"><span class="tocnumber">10</span> <span class="toctext">TokuDB· HA方案·TokuDB热备</span></a></li>
+</ul>
+</td></tr></table><script>if (window.showTocToggle) { var tocShowText = "显示"; var tocHideText = "隐藏"; showTocToggle(); } </script>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7GTID_.E5.92.8C_DELAYED">MySQL·　捉虫动态·GTID 和 DELAYED</span></h2>
+<p><b>描述</b>
+</p><p>　　这是一个MySQL 5.6才有的bug，影响包含最新版本。涉及到的概念有GTID、DELAYED。
+</p><p><br />
+<b>现象</b>
+</p><p>　　在5.6主备都开启GTID-MODE的时候，备库同步线程停止，且Last_SQL_Error显示“When @@SESSION.GTID_NEXT is set to a GTID, you must explicitly set it to a different value after a COMMIT or ROLLBACK. Please check GTID_NEXT variable manual page for detailed explanation. Current @@SESSION.GTID_NEXT is ... ”
+　　
+</p><p>　　查到这个位置正在执行的日志是一个INSERT语句，并且主库上使用的语法是 INSERT DELAYED INTO。
+　　
+</p><p><br />
+<b>GTID限制</b>
+</p><p>　　众所周知，在打开gtid-mode的时候，MySQL不允许执行create table xx as select ... 这个语句。其原因是每个GTID编号(gno)需要唯一对应一个事务，而在ROW格式binlog模式下，上述语句会被写成一个create语句和一个insert事务。这样违背唯一对应约束。
+</p><p><br />
+<b>关于DELAYED</b>
+</p><p>　　往数据库里插入数据的标准命令是INSERT，而DELAYED的意思，则是异步插入。也就是说，MySQL接受这个命令后，保存命令就直接返回给客户端，因此用户会发现在某些场景下INSERT DELAYED性能优于”INSERT，实际上只是更快的返回，而非更快的完成。
+</p><p>　　既然执行线程已经返回给用户，那么这个INSERT任务就是由一个后台线程执行的。这里有一个优化：执行线程每次循环获取现有的任务列表，多个一起执行。
+</p><p>　　这样就可能连续执行N个INSER操作，生成多个INSERT事件。而在生成GTID时，就只对应一个gno。
+</p><p>　　这就违反了上一节提到的GTID限制。
+</p><p>　　这个binlog传到备库后，备库在执行完这个gno对应的第一个事件后，操作表是一个MyISAM表（DELAYED语法只MyISAM引擎支持），自动提交事务，在执行下一个事务时，发现“少了”新的gno，因此报错。
+</p><p><br />
+<b>分析修复</b>
+</p><p>　　上述bug的根本原因是DELAYED语法生成了违反GTID限制的binlog。实际上这个语法应该也设定为：在GTID模式下禁止。
+</p><p>　　若从减少应用的报错考虑，另一种修复策略是在GTID模式下，自动将INSERT DELAYED转为INSERT。
+</p><p><br />
+</p><p><b>DELAYED相关</b>
+</p><p>　　a) InnoDB不支持DELAYED语法，因为这破坏了事务的原子性和可见性。
+</p><p>　　b) 即使对于MyISAM，官方已经将DELAYED语法在5.6列为deprecated, 在5.7取消。
+</p><p>　　c) 目前能够使用DELAYED的语法有 INSERT DELAYED 和 REPLACE DELAYED。
+</p><p>　　d) DELAYED 命令统一使用ROW格式binlog。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E9.99.90.E5.88.B6.E6.94.B9.E8.BF.9B.C2.B7GTID.E5.92.8C.E5.8D.87.E7.BA.A7">MySQL·　限制改进·GTID和升级</span></h2>
+<p><b> GTID 资料 </b>
+</p><p>MySQL 5.6 引入了global transaction identifiers (GTIDs，全局事务ID)的特性，这一特性是用来解决主从复制(replication)场景下的一些问题，GTID 只存在于 binlog 中，数据库中是没有的。
+</p><p>要了解 GTID 的话，<a href="http://dev.mysql.com/doc/refman/5.6/en/replication-gtids.html" class="external text" rel="nofollow">官方文档</a>是一定要看的，另外再推荐推荐三篇 Oracle 同学写的文章(需爬墙)：
+</p>
+<ol><li> <a href="http://svenmysql.blogspot.se/2012/10/failover-and-flexible-replication.html" class="external text" rel="nofollow">Failover and Flexible Replication Topologies in MySQL 5.6</a>
+</li><li> <a href="http://svenmysql.blogspot.jp/2012/10/advanced-use-of-global-transaction.html" class="external text" rel="nofollow">Advanced use of Global Transaction Identifiers</a>
+</li><li> <a href="http://svenmysql.blogspot.jp/2013/03/flexible-fail-over-policies-using-mysql.html" class="external text" rel="nofollow">Flexible Fail-over Policies Using MySQL and Global Transaction Identifiers</a>
+</li><li> 有兴趣的话也可以看下 GTID 的 worklog <a href="http://dev.mysql.com/worklog/task/?id=3584" class="external text" rel="nofollow">WL#3548</a>
+</li></ol>
+<p><b> 升级遇到的问题 </b> 
+</p><p>GTID 能很好的解决 failover 问题，做到主库切换自动化，减轻 DBA 同学的负担，但是这个前提是所有的 MySQL 实例都是 5.6，如果线上实例是 5.5 的，必须全部升到 5.6 才行，而目前官方并没有提供平滑的 5.5 升级到 5.6 GTID 的方式，中间必须要有一个实例重启过程，这是由 GTID 目前的实现方式决定的：
+</p>
+<ul><li> 限制1. GTID 模式实例和非GTID模式实例是不能进行复制的，要求非常严格，一刀切，要么都是GTID，要么都不是
+</li><li> 限制2. gtid_mode 是只读的，要改变状态必须1)关闭实例、2)修改配置文件、3) 重启实例
+</li></ul>
+<p><br />
+在这种条件要求下，我们来看下线上实例从 5.5 升级到 5.6 会有什么问题，为了保证业务不中断，升级过程一直要有实例对外提供服务，因此升级方式是创建一个新的 5.6 实例，从5.5同步数据，然后业务切换到 5.6。
+</p><p>为了描述方便，做如下假设：
+</p>
+<dl><dt>实例A 
+</dt><dd> 5.5 版本的，目前业务用的数据库
+</dd><dt>实例B
+</dt><dd> 5.6 版本的，数据迁移的目标
+</dd></dl>
+<p>迁移步骤如下：
+</p>
+<ol><li> 用热备份工具如 Percona XtraBackup 将 A 数据备份然后导入到B
+</li><li> B 用非 GTID 模式和 5.5 同步数据，这时用的是传统的基于文件位置的复制
+</li><li> B和A同步的差不多的时候，在 A 上设 read_only，等 B 同步完成，假设同步完后时间点为 t1
+</li><li> 关闭 B，修改参数开启GTID，重启B
+</li><li> 将业务的数据操作指向B，假设这个时间点为 t2
+</li><li> B 开始提供服务，迁移完毕
+</li></ol>
+<p>在上面的步骤中，t1 到 t2 的时间段内相当于数据库服务不可用，整个数据库停掉重启，这对线上业务来说是不可接受的，上面是用单个实例A和实例B说明问题，同样可以扩展到集群A和集群B。
+</p><p>gtid_mode 的取值范围除了 OFF 和 ON 这两个值外，还有 UPGRADE_STEP_1和UPGRADE_STEP_2，目前后2者并不支持，不过从名字上看应该是为了升级预留的，但是目前并没有好的升级方式。
+</p><p><b> 解决方案 </b>
+</p><p>如果要想做到不重启升级，必须打破之前提到限制条件，booking.com 提供了一种方案，就是打破限制1，创造出一种特殊的模式，使实例处于GTID模式下仍然可以和非GTID的实例进行复制。
+详细的方案介绍在这里 <a href="http://blog.booking.com/mysql-5.6-gtids-evaluation-and-online-migration.html" class="external text" rel="nofollow">MySQL 5.6 GTIDs: Evaluation and Online Migration</a>，代码的改动很小，就是让 sql/rpl_slave.cc 中的下面这段检查代码无效：
+</p>
+<pre>
+if (mi-&gt;master_gtid_mode &gt; gtid_mode + 1 ||
+    gtid_mode &gt; mi-&gt;master_gtid_mode + 1)
+{
+  mi-&gt;report(ERROR_LEVEL, ER_SLAVE_FATAL_ERROR,
+             &quot;The slave IO thread stops because the master has &quot;
+             &quot;@@GLOBAL.GTID_MODE&nbsp;%s and this server has &quot;
+             &quot;@@GLOBAL.GTID_MODE&nbsp;%s&quot;,
+             gtid_mode_names[mi-&gt;master_gtid_mode],
+             gtid_mode_names[gtid_mode]);
+  DBUG_RETURN(1);
+}
+</pre>
+<p><br />
+之前的升级方式是 A-&gt;B 这种拓扑，现在变为 A-&gt;C-&gt;B 
+</p>
+<dl><dt>实例A
+</dt><dd> 5.5 版本的，目前业务用的数据库
+</dd><dt>实例C
+</dt><dd> 5.6 版本的，一种中间状态实例，既可以和非GTID通信，又可以和GTID通信
+</dd><dt>实例B
+</dt><dd> 5.6 版本的，数据迁移的目标
+</dd></dl>
+<p>迁移步骤如下：
+</p>
+<ol><li> 用热备份工具如 Percona XtraBackup 将 A 数据备份然后导入到B
+</li><li> 建立 A-&gt;C-&gt;B 这种复制关系，其中 A-&gt;C 之间是文件位置协议，C-&gt;B 之间是 GTID 协议
+</li><li> B、C和A同步的差不多的时候，在 A 上设 read_only，等B同步完成
+</li><li> 将业务的数据操作指向B
+</li><li> B 开始提供服务，迁移完毕
+</li></ol>
+<p>这里为了和之前迁移目标一致，多用了一个实例C，其实这时候可以把B给去掉，还是2个实例。可以看到，引入了C后，升级过程中并没有实例重启过程，只有一个短暂的只读时间段，这个是无法避免的，即使不用GTID，也会有这个过程。
+</p><p>目前RDS实例升级到5.6也是用这种方式。如果是集群到集群的话，要注意一点，处于中间状态的实例C最好只有一个，因为这种实例相当于一个GTID转换器，将A中没有 GTID 的 binlog 转成包含 GTID 的 binlog，然后传给B，如果有多个实例C的话，A中同一个binlog 中的事务会转换出不同的GTID，这与 GTID 和事务一一对应的根本原则相矛盾，复制会出问题。当然，如果能保证经过不同的C的binlog事务不会重复的话就可以有多个C。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7GTID_.E5.92.8C_binlog_checksum">MySQL·　捉虫动态·GTID 和 binlog_checksum</span></h2>
+<p><b>现象描述</b>
+</p><p>　　在5.6主备环境下，主备都开启GTID-MODE，备库开启crc校验，主库不开。重启备库sql线程后，备库sql线程停止Last_Error显示：Relay log read failure: Could not parse relay log event entry. <i><b>The possible reasons are: the master's binary log is corrupted</b></i>(you can check this by running 'mysqlbinlog' on the binary log), <i><b>the slave's relay log is corrupted</b></i> (you can check this by running 'mysqlbinlog' on the relay log), a network problem, or a bug in the master's or slave's MySQL code. If you want to check the master's binary log or slave's relay log, you will be able to know their names by issuing 'SHOW SLAVE STATUS' on this slave.
+</p><p>　　从错误信息可以看出，可能是主库的binlog或备库的relaylog出错。
+</p><p><br />
+<b>关于GTIDs</b>
+</p><p>　　详见上一章节：MySQL·　限制改进·GTID和升级
+</p><p><br />
+<b>binlog头部信息</b>
+</p><p>　　FORMAT_DESCRIPTION：binlog格式信息，备库解析binlog的标准。
+</p><p>　　PREVIOUS_GTIDS_LOG：已产生的GTID集合，防止重复记录binlog。
+</p><p>　　ROTATE：备库binlog切换到主库binlog的转换标志。
+</p><p><br />
+<b>PREVIOUS_GTIDS_LOG</b>
+</p><p>　　开启GTID_MODE时，每个binlog文件的头部会有一个PREVIOUS_GTIDS_LOG，用于保存已产生的GTID。MySQL源码中的Gtid_set类用于实现这个功能，内部由链表实现，链表的每个节点保存了一个区间，用于指代一段连续的GNO。
+</p><p><br />
+</p><p><b>分析和修复</b>
+</p><p>　　在上述环境下，备库relay log的前几条应该是：
+</p>
+<pre>   FORMAT_DESCRIPTION_EVENT (of slave)
+   PREVIOUS_GTIDS_LOG_EVENT (of slave)
+   ROTATE_EVENT             (of master)
+   FORMAT_DESCRIPTION_EVENT (of master)
+</pre>
+<p>　　之前备库选取FORMAT 的策略是：先根据文件头备库的FORMAT_DESCRIPTION_EVENT确定FORMAT，然后继续向下读；
+</p><p>　　如果读到FORMAT_DESCRIPTION_EVENT，则更新FORMAT；如果读到ROTATE_EVENT，则继续向下读；
+</p><p>　　如果读到一条非FORMAT_DESCRIPTION_EVENT或ROTATE_EVENT的log，则停止更新FORMAT，选取当前FORMAT解析后面的log。
+</p><p>　　由备库前几条relay log可知，读到第二条PREVIOUS_GTIDS_LOG_EVENT时，已由备库的FORMAT_DESCRIPTION_EVENT确定FORMAT(binlog_checksum=on)，而略过主库的FORMAT_DESCRIPTION_EVENT。
+</p><p>　　到下面解析log时，会认为每条log尾部有crc校验信息。但校验信息实际是不存在的，所以会报crc校验的错误。
+</p><p>　　当读到PREVIOUS_GTIDS_LOG_EVENT时继续向下读，即可读到主库的FORMAT_DESCRIPTION_EVENT，解决这个bug。
+</p><p><br />
+</p><p><b>其他复现场景</b>
+</p><p>　　5.5/5.1会作为5.6的主库，此时备库开启GTID-MODE和crc校验。若中间出现主键冲突等错误，sql thread暂停后， 执行start slave，会报错 "Event crc check failed"。原因是5.5/5.1不支持crc校验，和5.6不开启crc校验相似。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E5.BC.95.E6.93.8E.E5.B7.AE.E5.BC.82.C2.B7create_time_in_status">MySQL·　引擎差异·create_time in status</span></h2>
+<p><b>背景</b>
+</p><p>　　在MySQL数据库中，我们利用show table status命令可以得到表的状态信息，其中一列信息为create_time，表示表的创建时间。对于不同的存储引擎（如InnoDB/MyISAM/MEMORY）我们都能得到create_time的数值。我们知道不同的存储引擎表的文件结构是不同的，因此实现表的创建时间create_time的机制也是不同的。下面着重探讨InnoDB和MyISAM在create_time上的区别。
+</p><p><b>实验</b>
+</p><p>　　我们先做一些实验来看看create_time的特点。在InnoDB引擎下创建一个表：
+</p>
+<pre>
+    CREATE TABLE `tb` (
+       `seq_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+       `a` varchar(32) DEFAULT NULL,
+       `b` varchar(32) DEFAULT NULL,
+       `c` varchar(32) DEFAULT NULL,
+       `d` char(255) DEFAULT NULL,
+       Primary key (seq_id),
+       KEY a (a),
+       KEY bc (b,c),
+       KEY cb (c,b)
+   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</pre>
+<p>　　在MyISAM引擎下也创建结构相同的一个表，如何可以更新create_time呢？我们在表上做以下3种操作，观察create_time的变化。
+</p><p>　　1. 对表进行增删改查操作，InnoDB、MyISAM的create_time不变。
+</p><p>　　2. 对表进行alter table add column e varchar(32)，InnoDB、MyISAM的create_time都更新到当前时间。
+</p><p>　　3. 对表进行truncate table tb，InnoDB的create_time不变、MyISAM的create_time更新到当前时间。
+</p><p>　　通过这些操作我们发现虽然2种引擎的内部实现不同，但前2种操作的现象是一样的。对表进行增删改查并不重建表，因此create_time没有更新。而alter table会更新create_time的原因是新建了一个原表的副本，在副本上实现alter table的功能（增加新列等等），最后删除原表，用副本替代原表。因此alter table下create_time是原表副本的创建时间。
+</p><p>　　第3种操作，两者的现象不同，这是为什么呢？我们从代码实现上分析原因。
+</p><p><br />
+<b>show table status的create_time的实现</b>
+</p>
+<dl><dd> 1.InnoDB
+</dd></dl>
+<p>　　在InnoDB下执行show table status获得create_time来自于代码：
+</p>
+<pre>
+    ./storage/innobase/handler/ha_innodb.cc：
+    ...
+    if (os_file_get_status(path,&amp;stat_info)) {
+        stats.create_time = (ulong) stat_info.ctime;
+    }
+    ...
+</pre>
+<p>　　stats.create_time最终来自于以下代码的statinfo变量：
+</p>
+<pre>
+    ./storage/innobase/os/os0file.c：
+    ...
+    ret = stat(path, &amp;statinfo);
+    ...
+</pre>
+<p>　　stat为C语言的库函数，含义是将文件路径path定位的文件（TABLENAME.frm）的状态信息（包括了创建时间create_time）存入statinfo。
+</p><p>　　通过对源码的分析，我们知道在InnoDB引擎，create_time来源于.frm文件的创建日期。在truncate table之后，InnoDB并没有重建.frm文件，因此show table status的create_time不变。
+</p>
+<dl><dd> 2. MyISAM下
+</dd></dl>
+<p>　　在MyISAM下执行show table status获得create_time来自于代码：
+</p>
+<pre>
+    ./storage/myisam/ha_myisam.cc:
+    ...
+    stats.create_time= (ulong) misam_info.create_time;
+    ...
+</pre>
+<p>　　对应的misam_info.create_time来源于:
+</p>
+<pre>
+    ./storage/myisam/mi_open.c:
+    ...
+    mi_state_info_read(disk_cache, &amp;share-&gt;state);
+    ...
+</pre>
+<p>　　即MyISAM通过读.MYI文件来获得state信息（包含了create_time)，也就是说MyISAM下show table status的create_time最终来源于MYI文件中的state信息。
+</p><p>　　在MyISAM下，创建表(create table..)的create_time来源于以下代码：
+</p>
+<pre>
+    ./storage/myisam/mi_create.c：
+    ...
+    if (! (flags &amp; HA_DONT_TOUCH_DATA))
+       share.state.create_time= (long) time((time_t*) 0);
+    ...
+</pre>
+<p>　　MyISAM下的create_time来源于share变量，每次执行这部分代码都会更新share.state.create_time。share是MyISAM引擎下的全局信息，share.state区间信息包含了键和数据文件长度、时间戳（即create_time）和打开表的次数等等参数。share.state会记入MYI文件，代码如下：
+</p>
+<pre>
+    ./storage/myisam/mi_create.c：
+    ...
+    DBUG_PRINT(&quot;info&quot;, (&quot;write state info and base info&quot;));
+    if (mi_state_info_write(file, &amp;share.state, 2) ||
+       mi_base_info_write(file, &amp;share.base))
+      goto err;
+    ...
+</pre>
+<p>　　执行truncate table也会经过以上2处的代码，更新.MYI文件的state区间的信息，然后show table status时读入.MYI文件最新的state信息（包含了create_time），因此create_time会被更新。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E5.8F.82.E6.95.B0.E6.95.85.E4.BA.8B.C2.B7thread_concurrency">MySQL·　参数故事·thread_concurrency</span></h2>
+<p><b>提要</b>
+</p><p>　　thread_concurrency参数用于向操作系统建议期望的并发线程数，参数在mysqld启动的时候使用。但MySQL 5.6 从源码中删除了这个参数，不再使用。
+</p><p><b>参数背景</b>
+</p><p>　　源码：
+</p>
+<pre>
+ #ifndef HAVE_THR_SETCONCURRENCY
+ #define thr_setconcurrency(A) pthread_dummy(0)
+ #endif
+ 
+ mysqld_main
+ {
+   (void) thr_setconcurrency(concurrency);	// 10 by default
+   ......
+ }
+</pre>
+<p>　　可以看到thread_concurrency的限制：
+</p>
+<dl><dd><dl><dd> 1. thread_concurrency不能用在GNU/Linux平台上，而只能在old Solaris versions &lt; 9才能work。
+</dd><dd> 2. OS层面只提供了hint建议，并不能提供足够的信息，控制和诊断都不够灵活。
+</dd><dd> 3. OS无法获得MySQL层面提供的所有线程的状态，包括语句的执行，阻塞，当前事务状态等信息，所以OS终究不能根据事务型软件系统量身定制并发控制。
+</dd></dl>
+</dd></dl>
+<p>　　一句话，OS层面无法把并发控制做精细，所以放弃使用。
+</p><p>　　那么并发控制究竟在什么地方进行控制最好，控制为多少合适呢?
+</p><p><br />
+<b>并发控制</b>
+</p><p>　　<b>并发控制点：</b>
+</p>
+<dl><dd><dl><dd> 并发控制的目的是最大化提高系统的资源利用率，并减少管理和调度开销。在MySQL实例中，主要处理sql请求，所以期望系统资源最大化提供给sql的执行过程。
+</dd></dl>
+</dd></dl>
+<p>　　sql的执行牵涉到server层和引擎层：
+</p>
+<dl><dd><dl><dd> 1. server层：比如cost计算，生成sql执行计划的过程
+</dd><dd> 2. Innodb层：比如根据执行计划，查找和更新数据page的过程
+</dd></dl>
+</dd></dl>
+<p>　　所以在MySQL实例中，有两个最佳的并发控制点：
+</p>
+<dl><dd><dl><dd> 1. server层：sql开始执行时。 MySQL在5.6后，在server层引入了thread pool进行并发控制
+</dd><dd> 2. Innodb层：记录查找和记录更新时。 Innodb存储引擎，使用innodb_thread_concurrency参数进行并发控制
+</dd></dl>
+</dd></dl>
+<p><br />
+　　<b>并发控制大小：</b>
+</p>
+<dl><dd><dl><dd> 设置过大：造成系统调度消耗过大
+</dd><dd> 设置过小：不能完全的使用系统资源，造成资源浪费
+</dd></dl>
+</dd></dl>
+<p>　　经验值：# Try number of CPU's*2 for thread_concurrency
+</p><p>　　但还需要配合具体的平台和业务系统进行测试，才能找到最佳值。
+</p><p><br />
+<b>Innodb并发控制</b>
+</p><p>　　Innodb使用参数innodb_thread_concurrency控制并发线程的个数，源码中使用一对函数：
+</p>
+<dl><dd><dl><dd> innodb_srv_conc_enter_innodb
+</dd><dd> innodb_srv_conc_exit_innodb
+</dd></dl>
+</dd></dl>
+<p>　　Innodb实现语句级的并发控制，在语句执行结束，stmt commit的时候，强制释放资源。
+</p><p><b>权衡和优化</b>
+</p>
+<dl><dd> 1. 一方面进行并发控制，提高资源利用率，
+</dd><dd> 2. 另一方还需要控制调度公平，防饿死等。
+</dd></dl>
+<p>　　Innodb引入了n_tickets_to_enter_innodb参数，sql进入innodb执行时进行初始化，默认值500。
+</p><p>　　在执行过程中，依次进行递减，递减到0时，强制退出并发线程，重新抢占。
+</p><p>　　好处：
+</p>
+<dl><dd><dl><dd> 1. 一方面单条sql可能写入或者更新多条记录，节省每次enter innodb的线程抢占代价。
+</dd><dd> 2. 另一方面防止单条sql过多的长时间占用并发线程，导致其它线程饿死的情况。
+</dd></dl>
+</dd></dl>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7auto_increment">MySQL·　捉虫动态·auto_increment</span></h2>
+<p><b>背景：</b>
+</p><p>　　Innodb引擎使用B_tree结构保存表数据，这样就需要一个唯一键表示每一行记录(比如二级索引记录引用)。
+</p><p>　　Innodb表定义中处理主键的逻辑是：
+</p><p>　　1.如果表定义了主键，就使用主键唯一定位一条记录
+</p><p>　　2.如果没有定义主键，Innodb就生成一个全局唯一的rowid来定位一条记录
+</p><p><br />
+</p><p><b>auto_increment的由来:</b>
+</p><p>　　1.Innodb强烈推荐在设计表中自定义一个主键，因为rowid是全局唯一的，所以如果有很多表没有定义主键，就会在生成rowid上产生争用。
+</p>
+<pre>      /* Dictionary system struct */
+      struct dict_sys_struct{
+      mutex_t	mutex;
+      row_id_t	row_id;
+      ......
+      }
+</pre>
+<p>　　row_id由mutex保护，并在每次checkpoint的时候，写入到数据字典的文件头。
+</p><p>　　2.当用户自定义了主键后，由于大部分实际应用部署的分布式，所以主键值的生成上，采用集中式的方式，更容易实现唯一性，所以auto_increment非常合适。  
+</p><p>　　auto_increment也带来两个好处：
+</p><p>　　1. auto_increment的值是表级别的，不会在db级别上产生争用
+</p><p>　　2. 由于auto_increment的顺序性，减少了随机读的可能，保证了写入的page的缓冲命中。（不可否认，写入的并发足够大时，会产生热点块的争用）
+</p><p><br />
+</p><p><b>auto_increment引起的bug：</b>
+</p><p>　　环境：MySQL 5.6.16版本, binlog_format=row
+</p><p>　　case复现：
+</p>
+<pre>     create table test.kkk ( c int(11) default null, id int(11) not null auto_increment, d int(11) default null, primary key (id), unique key d (d) )
+     engine=innodb default charset=latin1;
+     insert into test.kkk values(5, 27,4);
+     replace into test.kkk(c, id, d) values(6, 35, 4);
+     commit;	
+</pre>
+<pre>     show create table时：
+     主库：auto_increment=36
+     备库：auto_increment=28
+</pre>
+<p>　　当进行主备切换后，导致主键冲突，slave恢复异常。
+</p><p>　　同样insert on duplication update 语句同样存在这样的问题。
+</p><p><br />
+</p><p><b>aliyun rds分支bug修复</b>
+</p><p>　　<b>问题的原因：</b>Innodb对于auto_increment的处理，当语句是insert时，会进行递增，而update，delete语句则不更新。
+</p><p>　　当replace语句在主库的执行时：
+</p><p>　　1. 先按照insert语句执行，发现uk冲突。
+</p><p>　　2. 演变成update语句进行更新。
+</p><p>　　这样在主库，虽然insert失败，但auto_increment也递增上去了。但到备库，row格式下，只产生了一个update row event，
+</p><p>　　备库无法知道主库是一个replace语句，而且insert还失败了， 所以auto_increment在备库没有递增。
+</p><p>　　<b>修复方式：</b>在备库，对于update进行auto_increment递增，可能会产生副作用，即auto_increment的浪费，但不会产生主键冲突。
+</p><p><br />
+</p><p><b>那些年经历的auto_increment坑：</b>
+</p><p>　　1. 实例重启，主键冲突：
+</p><p>　　内存中的autoinc值，在系统重启后，使用select max(id) from table来初始化。所以，如果你设计的业务表，存在delete操作，那么一旦你的实例crash过，重启后，可能会复用以前使用过的id值。如果你需要持续对这个表进行逻辑备份，那么就可能会碰到主键冲突的问题。
+</p><p><br />
+</p><p>　　2. load file阻塞：
+</p><p>　　在设置innodb_autoinc_lock_mode=1的时候，MySQL为了维护单个statement语句的id连续性，当不确定插入条数的时候，会在语句整个执行过程中
+</p><p>　　持有LOCK_AUTO_INC,	/* locks the auto-inc counter of a table in an exclusive mode */
+</p><p>　　这个锁是表级别的，使用互斥模式。
+</p><p>　　所以，在繁忙的表上，如果要导入数据，小心可能阻塞正常的业务写入，并发写入在这个时候也会阻塞的。
+</p>
+<h2> <span class="mw-headline" id="MariaDB.C2.B7_.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7Extended_Keys">MariaDB· 性能优化·Extended Keys</span></h2>
+<p>MariaDB 10.0.8增加了一种新的执行计划——Extended Keys。
+</p><p>它充分利用了InnoDB的隐藏列来做执行计划，因为我们都知道InnoDB的索引组织表会把主键放在最末尾，所以实际上每个索引最后都包含了主键。
+</p><p>打开和关闭这个优化器选项的命令如下：
+</p><p>Enable:
+</p>
+<pre>  set optimizer_switch='extended_keys=on';
+</pre>
+<p>Disable:
+</p>
+<pre> set optimizer_switch='extended_keys=off';
+</pre>
+<p>MariaDB 10.0.8中默认选项是 'extended_keys=off'.
+MariaDB 10.0.9开始默认选项是 'extended_keys=on'.
+</p><p>看一个例子：
+</p><p>有一个DBT-3/TPC-H 测试中用到的SQL如下
+</p>
+<pre> select o_orderkey
+ from part, lineitem, orders
+ where p_retailprice &gt; 2095 and o_orderdate='1992-07-01'
+       and o_orderkey=l_orderkey and p_partkey=l_partkey;
+</pre>
+<p>这个查询是寻找发生在1992-07-01 并且零售价格高于2095的orderkeys.
+</p><p>通过 Extended Keys, 这个查询可以通过下面的计划执行:
+</p><p>扫描i_p_retailprice索引获得p_retailprice&gt;2095的行，再从 extended keys中读取p_partkey（主键）的值。
+对于每一个p_partkey的值，通过对lineitem表的i_l_partkey索引扫描，从 extended index中获取l_orderkey（主键）。
+对于每一个被选中的l_orderkey值，再通过i_o_orderdate索引去查找o_orderkey（主键）的值。
+这种访问方式所有的访问数据都没有回表，所以性能好的多。
+</p><p>下面是执行计划:
+</p>
+<pre> MariaDB [dbt3sf10]&gt; explain
+    -&gt; select o_orderkey
+    -&gt;   from part, lineitem, orders
+    -&gt;   where p_retailprice &gt; 2095 and o_orderdate='1992-07-01'
+    -&gt;         and o_orderkey=l_orderkey and p_partkey=l_partkey\G
+ *************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: part
+         type: range
+ possible_keys: PRIMARY,i_p_retailprice
+          key: i_p_retailprice
+      key_len: 9
+          ref: NULL
+         rows: 100
+        Extra: Using where; Using index
+ *************************** 2. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: lineitem
+         type: ref
+ possible_keys: PRIMARY,i_l_suppkey_partkey,i_l_partkey,i_l_orderkey,i_l_orderkey_quantity
+          key: i_l_partkey
+      key_len: 5
+          ref: dbt3sf10.part.p_partkey
+         rows: 15
+        Extra: Using index
+ *************************** 3. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: orders
+         type: ref
+ possible_keys: PRIMARY,i_o_orderdate
+          key: i_o_orderdate
+      key_len: 8
+          ref: const,dbt3sf10.lineitem.l_orderkey
+         rows: 1
+        Extra: Using index
+ 3 rows in set (0.00 sec)
+</pre>
+<h2> <span class="mw-headline" id="MariaDB.C2.B7.E4.B8.BB.E5.A4.87.E5.A4.8D.E5.88.B6.C2.B7CREATE_OR_REPLACE"> MariaDB·主备复制·CREATE OR REPLACE </span></h2>
+<p>MariaDB 10.0.8 版本增加了一个CREATE OR REPLACE TABLE语法，这个语法的目的是让Replication更加可靠，为什么这个语句能让复制更可靠呢？
+</p><p>例如用户使用CREATE ... SELECT语句，而这个语句回滚了又重新执行，备库有可能先收到一个CREATE语句，但是没收到INSERT的Events，主库重做一遍之后，备库收到CREATE语句时就会失败，而CREATE OR REPLACE则可以避免这个问题，存在的表会被替换掉。
+</p><p>最基本的使用例子：
+</p>
+<pre> CREATE OR REPLACE TABLE table_name (a int);
+</pre>
+<p>这个语句其实等价于：
+</p>
+<pre> DROP TABLE IF EXISTS table_name;
+ CREATE TABLE table_name (a int);
+</pre>
+<p>这两个语句的执行结果。
+</p>
+<ul><li> 如果 table_name被LOCK TABLES锁住了，CREATE OR REPLACE TABLE会忽略锁定，然后在语句执行完成后把新建的表加上锁定。
+</li><li> 临时表只有在指定了TEMPORARY关键字时才会被DROP掉。（用DROP TABLE的话，同名的临时表会比普通表先被删除）
+</li></ul>
+<p>使用CREATE OR REPLACE TABL必须意识到的问题：
+</p>
+<ul><li> 表会首先被DROP掉（如果这张表存在的话），然后CREATE动作才会执行。正是因为如此，如果CREATE步骤失败了，那么执行这个语句后表可能会不存在了。如果表是被LOCK TABLES锁住的，那么表的锁会被释放掉先。
+</li><li> OR REPLACE和IF EXISTS语句不可同时使用
+</li><li> Slave在复制中当CREATE语句没有使用IF EXISTS标识时，会默认使用CREATE OR REPLACE语句来执行。这个行为可以通过slave-ddl-exec-mode变量来改变，设置为STRICT则不会做这个替换。
+</li></ul>
+<p>相关的新增参数：  
+</p><p>　slave_ddl_exec_mode
+</p><p>　描述: Slave控制如何执行DDL的Event的模式。可选值有STRICT、IDEMPOTENT (默认值)。  
+</p><p>　　在 IDEMPOTENT 模式下，Slave不会因为那些不会导致主备不一致的DDL执行失败而停止。  
+</p><p>　　尤其是CREATE TABLE 会被当做 CREATE OR REPLACE TABLE，而 DROP TABLE 会被当做DROP TABLE IF EXISTS.
+</p><p>　默认值: IDEMPOTENT
+</p><p>　可选值: IDEMPOTENT, STRICT
+</p>
+<h2> <span class="mw-headline" id="TokuDB.C2.B7_.E5.8F.82.E6.95.B0.E6.95.85.E4.BA.8B.C2.B7.E6.95.B0.E6.8D.AE.E5.AE.89.E5.85.A8.E5.92.8C.E6.80.A7.E8.83.BD">TokuDB·  参数故事·数据安全和性能</span></h2>
+<p>TokuDB里可调优的参数不多，今天把＂最重要＂的几个拉出来晒晒。
+</p><p>与性能相关的参数及说明:<br />
+</p>
+<pre> tokudb_cache_size(bytes):
+ 缓存大小，读写时候，数据会首先会缓存到这里。
+ 默认大小为机器物理内存的一半。<br />
+ tokudb_commit_sync(ON/OFF):
+ 当事务提交的时候，是否要fsync log到磁盘。
+ 默认开启(ON)，如果设置为OFF，性能会提升，但可能会丢失事务(commit记录到log buffer，但是未fsync到磁盘的事务)。<br />
+ tokudb_directio(ON/OFF):
+ 是否开启Direct I/O功能，TokuDB在写盘的时候，无论是否开启Direct I/O，都是按照512字节对齐的。
+ 默认为OFF。<br />
+ tokudb_fsync_log_period(ms):
+ 多久fsync一下log buffer到磁盘，TokuDB的log buffer总大小为32MB且不可更改。
+ 默认为0ms(此时做fsync的后台线程一直处于wait状态)，此时受tokudb_commit_sync开关控制是否要fsync log到磁盘(checkpoint也会fsync log buffer的，默认为1分钟)。
+</pre>
+<p>针对不同的使用场景：
+</p><p>1) 对数据要求较高(不允许丢失数据，事务ACID完整性)，只需根据内存调整tokudb_cache_size大小即可，建议开启tokudb_directio。
+</p><p>2) 对数据要求不太高(允许部分数据丢失，不要求事务ACID完整性)，可配置:
+</p>
+<pre> tokudb_commit_sync=OFF
+ tokudb_fsync_log_period=1000 #1s
+</pre>
+<p>在此配置下，每1秒对log buffer做下fsync，可充分利用log的group commit功能，如果TokuDB挂掉，则可能会丢失最多1秒的数据。
+</p>
+<h2> <span class="mw-headline" id="TokuDB.C2.B7_HA.E6.96.B9.E6.A1.88.C2.B7TokuDB.E7.83.AD.E5.A4.87">TokuDB· HA方案·TokuDB热备</span></h2>
+<p>TokuDB企业版提供热备功能(与社区版唯一的区别)。
+</p><p>该功能以plugin方式提供，当backup plugin加载后，它会拦截所有的文件操作(比如文件读写／目录操作等)，从而实现在备份的过程中增量同步，具体原理请看:
+</p><p><a href="http://www.tokutek.com/2013/09/tokudb-hot-backup-part-1/" class="external free" rel="nofollow">http://www.tokutek.com/2013/09/tokudb-hot-backup-part-1/</a> <br />
+<a href="http://www.tokutek.com/2013/09/tokudb-hot-backup-part-2/" class="external free" rel="nofollow">http://www.tokutek.com/2013/09/tokudb-hot-backup-part-2/</a> <br />
+</p><p>社区版如何实现热备呢？
+</p><p>官方推荐的方式是mylvmbackup，不过可能会有一些＂坑＂。
+</p><p>Percona的Vadim同学写过一篇<a href="http://www.percona.com/blog/2014/07/15/tokudb-tips-mysql-backups/" class="external text" rel="nofollow">TokuDB tips</a>，介绍了Percona在使用mylvmbackup热备TokuDB中遇到的＂坑＂及解决方法：
+</p><p>不能只备份TokuDB自身的数据以及日志文件，还要备份最新的binlog，否则启动的时候可能就＂跪＂了！
+</p><p>还有一个比较geek的方式，直接基于TokuDB自身的机制，轻松的热备出一个备库。
+</p><p>上攻略：
+</p>
+<pre> 1) SET TOKUDB_CHECKPOINT_LOCK=ON;
+ 2) 开始拷贝TokuDB的数据文件(不包含日志文件)
+ 3) FLUSH TABLES WITH READ LOCK;
+ 4) 记录binlog位置，拷贝最新的binlog和TokuDB的日志文件(*.tokulog)
+ 5) UNLOCK TABLES;
+ 6) SET TOKUDB_CHECKPOINT_LOCK=OFF;
+</pre>
+<p>＂大杀器＂就是<a href="https://github.com/Tokutek/tokudb-engine/wiki/Checkpoint-Lock" class="external text" rel="nofollow">TOKUDB_CHECKPOINT_LOCK</a>，它的作用是允许拿到checkpoint锁，此时TokuDB的checkpoint会一直block到该锁释放(执行前要把tokudb_checkpoint_on_flush_logs关掉)，目的是防止拷贝TokuDB数据文件的过程中做sharp checkpoint(注意：由于不做checkpoint，TokuDB的日志文件会逐渐增多)，从而导致数据文件内部不一致(已拷贝的文件被修改)。
+</p><p>整个热备过程中，只有步骤4是阻塞写的，但耗时较短。
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 119/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key tmysqlwikidb-tmysql:pcache:idhash:119-0!1!0!!zh-cn!2!edit=0 and timestamp 20170514203646 -->
+<div class="printfooter">
+取自“<a href="http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09">http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09</a>”</div>
+		<div id='catlinks' class='catlinks catlinks-allhidden'></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>查看</h5>
+		<div class="pBody">
+			<ul>
+				 <li id="ca-nstab-main" class="selected"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09" title="查看页面内容 [c]" accesskey="c">页面</a></li>
+				 <li id="ca-talk" class="new"><a href="/index.php?title=%E8%AE%A8%E8%AE%BA:MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09&amp;action=edit&amp;redlink=1" title="关于页面正文的讨论 [t]" accesskey="t">讨论</a></li>
+				 <li id="ca-viewsource"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09&amp;action=edit" title="此页面已被保护，你可以查看其源代码。 [e]" accesskey="e">查看源代码</a></li>
+				 <li id="ca-history"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09&amp;action=history" title="此页面的早前修订版本 [h]" accesskey="h">历史</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>个人工具</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95&amp;returnto=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09" title="我们鼓励您登录，但这并不是必须的 [o]" accesskey="o">登录</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(/skins/common/images/wiki.png);" href="/index.php?title=%E9%A6%96%E9%A1%B5" title="访问首页"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+	<div class='generated-sidebar portlet' id='p-navigation'>
+		<h5>导航</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage-description"><a href="/index.php?title=%E9%A6%96%E9%A1%B5" title="访问首页 [z]" accesskey="z">首页</a></li>
+				<li id="n-portal"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E7%A4%BE%E5%8C%BA" title="关于本计划，您可以做什么，应该如何做">社区入口</a></li>
+				<li id="n-currentevents"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%BD%93%E5%89%8D%E4%BA%8B%E4%BB%B6" title="查找当前事件的背景信息">当前事件</a></li>
+				<li id="n-recentchanges"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9" title="列出该网站的最近修改 [r]" accesskey="r">最近更改</a></li>
+				<li id="n-randompage"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2" title="随机载入一个页面 [x]" accesskey="x">随机页面</a></li>
+				<li id="n-help"><a href="/index.php?title=%E5%B8%AE%E5%8A%A9:%E7%9B%AE%E5%BD%95" title="寻求帮助">帮助</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="p-search" class="portlet">
+		<h5><label for="searchInput">搜索</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/index.php" id="searchform">
+				<input type='hidden' name="title" value="特殊:搜索"/>
+				<input id="searchInput" title="搜索该网站" accesskey="f" type="search" name="search" />
+				<input type='submit' name="go" class="searchButton" id="searchGoButton"	value="进入" title="如果相同的标题存在的话便直接前往该页面" />&nbsp;
+				<input type='submit' name="fulltext" class="searchButton" id="mw-searchButton" value="搜索" title="搜索该文字的页面" />
+			</form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>工具箱</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%93%BE%E5%85%A5%E9%A1%B5%E9%9D%A2/MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09" title="列出所有与此页相链的页面 [j]" accesskey="j">链入页面</a></li>
+				<li id="t-recentchangeslinked"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%93%BE%E5%87%BA%E6%9B%B4%E6%94%B9/MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09" title="从此页链出的所有页面的更改 [k]" accesskey="k">链出更改</a></li>
+<li id="t-specialpages"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E7%89%B9%E6%AE%8A%E9%A1%B5%E9%9D%A2" title="所有特殊页面列表 [q]" accesskey="q">特殊页面</a></li>
+				<li id="t-print"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09&amp;printable=yes" rel="alternate" title="这个页面的可打印版本 [p]" accesskey="p">可打印版</a></li>				<li id="t-permalink"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.09&amp;oldid=848" title="这个页面修订版本的永久链接">永久链接</a></li>			</ul>
+		</div>
+	</div>
+</div><!-- end of the left (by default at least) column -->
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="/skins/common/images/poweredby_mediawiki_88x31.png" height="31" width="88" alt="Powered by MediaWiki" /></a></div>
+	<div id="f-copyrightico"><a href="http://www.gnu.org/copyleft/fdl.html"><img src="/skins/common/images/gnu-fdl.png" alt="GNU Free Documentation License 1.3" width="88" height="31" /></a></div>
+	<ul id="f-list">
+		<li id="lastmod"> 此页面最后修订于2014年9月15日 (星期一) 05:47。</li>
+		<li id="viewcount">此页面已被浏览过10,653次。</li>
+		<li id="copyright">本站全部文字内容使用<a href="http://www.gnu.org/copyleft/fdl.html" class="external ">GNU Free Documentation License 1.3</a>授权。</li>
+		<li id="privacy"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96" title="淘宝数据库研发组:隐私政策">隐私政策</a></li>
+		<li id="about"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%85%B3%E4%BA%8E" title="淘宝数据库研发组:关于">关于淘宝数据库研发组</a></li>
+		<li id="disclaimer"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%85%8D%E8%B4%A3%E5%A3%B0%E6%98%8E" title="淘宝数据库研发组:免责声明">免责声明</a></li>
+	</ul>
+</div>
+</div>
+
+<script>if (window.runOnloadHook) runOnloadHook();</script>
+<!-- Served in 0.053 secs. --></body></html>

@@ -1,0 +1,714 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="zh-cn" dir="ltr">
+<head>
+<title>MySQL内核月报 2014.12 - 淘宝数据库研发组</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="MediaWiki 1.16.5" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="淘宝数据库研发组 (zh-cn)" />
+<link title="Creative Commons" type="application/rdf+xml" href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12&amp;action=creativecommons" rel="meta" />
+<link rel="copyright" href="http://www.gnu.org/copyleft/fdl.html" />
+<link rel="alternate" type="application/atom+xml" title="淘宝数据库研发组的Atom订阅" href="/index.php?title=%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9&amp;feed=atom" />
+<link rel="stylesheet" href="/skins/common/shared.css?270" media="screen" />
+<link rel="stylesheet" href="/skins/common/commonPrint.css?270" media="print" />
+<link rel="stylesheet" href="/skins/monobook/main.css?270" media="screen" />
+<!--[if lt IE 5.5000]><link rel="stylesheet" href="/skins/monobook/IE50Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 5.5000]><link rel="stylesheet" href="/skins/monobook/IE55Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 6]><link rel="stylesheet" href="/skins/monobook/IE60Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" href="/skins/monobook/IE70Fixes.css?270" media="screen" /><![endif]-->
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Common.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" />
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Print.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" media="print" />
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Monobook.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" />
+<link rel="stylesheet" href="/index.php?title=-&amp;action=raw&amp;maxage=18000&amp;gen=css" />
+<script>
+var skin="monobook",
+stylepath="/skins",
+wgUrlProtocols="http\\:\\/\\/|https\\:\\/\\/|ftp\\:\\/\\/|irc\\:\\/\\/|gopher\\:\\/\\/|telnet\\:\\/\\/|nntp\\:\\/\\/|worldwind\\:\\/\\/|mailto\\:|news\\:|svn\\:\\/\\/",
+wgArticlePath="/index.php?title=$1",
+wgScriptPath="",
+wgScriptExtension=".php",
+wgScript="/index.php",
+wgVariantArticlePath=false,
+wgActionPaths={},
+wgServer="http://mysql.taobao.org",
+wgCanonicalNamespace="",
+wgCanonicalSpecialPageName=false,
+wgNamespaceNumber=0,
+wgPageName="MySQL内核月报_2014.12",
+wgTitle="MySQL内核月报 2014.12",
+wgAction="view",
+wgArticleId=130,
+wgIsArticle=true,
+wgUserName=null,
+wgUserGroups=null,
+wgUserLanguage="zh-cn",
+wgContentLanguage="zh-cn",
+wgBreakFrames=false,
+wgCurRevisionId=1064,
+wgVersion="1.16.5",
+wgEnableAPI=true,
+wgEnableWriteAPI=true,
+wgSeparatorTransformTable=["", ""],
+wgDigitTransformTable=["", ""],
+wgMainPageTitle="首页",
+wgFormattedNamespaces={"-2": "媒体", "-1": "特殊", "0": "", "1": "讨论", "2": "用户", "3": "用户讨论", "4": "淘宝数据库研发组", "5": "淘宝数据库研发组讨论", "6": "文件", "7": "文件讨论", "8": "MediaWiki", "9": "MediaWiki讨论", "10": "模板", "11": "模板讨论", "12": "帮助", "13": "帮助讨论", "14": "分类", "15": "分类讨论"},
+wgNamespaceIds={"媒体": -2, "特殊": -1, "": 0, "讨论": 1, "用户": 2, "用户讨论": 3, "淘宝数据库研发组": 4, "淘宝数据库研发组讨论": 5, "文件": 6, "文件讨论": 7, "mediawiki": 8, "mediawiki讨论": 9, "模板": 10, "模板讨论": 11, "帮助": 12, "帮助讨论": 13, "分类": 14, "分类讨论": 15, "对话": 1, "用户对话": 3, "图像": 6, "档案": 6, "image": 6, "image_talk": 7, "图像对话": 7, "图像讨论": 7, "档案对话": 7, "档案讨论": 7, "文件对话": 7, "模板对话": 11, "帮助对话": 13, "分类对话": 15},
+wgSiteName="淘宝数据库研发组",
+wgCategories=[],
+wgRestrictionEdit=[],
+wgRestrictionMove=[];
+</script><script src="/skins/common/wikibits.js?270"></script>
+<script src="/skins/common/ajax.js?270"></script>
+<script src="/index.php?title=-&amp;action=raw&amp;gen=js&amp;useskin=monobook&amp;270"></script>
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-MySQL内核月报_2014_12 skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content" >
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">MySQL内核月报 2014.12</h1>
+	<div id="bodyContent">
+		<h3 id="siteSub">出自淘宝数据库研发组</h3>
+		<div id="contentSub"></div>
+		<div id="jump-to-nav">跳转到： <a href="#column-one">导航</a>, <a href="#searchInput">搜索</a></div>
+		<!-- start content -->
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>目录</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B75.7_Innodb.E4.BA.8B.E5.8A.A1.E7.B3.BB.E7.BB.9F"><span class="tocnumber">1</span> <span class="toctext">MySQL·　性能优化·5.7 Innodb事务系统</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#MySQL.C2.B7.E3.80.80.E8.B8.A9.E8.BF.87.E7.9A.84.E5.9D.91.C2.B75.6_GTID_.E5.92.8C.E5.AD.98.E5.82.A8.E5.BC.95.E6.93.8E.E9.82.A3.E4.BC.9A.E4.BA.8B"><span class="tocnumber">2</span> <span class="toctext">MySQL·　踩过的坑·5.6 GTID 和存储引擎那会事</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7thread_pool_.E5.8E.9F.E7.90.86.E5.88.86.E6.9E.90"><span class="tocnumber">3</span> <span class="toctext">MySQL·　性能优化·thread pool 原理分析</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7.E5.B9.B6.E8.A1.8C.E5.A4.8D.E5.88.B6.E5.A4.96.E5.BB.BA.E7.BA.A6.E6.9D.9F.E9.97.AE.E9.A2.98"><span class="tocnumber">4</span> <span class="toctext">MySQL·　性能优化·并行复制外建约束问题</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#MySQL.C2.B7.E3.80.80.E7.AD.94.E7.96.91.E9.87.8A.E6.83.91.C2.B7binlog_event.E6.9C.89.E5.BA.8F.E6.80.A7"><span class="tocnumber">5</span> <span class="toctext">MySQL·　答疑释惑·binlog event有序性</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#MySQL.C2.B7.E3.80.80.E7.AD.94.E7.96.91.E9.87.8A.E6.83.91.C2.B7server_id.E4.B8.BA0.E7.9A.84Rotate"><span class="tocnumber">6</span> <span class="toctext">MySQL·　答疑释惑·server_id为0的Rotate</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="#MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7Bulk_Load_for_CREATE_INDEX"><span class="tocnumber">7</span> <span class="toctext">MySQL·　性能优化·Bulk Load for CREATE INDEX</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="#MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7Opened_tables_block_read_only"><span class="tocnumber">8</span> <span class="toctext">MySQL·　捉虫动态·Opened tables block read only</span></a></li>
+<li class="toclevel-1 tocsection-9"><a href="#MySQL.C2.B7.E3.80.80.E4.BC.98.E5.8C.96.E6.94.B9.E8.BF.9B.C2.B7_GTID.E5.90.AF.E5.8A.A8.E4.BC.98.E5.8C.96"><span class="tocnumber">9</span> <span class="toctext">MySQL·　优化改进· GTID启动优化</span></a></li>
+<li class="toclevel-1 tocsection-10"><a href="#TokuDB.C2.B7_Binary_Log_Group_Commit_with_TokuDB"><span class="tocnumber">10</span> <span class="toctext">TokuDB· Binary Log Group Commit with TokuDB</span></a></li>
+</ul>
+</td></tr></table><script>if (window.showTocToggle) { var tocShowText = "显示"; var tocHideText = "隐藏"; showTocToggle(); } </script>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B75.7_Innodb.E4.BA.8B.E5.8A.A1.E7.B3.BB.E7.BB.9F">MySQL·　性能优化·5.7 Innodb事务系统</span></h2>
+<p><b>背景知识</b>
+</p><p>为了便于理解下文，我们先简单梳理下Innodb中的事务、视图、多版本的相关背景知识。
+</p><p>在Innodb中，每次开启一个事务时，都会为该session分配一个事务对象。而为了对全局所有的事务进行控制和协调，有一个全局对象trx_sys，对trx_sys相关成员的操作需要trx_sys-&gt;mutex锁。
+</p><p><br />
+Innodb使用一种称做ReadView(视图)的对象来判断事务的可见性（也就是ACID中的隔离性）。根据可见性原则，某个新开启的事务不应该看到其他未提交的事务。 Innodb在执行一个SELECT或者显式开启START TRANSACTION WITH CONSISTENT SNAPSHOT (后者只应用于REPEATABLE-READ隔离级别) 会创建一个视图对象。对于RR隔离级别，视图的生命周期到事务提交结束，对于RC隔离级别，则每条查询开始时重分配事务。
+</p><p><br />
+通常一个视图中包含创建视图的事务ID，以及在创建视图时活跃的事务ID数组。例如，当开启一个视图时，当前事务的事务ID为5，   事务链表上活跃事务ID为{2,5,6,9,12}，那么就会把{2,6,9,12}存储到当前的视图中（5是当前事务的ID，不记录到视图中），{2,6,9,12}对应的事务所做的修改对当前事务而言都是不可见的，小于2的事务ID对当前事务都是可见的，大于12的事务ID对当前事务是不可见的。
+</p><p><br />
+那么如何判断可见性呢？ 对于聚集索引，每次修改记录时，都会在记录中保存当前的事务ID，同时旧版本记录存储在UNDO中；对于二级索引，则在二级索引页中存储了更新当前页的最大事务ID，如果该事务ID大于readview-&gt;up_limit_id（对于上例，up_limit_id值为2），那么就需要回聚集索引判断记录可见性；如果小于2， 那么总是可见的，可以直接读取。
+</p><p><br />
+Innodb的多版本数据使用UNDO来维护的，例如聚集索引记录(1) =&gt;(2)=&gt;(3)，从1更新成2，再更新成3，就会产生两条undo记录。当然这不是本文讨论的重点。后续在单独针对临时表的优化时会谈及undo相关的知识。
+</p><p><br />
+<b>Innodb事务系统优化</b>
+</p><p><br />
+在MySQL 5.7版本里，针对性的对事务系统做了比较深入的优化，主要解决了下面几个问题。
+</p><p><br />
+问题一：视图对象的创建需要trx_sys-&gt;mutex锁保护
+</p><p><br />
+trx_sys-&gt;mutex是事务系统最核心的全局锁对象，持有该锁进行的操作都不应该耗时过长。对于read view对象，完全可以将其缓存下来重复使用。这样就避免了持有锁分配视图内存。
+</p><p>因此在MySQL 5.7版本中，实例启动时就分配1024个视图对象；同时维护两个链表，一个是已使用的视图链表，一个是空闲的视图链表；当需要分配新的视图时，总是从空闲视图链表中分配，如果没有，再新分配一个。
+</p><p>在Percona Server中也做了类似的优化，但与5.7不同的是，其不集中管理所有的视图，而是每个事务对象(trx_t)上都挂载一个预分配的视图对象，在事务对象销毁时释放(事务对象本身对session而言也是重用的)。
+</p><p><br />
+问题二：视图对象中保存全局事务ID时，需要扫描事务链表
+</p><p><br />
+正如上面描述的，为了判断事务视图的可见性，在打开一个视图时需要拷贝当时活跃的事务ID。在5.5及之前版本需要遍历所有的活跃事务，而在5.6中，将事务链表拆分成了只读事务链表，和读写事务链表，这样我们只需要遍历读写事务链表，拷贝事务ID即可。
+</p><p>在5.7中，事务系统维持了一个全局事务ID数组，每个活跃读写事务的ID都被加入到其中，在事务提交时从其中删除，这样打开视图时只需要使用memcpy 拷贝该数组即可，无需遍历链表。在读写链表较长(高并发下)的场景，该优化可以显著的提升性能。不过就该优化点而言，Percona Serve同样走在了前面，相同的思路实现在Percona Server 5.6中。
+</p><p><br />
+问题三:  用户需要显式开启只读事务，才会放入只读事务链表
+</p><p><br />
+尽量在5.6中已经将事务链表拆分成了只读事务链表和读写事务链表（AUTOCOMMIT的SELECT不加入任何链表），但用户需要显式的指定事务以只读模式打开（START TRANSACTION READ ONLY）或者设置SESSION变量tx_read_only。
+</p><p>显然这种方式对用户而言是极不友好的，因此在5.7中做了比较彻底的改变，将只读事务链表从其中彻底移除了，取而代之的是，所有事务都以只读模式打开。
+</p><p>例如如下事务序列：
+</p><p>BEGIN;
+</p><p>SELECT;  //事务开始，不分配事务ID，不分配回滚段；
+</p><p>UPDATE; //分配事务ID并插入全局事务数组和事务对象集合中，分配回滚段；
+</p><p>COMMIT;
+</p><p><br />
+而对于BEGIN;SELECT;SELECT;COMMIT这样的序列，整个事务周期既不分配事务ID，也不分配回滚段。
+</p><p>那么问题来了，既然只读的事务不分配事务ID，那么如何标示事务呢，在5.7中，使用事务对象的地址来进行计算得到一个唯一的事务ID。执行’SHOW ENGINE INNODB STATUS’不再显示活跃的只读事务，只能通过INNODB_TRX表来查询。这是一个需要注意的点，因为很多人都是通过前者来找到长时间未提交的事务。
+</p><p>另外一个比较有意思的小优化是，对于AUTOCOMMIT的只读查询，关闭视图时，并不是立刻从视图链表中移除，而是设置一个简单的close标记；该session下次需要打开该read view时，如果这期间没有任何读写事务，就可以直接重用上次的read view，清楚close标记，这样打开、关闭视图都无需获取trx_sys-&gt;mutex。
+</p><p><br />
+问题四：隐式锁转换为显式锁的开销
+</p><p><br />
+Innodb对于类似INSERT操作，采用的是隐式锁的方式，隐式锁不是锁，只是一种称呼而已，只有在需要的时候，才会转换为显式锁。例如如下：
+</p><p>Session 1: BEING; INSERT INTO t1(pk, val) VALUES (1,2); //不创建锁对象
+</p><p>Session 2: UPDATE t1 SET val=val+1 WHERE pk=1; //创建两个锁对象，一个是为session1创建一个记录锁对象，另外一个是给自己创建一个等待类型的记录锁对象，然后session2加入锁等待队列。
+</p><p><br />
+在Session 2中为Session1创建锁对象的过程即是所谓的隐式锁向显式锁转换。 当session2扫描到session 1插入的记录时，发现session 1的事务依然活跃，就会进入转换逻辑。
+</p><p>在5.6版本中，其转换过程如下：
+</p><p>1.持有lock_sys-&gt;mutex
+</p><p>2.
+持有trx_sys-&gt;mutex；
+</p><p>根据事务ID，扫描读写事务链表，找到对应的事务对象；
+</p><p>释放trx_sys-&gt;mutex；
+</p><p>3.创建显式锁对象
+</p><p>4.释放lock_sys-&gt;mutex
+</p><p><br />
+可以看到，在该操作的过程中，全程持有lock_sys-&gt;mutex，持有锁的原因是防止事务提交掉。当读写事务链表非常长时（例如高并发写入时），这种开销将是不可接受的。
+</p><p>在5.7版本中，上述逻辑则优化成:
+</p><p>1.
+持有trx_sys-&gt;mutex
+</p><p>根据事务ID找到对应的事务对象（直接查找trx_sys-&gt;rw_trx_set，其保存了trx_id和事务对象的映射关系，因此无需扫描读写事务链表）
+</p><p>增加事务对象引用计数（++trx-&gt;n_ref）
+</p><p>释放trx_sys-&gt;mutex
+</p><p>2.
+持有lock_sys-&gt;mutex；
+</p><p>创建显式锁对象；
+</p><p>释放lock_sys-&gt;mutex；
+</p><p>3.递减事务对象引用计数
+</p><p>在事务commit，释放记录锁前，会先判断引用记录数是否为0，如果不为0，表示正有其他事务为其转换显式锁，这时候需要等待，直到计数为0，才能进入释放事务记录锁阶段。
+</p><p>总的来说，该优化减少了隐式锁转换时持有LOCK_sys-&gt;mutex的时间，从而提升性能。
+</p><p><br />
+除了上述提到的几点事务优化外，在5.7版本中还对事务系统部分的代码做了重构，完全用C++重写；引入了一个POOL结构，事务对象和锁对象都可以缓存复用。大家可以阅读几个相关的worklog，以更好的理解上述优化：
+</p><p><a href="http://dev.mysql.com/worklog/task/?id=6047" class="external free" rel="nofollow">http://dev.mysql.com/worklog/task/?id=6047</a>
+</p><p><a href="http://dev.mysql.com/worklog/task/?id=6578" class="external free" rel="nofollow">http://dev.mysql.com/worklog/task/?id=6578</a>
+</p><p><a href="http://dev.mysql.com/worklog/task/?id=6899" class="external free" rel="nofollow">http://dev.mysql.com/worklog/task/?id=6899</a>
+</p><p><a href="http://dev.mysql.com/worklog/task/?id=6906" class="external free" rel="nofollow">http://dev.mysql.com/worklog/task/?id=6906</a>
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E8.B8.A9.E8.BF.87.E7.9A.84.E5.9D.91.C2.B75.6_GTID_.E5.92.8C.E5.AD.98.E5.82.A8.E5.BC.95.E6.93.8E.E9.82.A3.E4.BC.9A.E4.BA.8B">MySQL·　踩过的坑·5.6 GTID 和存储引擎那会事 </span></h2>
+<p><b> 混用引擎的问题 </b>
+</p><p>在MySQL中，存储引擎是通过插件方式使用的，事务是由存储引擎自己实现，MySQL服务层是不管理事务的，所以在同一个事务中混用不同的存储引擎是不可靠的。
+如果混用事务引擎和非事务引擎的话，事务如果正常提交的话，5.5不会有问题，但是5.6版本如果开了 GTID 的话就会报错，因为GTID模式下不允许事务中同时更新事务引擎和非事务引擎（<a href="http://dev.mysql.com/doc/refman/5.6/en/replication-gtids-restrictions.html" class="external text" rel="nofollow">Restrictions on Replication with GTIDs</a>）；
+如果事务回滚的话，不管是 5.5 还是 5.6 都会有问题的，因为对非事务引擎表的操作是无法回滚的，这样就会造成数据不一致，因为只有部分操作成功，并且结果不可预知，事务的原子性和一致性被破坏。
+</p><p>我们下面举例子来说明，t1_i 是事务引擎表（InnoDB），ti_m 是非事务引擎（MyISAM）。
+</p><p>在事务执行前2张表里的数据如下：
+</p>
+<pre>mysql&gt; SELECT * FROM t1_i;
++------+------+
+| id   | name |
++------+------+
+|    1 | test |
+|    2 | test |
++------+------+
+2 rows in set (0.00 sec)
+
+mysql&gt; SELECT * FROM t1_m;
++------+------+
+| id   | name |
++------+------+
+|    1 | test |
+|    2 | test |
++------+------+
+2 rows in set (0.00 sec)
+</pre>
+<p>事务如下，对2张表分别插一条数据，然后 rollback 模拟出错回滚，
+</p>
+<pre>BEGIN;
+INSERT INTO t1_m VALUES (3, "test");
+INSERT INTO t1_i VALUES (3, "test");
+ROLLBACK;
+</pre>
+<p>执行回滚后，我们会看到 MySQL 返回信息中有 warnings;<br />
+Query OK, 0 rows affected, 1 warning 
+</p><p>查看 warning，可以清楚地看到提示，非事务引擎无法回滚：
+</p>
+<pre>SHOW WARNINGS;
++---------+------+---------------------------------------------------------------+
+| Level   | Code | Message                                                       |
++---------+------+---------------------------------------------------------------+
+| Warning | 1196 | Some non-transactional changed tables couldn't be rolled back |
++---------+------+---------------------------------------------------------------+
+</pre>
+<p>我们来看下现在2张表中的数据，可以看到 t1_m 的插入确实没有回滚，这与事务逻辑的预期是不一样的。
+</p>
+<pre>mysql&gt; SELECT * FROM t1_m;
++------+------+
+| id   | name |
++------+------+
+|    1 | test |
+|    2 | test |
+|    3 | test |
++------+------+
+
+mysql&gt; SELECT * FROM t1_I;
++------+------+
+| id   | name |
++------+------+
+|    1 | test |
+|    2 | test |
++------+------+
+</pre>
+<p>当我们在非事务引擎上执行事务相关的操作的时候，MySQL 一般是不会报错的，比如在非事务引擎的操作前后用 BEGIN 和 COMMIT, 这是完全可以的，并且让我们误以为操作是有事务性的，我们在使用的时候要注意这一点。
+</p><p>总的来说，要遵循这样的一条原则，不要在事务中混用不同的存储引擎。
+</p><p><b> 5.5 到 5.6 升级问题 </b>
+</p><p>5.5 升级到 5.6 的时候，我们会先建立一个5.6版本的实例，然后把数据从5.5迁移到5.6，最后把连接切到 5.6 完成升级。有时候升级会失败，这是因为5.6 GTID 的一些限制导致的。
+</p><p>其中有一条是关于临时表的限制，官方描述如下：
+</p>
+<blockquote>
+Temporary tables.  CREATE TEMPORARY TABLE and DROP TEMPORARY TABLE statements are not supported inside transactions when using GTIDs (that is, when the server was started with the --enforce-gtid-consistency option). It is possible to use these statements with GTIDs enabled, but only outside of any transaction, and only with autocommit=1.
+</blockquote>
+<p>限制表明不能在事务中创建临时表，可以在事务外创建，但要求 autocommit = 1。
+</p><p>我们新建5.6的实例的时候，会重用 5.5 的配置，autocommit 就是其中之一，并且这个是允许用户配置的，如果用户在5.5实例上把这个值改为0，然后升级到5.6，就会出错。我们知道，创建新实例的时候，会先通过 mysql_install_db 脚本初始化数据库，这包括系统表的创建、基本数据的添加等 ，其中会用到 mysql_system_tables_data.sql 这个sql脚本，里面有：
+</p>
+<blockquote>
+CREATE TEMPORARY TABLE tmp_db LIKE db; <br />
+CREATE TEMPORARY TABLE tmp_user LIKE user; <br />
+CREATE TEMPORARY TABLE tmp_proxies_priv LIKE proxies_priv; <br />
+</blockquote>
+<p>这样的语句，脚本执行失败，所以mysql.db 、mysql.user 和 mysql.proxies_priv表里的初始数据就没有添加进去。
+</p><p>error log 中会看到这样的信息
+</p>
+<blockquote>
+2014-12-08 20:48:15 9264 [Warning] Bootstrap mode disables GTIDs. Bootstrap mode should only be used by mysql_install_db which initializes the MySQL data directory and creates system tables.
+ERROR: 1787  When @@GLOBAL.ENFORCE_GTID_CONSISTENCY = 1, the statements CREATE TEMPORARY TABLE and DROP TEMPORARY TABLE can be executed in a non-transactional context only, and require that AUTOCOMMIT = 1.
+2014-12-08 20:48:16 9264 [ERROR] Aborting
+</blockquote>
+<p>我们这时如果正常启动mysqld的话，会发现默认root用户是登录不进去的，因为user表是空的，根本没有root用户，而匿名用户 <i>@localhost 又什么也做不了。</i>
+</p><p>我们用 --skip-grant-tables 启动数据库后，匿名用户登录进去，查看user表，会发现是空的。
+</p>
+<pre>mysql&gt; SELECT * FROM mysql.user;
+Empty set (0.00 sec)
+</pre>
+<p>因为新建的数据库不可用，所以最终导致迁移失败。
+</p><p>这个问题的根本原因是5.5的配置文件中 autocommit = 0 导致的，所以好的解决方法是我们在升级5.6前，把这个值设置为1，然后再升级。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7thread_pool_.E5.8E.9F.E7.90.86.E5.88.86.E6.9E.90">MySQL·　性能优化·thread pool 原理分析</span></h2>
+<p><b> 大连接问题</b>
+</p><p>现有mysql 处理客户端连接的方式会触发mysql 新建一个线程来处理新的连接，新建的线程会处理该连接所发送的所有 SQL 请求，即 one-thread-per-connection 的方式，其创建连接的堆栈为：
+</p>
+<pre> mysqld_main
+   handle_connections_sockets
+     create_new_thread
+       create_thread_to_handle_connection
+         handle_one_connection
+</pre>
+<p>线程建立后，处理请求的堆栈如下：
+</p>
+<ol><li>0 mysql_execute_command 
+</li><li>1 0x0000000000936f40 in mysql_parse
+</li><li>2 0x0000000000920664 in dispatch_command
+</li><li>3 0x000000000091e951 in do_command
+</li><li>4 0x00000000008c2cd4 in do_handle_one_connection 
+</li><li>5 0x00000000008c2442 in handle_one_connection 
+</li><li>6 0x0000003562e07851 in start_thread () from /lib64/libpthread.so.0
+</li><li>7 0x0000003562ae767d in clone () from /lib64/libc.so.6
+</li></ol>
+<p><b><b> 优点及存在的问题</b></b>
+</p><p>在连接数较小的情况下可以很快的响应客户端的请求，但当连接数非常大时会创建很多线程，这样会引起以下问题：
+</p><p>1. 过多线程之间的切换会加重系统的负载，造成系统资源紧张且响应不及时；
+</p><p>2. 频繁的进行线程的创建及销毁以及线程间同时无序的竟争系统资源加重了系统的负载。
+</p><p>thread_pool正是为了解决以上问题而产生的；
+</p><p><br />
+<b> 什么是thread_pool </b>
+</p><p>thread_pool(线程池)，是指mysql 创建若干工作线程来共同处理所有连接的用户请求，用户的请求的方式不再是 ‘one thread per connection’，而是多个线程共同接收并处理多个连接的请求，在数据库的底层处理方面(mysql_execute_command)，单线程的处理方式和线程池的处理方式是一致的。
+</p><p><br />
+<b> thread_pool 的工作原理 </b>
+</p><p>启动 thread_pool 的mysql 会创建thread_pool_size 个thread group , 一个timer thread, 每个thread group 最多拥有thread_pool_oversubscribe个活动线程，一个listener线程，listener线程负责监听分配到thread group中的连接，并将监听到的事件放入到一个queue中，worker线程从queue中取出连接的事件并执行具体的操作，执行的过程和one thread per connection 相同。timer threaad 则是为了监听各个threadgroup的运行情况，并根据是否阴塞来创建新的worker线程。
+</p><p>thread_pool 建立连接的堆栈如下：
+</p>
+<pre> mysqld_main
+   handle_connections_sockets
+     create_new_thread
+       tp_add_connection
+         queue_put
+</pre>
+<p>thread group中的 worker 处理请求的堆栈如下：
+</p>
+<ol><li>0 mysql_execute_command 
+</li><li>1 0x0000000000936f40 in mysql_parse 
+</li><li>2 0x0000000000920664 in dispatch_command 
+</li><li>3 0x000000000091e951 in do_command 
+</li><li>4 0x0000000000a78533 in threadpool_process_request 
+</li><li>5 0x000000000066a10b in handle_event 
+</li><li>6 0x000000000066a436 in worker_main
+</li><li>7 0x0000003562e07851 in start_thread () 
+</li><li>8 0x0000003562ae767d in clone () 
+</li></ol>
+<p>其中worker_main函数是woker线程的主函数，调用mysql本身的do_command 进行消息解析及处理，和one_thread_per_connection 是一样的逻辑；
+thread_pool 自行控制工作的线程个数，进而实现线程的管理。
+</p><p><br />
+thread_pool中线程的创建：
+</p><p>1. listener线程将监听事件放入mysql放入queue中时，如果发现当前thread group中的活跃线程数active_thread_count为零，则创建新的worker 线程；
+</p><p>2. 正在执行的线程阻塞时，如果发现当前thread group中的活跃线程数active_thread_count为零，则创建新的worker 线程；
+</p><p>3. timer线程在检测时发现没有listener线程且自上次检测以来没有新的请求时会创建新的worker线程，其中检测的时间受参数threadpool_stall_limit控制；
+</p><p>4. timer线程在检测时发现没有执行过新的请求且执行队列queue 不为空时会创建新的worker线程；
+</p><p><br />
+worker线程的伪码如下：
+</p>
+<pre> worker_main
+ {
+   while(connection)
+   {
+        connection= get_event();
+        /* get_event函数用于从该线程所属thread_Group中取得事件，然后交给Handle_event函数处理，在同一Group内部，只有thread_pool_oversubscribe个线程能同时工作，多余的线程会进入sleep状态  */
+        if(connection)
+          handle_event(connection);
+        /* 如果是没有登录过的请求，则进行授权检查，并将其Socket绑定到thread_group中的pollfd中，并设置Connection到event中的指针上；对于登录过的，直接处理请求 */
+   }
+   // 线程销毁
+ }
+</pre>
+<p><br />
+thread_pool中线程的销毁：
+</p><p>当从队列queue中取出的connection为空时，则此线程销毁，取connection所等待的时间受参数thread_pool_idle_timeout的控制；
+综上，thread_pool通过线程的创建及销毁来自动处理worker的线程个数，在负载较高时，创建的线程数目较高，负载较低时，会销毁多余的worker线程，从而降低连接个数带来的影响的同时，提升稳定性及性能。同时，threadpool中引入了Timer 线程，主要做两个事情。
+</p><p>1. 定期检查每个thread_group是否阻塞，如果阻塞，则进行唤醒或创建线程的工作；
+</p><p>2. 检查每个thread_group中的连接是否超时，如果超时则关掉连接并释放相应的资源；
+</p><p><br />
+threadpool在使用中存在的问题：
+</p><p>1. 由于threadpool严格控制活跃线程数的限制，如果同时有多个大查询同时分配到了同一个thread group，则会造成此group中的请求过慢，rt 升高，最典型的就是多个binlog dump 线程同时分配到了同一个group内；
+</p><p>2. 开启了事务模式时，非事务模式的请求会放入低优先级队列，因此可能在较长时间内得不到有效处理，极端情况下，会导致实例hang 住，例如某个连接执行了 flush tables with read lock ,并且此连接的后续请求都会放入低优先级，那么有可能会造成实列hang住；
+</p><p>3. 较小并发下，threadpool 性能退化的问题；
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7.E5.B9.B6.E8.A1.8C.E5.A4.8D.E5.88.B6.E5.A4.96.E5.BB.BA.E7.BA.A6.E6.9D.9F.E9.97.AE.E9.A2.98">MySQL·　性能优化·并行复制外建约束问题 </span></h2>
+<p><b> 背景： </b>
+</p><p>mysql 主备同步是通过binlog来进行的，备库的 IO 线程从主库拉取binlog，SQL线程将拉取的binlog应用到备库，在5.6之前，备库只有一个线程应用binlog，主库的更新量大，且备库的执行效率低时，就会造成了大量从主库拉取的binlog来不及执行，因此造成了主备延迟问题。为了解决主备延迟，需要提高备库的执行效率，阿里MySQL 设计并开发了并行复制功能，所谓并行复制，指的是应用binlog的线程数量是多个的，而不是原生的单个线程，经过测试可以极大的提高复制性能（有3X的性能提升），在并行复制中，一个 IO 线程，一个分发线程，多个sql_thread，分发线程读取relay log，并将读取的relay log 分发给多个sql_thread, 从而实现并行化的效果。
+</p><p><b> 原理：</b>
+</p><p>分发线程的分发原理是依据当前事务所操作的表的名称来进行分发的，如果事务是跨表的（一个事务更新多张表），则需要等待已分配的该表相关的事务全部执行完毕，才会继续分发，其分配行为的伪码可以简单的描述如下：
+</p>
+<pre>get_slave_worker
+ if (contains_partition_info(log_event))
+    table_name= get_db_name(log_event);
+    entry {table_name, worker_thread, usage} = map_table_to_worker(table_name);
+    while (entry-&gt;usage &gt; 0)
+       wait();
+   return worker;
+ else if (last_assigned_worker)
+   return last_assigned_worker;
+ else
+   push into buffer_array and deliver them until come across a event that have partition info
+</pre>
+<p><b> 问题描述（testcase）： </b>
+</p>
+<blockquote>
+drop table t2 if exists t2;<br />
+
+drop table t1 if exists t1;<br />
+
+create table t1(c1 int primary key, c2 int);<br />
+
+create table t2(c1 int primary key, c2 int , foreign  key (c2) references t1(c1));<br />
+
+insert into t1 values(1,1);<br />
+
+insert into t1 values(2,2);<br />
+
+insert into t2 values(1,1);<br />
+
+insert into t2 values(2,2);<br />
+</blockquote>
+<p>以下两个语句在备库的执行顺序不同，结果会不同
+</p><p>delete from t2 where c2=1; （语句1）
+</p><p>update t1 set c1=3 where c1=1;（语句2）
+</p><p>如果语句2先于语句1在备库执行，则会报外建约束错误，因为在上述的分发原理中没有考虑到外建约束问题，这种情况下，只有串行化处理了，当然，你可以执行：set global foreign_key_checks=off;然后start slave；在类似语句执行完后，再恢复foreign check，但是这样做真正安全吗？答案是不一定的……
+</p><p>情况1:
+</p><p>create table t1(c1 int primary key, c2 int);
+</p><p>create table t2(c1 int primary key, c2 int , foreign  key (c2) references t1(c1));
+</p><p>在这种定义下，如果不检测foreign key，则不会有问题，因为对t1, t2的操作都会记录binlog；
+</p><p>情况2:
+</p><p>create table t1(c1 int primary key, c2 int);
+</p><p>create table t2(c1 int primary key, c2 int , foreign  key (c2) references t1(c1) on delete cascade);
+</p><p>在这种定义下，如果不检测foreign key，则会有问题，因为对表t1的操作会影响t2表，在检测foreign key的时候，会进行相应的cascade操作，如果不检测foreign key,则不进行级联操作，这种问题一旦发生，则会引起主备不一致问题。
+</p><p><br />
+<b> 解决方法 </b>
+</p><p>5.6 并行复制没有此问题，5.6中在检测到foreign key的事件时，会等待已经分发的所有binlog都已执行完再执行，因此解决了此问题。
+</p><p><b> 改进方案 </b>
+这个方案虽然能解决问题，但是若系统中只要出现一个外键关系，并且持续有更新，会导致持续性的回退到单线程方案，那么多线程复制的效果就会大打折扣。实际上这个做法比较极端，改进的方案是，遇到有foreign key 的表，应该将其分发到依赖他的表的同一个sql thread 中。这样执行这些事务时，其他表的并行复制仍能继续。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E7.AD.94.E7.96.91.E9.87.8A.E6.83.91.C2.B7binlog_event.E6.9C.89.E5.BA.8F.E6.80.A7">MySQL·　答疑释惑·binlog event有序性 </span></h2>
+<p><b>背景</b>
+</p><p>　　对于解析MySQL的binlog用来更新其他数据存储的应用来说，binlog的顺序标识是很重要的。比如根据时间戳得到binlog位点作为解析起点。
+</p><p>　　但是binlog里面的事件，是否有稳定的有序性？
+</p><p>　　binlog中有三个看上去可能有序的信息：xid、timestamp、gno。本文分析这三个信息在binlog中的有序性。
+</p><p><br />  
+<b>Xid</b>
+</p><p>　　当binlog格式为row，且事务中更新的是事务引擎时，每个事务的结束位置都有Xid，Xid的类型为整型。
+</p><p>　　MySQL中每个语句都会被分配一个全局递增的query_id(重启会被重置)，每个事务的Xid来源于事务第一个语句的query_id。
+</p><p>　　考虑一个简单的操作顺序：
+</p><p>　　session 1: begin; select; update;
+</p><p>　　session 2: begin; select; update; insert; commit;
+</p><p>　　session 1: insert; commit;
+</p><p>　　显然Xid2 &gt; Xid1，但因为事务2会先于事务1记录写binlog，因此在这个binlog中，会出现Xid不是有序的情况。
+</p><p><br />
+<b>TIMESTAMP</b>
+</p><p>　　时间戳的有序性可能是被误用最多的。在mysqlbinlog这个工具的输出结果中，每个事务起始有会输出一个SET TIMESTAMP=n。这个值取自第一个更新事件的时间。上一节的例子中,timestamp2&gt;timestamp1,但因为事务2会先于事务1记录写binlog，因此在这个binlog中，会出现TIMESTAMP不是有序的情况。
+</p><p><br />
+<b>GNO</b>
+</p><p>　　对于打开了gtid_mode的实例，每个事务起始位置都会有一个gtid event，其内容输出格式为UUID:gn，gno是一个整型数。
+</p><p>　　由于NEXT_GTID是可以直接指定的，因此若故意构造，可以很容易得到不是递增的情况，这里只讨论automatic模式下的有序性。
+</p><p>　　与上述两种情况不同，gno生成于事务提交时写binlog的时候。注意这里不是生成binlog，而是将binlog写入磁盘的时候。因此实现上确保了同一个UUID下gno的有序性。
+</p><p><br />
+<b>小结</b>
+</p><p>　　一个binlog文件中的Xid和TIMESTAMP无法保证有序性。在无特殊操作的情况下，相同的UUID可以保证gno的有序性。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E7.AD.94.E7.96.91.E9.87.8A.E6.83.91.C2.B7server_id.E4.B8.BA0.E7.9A.84Rotate">MySQL·　答疑释惑·server_id为0的Rotate </span></h2>
+<p><b>背景</b>
+</p><p>　　在MySQL的M-S结构里面，event是binlog日志的基本单位。每个event来源于主库，每个Event都包含了serverid，用于表示该event是哪个实例生成的。
+</p><p>　　在5.6里面，细心的同学会发现，备库的relaylog中出现了server_id为0的event，其类型为Rotate Event。
+</p><p>　　这里说说server_id=0的Rotate Event。
+</p><p><br />
+<b>心跳event</b>
+</p><p>　　MySQL Cluster中从NDB 6.3开始就出现的HEADBEAT event(hb event), 在社区版直到5.6.2才提供。
+</p><p>　　hb event的目的是为了保持M-S之间的心跳。用法上是slave在change master的时候可以指定MASTER_HEARTBEAT_PERIOD。当此值为0时，主库发送完所有事件后这个主备通道就一直idle直到发送新的event；当此值为非0的n时，主库通道在idle超过n秒之后，发一个hb event。
+</p><p>　　心跳event的另外一个作用是主库将当前的最新位点通知给备库。hb event中包含主库当前binlog最新位置的文件名和位点。备库收到hb event后判断主库位点是否大于本地保存的位点，若是，则在relay log中记录一个server_id为0的Rotate事件， 这意味着主库上新增了不需要发送给自己的event。
+</p><p><br />
+<b>出现条件</b>
+</p><p>　　在传统的主备环境中，正常情况下心跳事件是不会被触发写入到备库的relaylog的。这是因为所有的主库binlog中的事件都会发给备库，所以备库收到的hb event中的位点总是不大于备库已经接收到的binlog event最大值（注意到hb event只在通道idle时才发）。
+</p><p>　　但是在5.6启用了GTID以后，就出现了这样的case。最常见的是每个binlog文件开头用于表示之前所有binlog执行过的事件合集的Previous-GTIDs，这个事件需要记录在binlog中，但是不需要发给slave。这就会让备库在接收到hb之后记录一个server_id=0的Rotate event。
+</p><p><br />
+<b>主库relaylog</b>
+</p><p>　　与此相关的，一个可能出现的现象是双M单写场景下，备库没有更新，但是主库会一直写relay log。
+</p><p>　　步骤如下：
+</p><p>　　1、主备之间完成MM关系(GTID_MODE=on)
+</p><p>　　2、主库和备库各自stop slave
+</p><p>　　3、主库执行大量更新
+</p><p>　　4、主库start slave
+</p><p>　　5、备库start slave
+</p><p>　　在备库同步日志过程中生成了本地的binlog，这些binlog需要再发回给主库。5.6的一个机制是，如果发现通道对面的接收方的executed_set已经包含了这个事件，则不发送。
+</p><p>　　由于这些事件本身就是主库发送过来的，因此备库都不需要发回。但是备库必须通知主库本地的binlog的最新位点，因此构造了一个hb event。
+</p><p>　　主库收到hb event后记录在relaylog中，形式就是server_id=0的Rotate事件。
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7Bulk_Load_for_CREATE_INDEX"> MySQL·　性能优化·Bulk Load for CREATE INDEX</span></h2>
+<p><b>背景</b>
+</p><p>MySQL5.6以后的版本提供了多种优化手段用于create index，比如online方式，Bulk Load方式。
+</p>
+<dl><dd>Online提供了非阻塞写入的方式创建索引，为运维提供了很大的便利。
+</dd><dd>Bulk Load提升了索引创建的效率,减少了阻塞的时间。
+</dd></dl>
+<p>这篇介绍下MySQL 5.7.5 Bulk Load的细节，并从查找，排序，redo，undo，page split等维度比较一下传统方式和Bulk Load方式。
+</p><p><br />
+<b>传统方式</b>
+</p><p>MySQL 5.7.5版本之前，create index使用的是和insert一条记录相同的api接口，即自上而下的插入方式。
+</p>
+<dl><dd>步骤1: 扫描clustered index，得到行记录。
+</dd><dd>步骤2: 根据record，按照B-Tree的结构，从root-&gt;branch-&gt;leaf page查找到属于record的位置。:
+</dd><dd>步骤3: 调用write index record接口，维护索引。
+</dd></dl>
+<p><br />
+</p>
+<dl><dd>1. 查找: 对每一条记录在插入前从B-Tree上查找到自己的位置。
+</dd><dd>2. 排序: 因为是按照B-Tree的结构，所以每一条记录插入都是有序的。
+</dd><dd>3. redo: 每条记录的插入都会记录innodb的redo做保护。
+</dd><dd>4. undo: 记录每个插入记录位置的undo
+</dd><dd>5. page split: 插入采用optimistic的方式，如果失败而发现page full，那么就split page，并向上更新branch page。
+</dd></dl>
+<p><br />
+从上面的步骤和几个维度的说明上，传统的create index比较简单，但一方面会阻塞写入，另一方面效率会比较低，延长了不可用时间。
+</p><p><br />
+<b>Bulk Load方式</b>
+</p><p>MySQL 5.7.5 版本，提供了Bulk Load方式创建索引，使用多路归并排序和批量写入的方法，是一种自下而上的方式。
+</p>
+<dl><dd>步骤1: 扫描clustered index，写入sort buffer，等sort buffer写满了后，写入到临时文件中。
+</dd><dd>步骤2: 对临时文件中的有序记录进行归并排序。
+</dd><dd>步骤3: 批量写入到索引结构中。
+</dd></dl>
+<p><br />
+批量写入: 因为记录都是有序的，所以写入的过程就是，不断的分配leaf page，然后批量写入记录，并保留innodb_fill_factor设置的空闲空间大小，所以，就是不断在最右边leaf page写入，并不断进行平衡B-Tree结构的过程。
+</p><p><br />
+</p>
+<dl><dd>1. 查找: Bulk Load方式并没有单条record查找的过程。
+</dd><dd>2. 排序: 使用多路归并排序，对待写入的records进行排序。
+</dd><dd>3. redo: Innodb并没有记录redo log，而是做checkpoint直接持久化数据。
+</dd><dd>4. undo: 记录了新分配的page。
+</dd><dd>5. page split: 因为每次都是初始化一个最右端的page，create index的时候不存在split。
+</dd></dl>
+<p><br />
+从上面的步骤和几个维度的说明上，Bulk Load方式能显著的利用机器的吞吐量，加快创建index的过程。
+</p><p><br />
+<b>问题及与Oracle的比较</b>
+</p><p>1. 临时空间使用
+</p>
+<dl><dd>MySQL使用临时目录来保存临时文件，对于文件的大小受限于目录空间大小，需要注意。RDS通过增加一个参数来控制临时空间的使用。
+</dd></dl>
+<dl><dd>Oracle使用临时表空间，如果排序空间不足，则会遇到常见的错误：ORA-01652: unable to extend temp segment by 128 in tablespace TEMP
+</dd></dl>
+<p>2. redo保护
+</p>
+<dl><dd>MySQL 的Bulk Load方式，没有使用redo保护，数据库从write-ahead logging方式退化成direct persist data，并且未来如果MySQL希望使用Innodb redo的方式进行复制，也变的困难。
+</dd></dl>
+<dl><dd>Oracle如果不指定no logging参数，索引创建过程中记录完整的redo信息。
+</dd></dl>
+<p>3. direct write
+</p>
+<dl><dd>MySQL Bulk Load方式，对于新的leaf page，在创建的过程中，唤醒page cleaner线程对这些page做checkpoint进行持久化。
+</dd><dd>Oracle提供一种用户的服务器进程直接direct write物理文件的方式，写入数据，而不依赖DBWR进程。
+</dd></dl>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7Opened_tables_block_read_only"> MySQL·　捉虫动态·Opened tables block read only</span></h2>
+<p><b>背景</b>
+</p><p>MySQL通过read_only参数来设置DB只读，这样MySQL实例就可以作为slave角色，只应用binlog，不接受用户修改数据。这样就可以保护master-slave结构中的数据一致性，防止双写风险。
+</p><p><br />
+<b>global read_only的实现方式</b>
+</p><p>MySQL5.5版本通过三个步骤来设置read_only：
+</p>
+<dl><dd>步骤1：获取global read lock，阻塞所有的写入请求
+</dd><dd>步骤2：flush opened table cache，阻塞所有的显示读写锁
+</dd><dd>步骤3：获取commit lock，阻塞commit写入binlog
+</dd><dd>步骤4：设置read_only=1
+</dd><dd>步骤5：释放global read lock和commit lock。
+</dd></dl>
+<p>MySQL 5.5的版本，通过这5步完成设置read only的功能。
+</p><p><br />
+<b>Bug描述</b>
+</p><p>比如如下场景：
+</p>
+<pre> session1：
+ lock table t read;
+ 
+ session2：
+ set global read_only=1;
+</pre>
+<p>先执行session1，然后session2会一直被session1阻塞。
+</p><p>原因是：session1的显示锁，虽然与步骤1中的global read lock相容，
+但session2因为session1一直持有读锁并保持t表opened而被阻塞。
+</p><p>但是，实际上，显示的读写锁产生的opened table并不影响read_only的功能，这里的flush tables也并非是必须的。
+</p><p>这也是我们的实际应用环境中，因主备切换而要在master实例上设置read_only的时候，经常被大查询所阻塞的原因。
+</p><p><br />
+<b>修复方法</b>
+</p><p>修复方法非常简单，只需要把步骤2删除即可，不影响read only的语义。
+</p><p>官方在MySQL 5.6.5中进行了修复：
+</p><p>If tables were locked by LOCK TABLES ... READ in another session, SET GLOBAL read_only = 1 failed to complete. (Bug #57612, Bug #11764747)
+</p><p><br />
+<b>RDS功能增强</b>
+</p><p>设置read_only阻塞用户写入，但只能阻塞普通用户的更新，RDS为了最大可能的保护数据一致性，增强了read_only功能，通过设置super read only，阻塞除了slave线程以为的所有用户的写入，包括super用户。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E4.BC.98.E5.8C.96.E6.94.B9.E8.BF.9B.C2.B7_GTID.E5.90.AF.E5.8A.A8.E4.BC.98.E5.8C.96">MySQL·　优化改进· GTID启动优化 </span></h2>
+<p><b> 背景 </b>
+</p><p>GTID 可以说是 MySQL 5.6 版本的一个杀手级特性，它给主备复制带来了极大的便利，RDS只读实例就是强依赖于这个特性。然而GTID在给我们带来便利的同时，也埋下了许多坑，最近几期内核月报中GTID的频繁出现也说明了这一点，对其我们可以说是既爱又恨。
+</p><p>GTID 并不是免费午餐，要使用它是要有代价的，为了保证GTID这个体系能够运转起来，需要做许多相关的工作，比如binlog里每个事务要多记 gtid_event 这种事件、写binlog的时候要生成 gtid、要维护几个GTID集合(logged, purged, owned)、THD类要多加GTID的成员变量等等，这些对性能和资源开销方面都有影响。
+</p><p>官方的最新代码中加入了一个关于GTID的优化，是在mysqld启动的时候，加快 gtid_set 初始化的速度，详见revno: <a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.6/revision/6110" class="external text" rel="nofollow">6110</a>。关于GITD集合，最重要的有2个，一个是 gtid_executed， 另一个是gtid_purged，很多数据库运维相关的操作都要和这2个集合打交道，前者对应当前实例已经执行过的事务集合，后者对应已经执行过，但是已经不在binlog中的事务集合。mysqld 正常运行时，这2个集合是在内存中持续更新的，可是重启的时候，需要初始化这2个集合，因为并没有专门的地方记录这2个集合，初始化是通过读取binlog进行的。
+</p><p><b> 优化分析 </b>
+</p><p>mysqld 是通过对 binlog.index 中记录的 binlog 文件做2次遍历来实现初始化的，第一次是从后向前，即从最新的binlog开始，到最老的binlog，对每个binlog从头到尾读一遍，初始化 gtid_executed 集合；第二次是从前往后，同样对每个binlog从头到尾读一遍，用来初始化gtid_purged 集合。每一遍的最好情况都是只读一个binlog文件，对gtid_executed 集合来说，只需要最新的binlog就行了，因为每个binlog开始会记录 previous_gitd_set，这个集合加上当前binlog内部记录的 gtid_event，就是所有已经执行的，也即 gtid_executed； 对gitd_purged来说，理想情况更简单，只需要读最老binlog文件的头部的previous_gtid event即可，文件里面的 gtid_event 根本不需要。
+</p><p><br />
+最坏情况是什么呢，就是一堆binlog文件里，只有其中一个文件里有gtid，其它都没有，这样的话，对于2遍扫描，都需要扫到这个binlog，才能确定这2个集合。
+</p><p><br />
+比如 a b c D e f 这几个，每个对应一个binlog文件，其中只有D含有gtid，其它的都没有，这样的话，每一遍的扫描都要读到文件D才能确定。
+</p><p><br />
+官方的优化是，不管什么情况下，每一遍的扫描，最多只读一个文件，不会再多读，如果最新和最老的文件都没有gtid，就把gtid_executed和gtid_purged设为空。
+</p><p><br />
+<b> 优化场景 </b>
+</p><p>下面我们来看下，这个优化有没有用 。<br />
+我们还是用 a b c d e f 这几个表示binlog文件，小写表示文件没有包含gtid，大写表示有。
+</p>
+<ol><li> 开始没有开gtid，后来开了：a, b, c, d, e, F 这样的模式，gtid_executed  只读 F，gtid_purged 只读a, 前者是F全集，后者是空的，如果没有这个优化的话，gtid_executed 也是读一个文件，gtid_purged 要从a读到F，最终还是空的，优化是有效果的
+</li><li> 开始有，后来没有：A, b, c, d, e, f，这种情况下 gtid_executed 集合被初始化成空集，gtid_purged 也是空集，初始化结果是错的
+</li><li> 开始没有，中间有最后也没有：a, b, c, D, e, f  这种情况，2个集合都被初始化成空的，结果也是错的
+</li><li> 一直有：A，B，C，D，E，F，这种本来就是最好情况，本来每次遍历就只读一个文件的，加不加这个优化都一样
+</li></ol>
+<p>其它情况可以自己推算下
+</p><p>总的来说这个优化是比较鸡肋的，有的情况下还会算错，官方的优化 patch 带了个开关控制，默认是关的，这个只是对个别场景比较适合，比如上面的场景1。
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="TokuDB.C2.B7_Binary_Log_Group_Commit_with_TokuDB"> TokuDB· Binary Log Group Commit with TokuDB</span></h2>
+<p>MySQL在开启Binary Log的情况下，使用2PC(图1)来保证事务(XA)完整性的，每次提交事务需要做:
+</p>
+<pre> 1) prepare phase:
+     记录prepare信息到引擎层的Redo Log，fsync到磁盘
+ 2) commit phase:
+     A) 记录commit信息到MySQL Server层的Binary Log，fsync到磁盘
+     B) 记录commit信息到引擎层的Redo Log，fsync到磁盘
+</pre>
+<p>每个事务在提交的时候都要做3次fsync以确保日志真正的落盘，这样在log里，一个事务就会有3种状态:
+</p>
+<pre> 状态1: Redo Log里存在，Binary Log里也存在      --正常情况，crash恢复时需要commit
+ 状态2: Redo Log里存在，Binary Log里不存在      --prepare完毕后发生crash，恢复时需要rollback
+ 状态3: Redo Log里不存在，Binary Log里也不存在   --提交失败，无需处理
+</pre>
+<p><a href="/index.php?title=%E6%96%87%E4%BB%B6:2pc.png" class="image"><img alt="2pc.png" src="/images/6/67/2pc.png" width="660" height="405" /></a>
+</p><p>这样，无论处于任何一个状态，事务的完整性都不会被破坏，但是每次提交会产生3次fsync，性能非常低。<br />
+为了提升性能，MySQL 5.6增加了group commit功能，当多个事务并发提交时，让多个都在等待fsync的事务合并做一次fsync，大大提升了吞吐量。<br />  
+但是这个优化还需要引擎层的配合，引擎层需要＂一切行动听指挥＂，不要＂任性＂的做fsync，需要对当前THD做HA_IGNORE_DURABILITY判断，代码如下:
+</p>
+<pre> static bool tokudb_fsync_on_commit(THD *thd) {
+ #if MYSQL_VERSION_ID &gt;= 50600
+     if (thd_get_durability_property(thd) == HA_IGNORE_DURABILITY)
+         return false;
+     else
+ #endif
+         return THDVAR(thd, commit_sync)&nbsp;!= 0;
+ }
+</pre>
+<p>TokuDB 7.5.4版本即将包含这个特性，官方透露，600 tokudb commits/sec只产生120个tokudb fsyncs。
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 51/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key tmysqlwikidb-tmysql:pcache:idhash:130-0!1!0!!zh-cn!2!edit=0 and timestamp 20170515031849 -->
+<div class="printfooter">
+取自“<a href="http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12">http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12</a>”</div>
+		<div id='catlinks' class='catlinks catlinks-allhidden'></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>查看</h5>
+		<div class="pBody">
+			<ul>
+				 <li id="ca-nstab-main" class="selected"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12" title="查看页面内容 [c]" accesskey="c">页面</a></li>
+				 <li id="ca-talk" class="new"><a href="/index.php?title=%E8%AE%A8%E8%AE%BA:MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12&amp;action=edit&amp;redlink=1" title="关于页面正文的讨论 [t]" accesskey="t">讨论</a></li>
+				 <li id="ca-viewsource"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12&amp;action=edit" title="此页面已被保护，你可以查看其源代码。 [e]" accesskey="e">查看源代码</a></li>
+				 <li id="ca-history"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12&amp;action=history" title="此页面的早前修订版本 [h]" accesskey="h">历史</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>个人工具</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95&amp;returnto=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12" title="我们鼓励您登录，但这并不是必须的 [o]" accesskey="o">登录</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(/skins/common/images/wiki.png);" href="/index.php?title=%E9%A6%96%E9%A1%B5" title="访问首页"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+	<div class='generated-sidebar portlet' id='p-navigation'>
+		<h5>导航</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage-description"><a href="/index.php?title=%E9%A6%96%E9%A1%B5" title="访问首页 [z]" accesskey="z">首页</a></li>
+				<li id="n-portal"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E7%A4%BE%E5%8C%BA" title="关于本计划，您可以做什么，应该如何做">社区入口</a></li>
+				<li id="n-currentevents"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%BD%93%E5%89%8D%E4%BA%8B%E4%BB%B6" title="查找当前事件的背景信息">当前事件</a></li>
+				<li id="n-recentchanges"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9" title="列出该网站的最近修改 [r]" accesskey="r">最近更改</a></li>
+				<li id="n-randompage"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2" title="随机载入一个页面 [x]" accesskey="x">随机页面</a></li>
+				<li id="n-help"><a href="/index.php?title=%E5%B8%AE%E5%8A%A9:%E7%9B%AE%E5%BD%95" title="寻求帮助">帮助</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="p-search" class="portlet">
+		<h5><label for="searchInput">搜索</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/index.php" id="searchform">
+				<input type='hidden' name="title" value="特殊:搜索"/>
+				<input id="searchInput" title="搜索该网站" accesskey="f" type="search" name="search" />
+				<input type='submit' name="go" class="searchButton" id="searchGoButton"	value="进入" title="如果相同的标题存在的话便直接前往该页面" />&nbsp;
+				<input type='submit' name="fulltext" class="searchButton" id="mw-searchButton" value="搜索" title="搜索该文字的页面" />
+			</form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>工具箱</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%93%BE%E5%85%A5%E9%A1%B5%E9%9D%A2/MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12" title="列出所有与此页相链的页面 [j]" accesskey="j">链入页面</a></li>
+				<li id="t-recentchangeslinked"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%93%BE%E5%87%BA%E6%9B%B4%E6%94%B9/MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12" title="从此页链出的所有页面的更改 [k]" accesskey="k">链出更改</a></li>
+<li id="t-specialpages"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E7%89%B9%E6%AE%8A%E9%A1%B5%E9%9D%A2" title="所有特殊页面列表 [q]" accesskey="q">特殊页面</a></li>
+				<li id="t-print"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12&amp;printable=yes" rel="alternate" title="这个页面的可打印版本 [p]" accesskey="p">可打印版</a></li>				<li id="t-permalink"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12&amp;oldid=1064" title="这个页面修订版本的永久链接">永久链接</a></li>			</ul>
+		</div>
+	</div>
+</div><!-- end of the left (by default at least) column -->
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="/skins/common/images/poweredby_mediawiki_88x31.png" height="31" width="88" alt="Powered by MediaWiki" /></a></div>
+	<div id="f-copyrightico"><a href="http://www.gnu.org/copyleft/fdl.html"><img src="/skins/common/images/gnu-fdl.png" alt="GNU Free Documentation License 1.3" width="88" height="31" /></a></div>
+	<ul id="f-list">
+		<li id="lastmod"> 此页面最后修订于2014年12月18日 (星期四) 08:24。</li>
+		<li id="viewcount">此页面已被浏览过6,936次。</li>
+		<li id="copyright">本站全部文字内容使用<a href="http://www.gnu.org/copyleft/fdl.html" class="external ">GNU Free Documentation License 1.3</a>授权。</li>
+		<li id="privacy"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96" title="淘宝数据库研发组:隐私政策">隐私政策</a></li>
+		<li id="about"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%85%B3%E4%BA%8E" title="淘宝数据库研发组:关于">关于淘宝数据库研发组</a></li>
+		<li id="disclaimer"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%85%8D%E8%B4%A3%E5%A3%B0%E6%98%8E" title="淘宝数据库研发组:免责声明">免责声明</a></li>
+	</ul>
+</div>
+</div>
+
+<script>if (window.runOnloadHook) runOnloadHook();</script>
+<!-- Served in 0.052 secs. --></body></html>

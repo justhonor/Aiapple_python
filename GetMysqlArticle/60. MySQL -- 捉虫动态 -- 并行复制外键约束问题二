@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · 捉虫动态 · 并行复制外键约束问题二</title>
+  <meta name="description" content="背景">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2016/04/04/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2016/04">
+    <h1>数据库内核月报 － 2016 / 04</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2016/04/03/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2016/04/05/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/01/" target="_blank">
+                
+                MySQL · 参数故事 · innodb_additional_mem_pool_size
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/02/" target="_blank">
+                
+                GPDB · 特性分析 · Segment事务一致性与异常处理
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/03/" target="_blank">
+                
+                GPDB · 特性分析 · Segment 修复指南
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2016/04/04/" target="_blank">
+                
+                MySQL · 捉虫动态 · 并行复制外键约束问题二
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/05/" target="_blank">
+                
+                PgSQL · 性能优化 · 如何潇洒的处理每天上百TB的数据增量
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/06/" target="_blank">
+                
+                Memcached · 最佳实践 · 热点 Key 问题解决方案
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/07/" target="_blank">
+                
+                MongoDB · 最佳实践 · 短连接Auth性能优化
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/08/" target="_blank">
+                
+                MySQL · 最佳实践 · RDS 只读实例延迟分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/09/" target="_blank">
+                
+                MySQL · TokuDB · TokuDB索引结构--Fractal Tree
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/10/" target="_blank">
+                
+                MySQL · TokuDB · Savepoint漫谈
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · 捉虫动态 · 并行复制外键约束问题二
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <h2>背景</h2>
+
+<p>并行复制可以大大提高备库的 binlog 应用速度，内核月报也多次对并行复制特性进行介绍，感兴趣的朋友可以回顾下：<a href="http://mysql.taobao.org/monthly/2015/08/09/">5.6 并行复制实现分析</a>、<a href="http://mysql.taobao.org/monthly/2015/09/07/">5.6 并行复制恢复实现</a> 和 <a href="http://mysql.taobao.org/monthly/2015/09/09/">5.6并行复制事件分发机制</a>。</p>
+
+<p>在早期的内核月报，有一篇 <a href="http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12#MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7.E5.B9.B6.E8.A1.8C.E5.A4.8D.E5.88.B6.E5.A4.96.E5.BB.BA.E7.BA.A6.E6.9D.9F.E9.97.AE.E9.A2.98">并行复制外建约束问题</a>，介绍阿里在 5.5 版本中自己实现并行复制时遇到的外键约束问题，本文接着前作继续介绍并行复制外键约束问题，这次场景不一样，并且目前官方 5.6 最新版本（5.6.30）中也有这个问题。</p>
+
+<h2>问题描述</h2>
+
+<p>一般情况的复制是 A-&gt;B 这样一主一备，本文要描述的场景是 A-&gt;B-&gt;C 这样一主两备，并且备库级联，其中备库 C 开启了并行复制，B 可以串行也可以并行，binlog_fomat 都是 row。</p>
+
+<p>在主库A上执行如下语句：</p>
+
+<pre><code>CREATE DATABASE db1;
+CREATE DATABASE db2;
+USE db1;
+CREATE TABLE `parent` (
+`id` int(11) NOT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+USE db2;
+CREATE TABLE `child` (
+`id` int(11) DEFAULT NULL,
+`parent_id` int(11) DEFAULT NULL,
+KEY `par_ind` (`parent_id`),
+CONSTRAINT `child_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `db1`.`parent` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+INSERT INTO db1.parent VALUES(1);
+INSERT INTO db2.child VALUES(1, 1);
+</code></pre>
+
+<p>备库 C 上会报错如下，非常明显的一个外键约束的错误：</p>
+
+<pre><code>Last_SQL_Errno: 1452
+Last_SQL_Error: Worker 7 failed executing transaction '' at master log mysqld-bin.000001, end_log_pos 1008; Could not execute Write_rows event on table db2.child; Cannot add or update a child row: a foreign key constraint fails (`db2`.`child`, CONSTRAINT `child_ibfk_1` FOREIGN KEY (`parent_id`) REFERENCES `db1`.`parent` (`id`) ON DELETE CASCADE), Error_code: 1452; handler error HA_ERR_NO_REFERENCED_ROW; the event's master log mysqld-bin.000001, end_log_pos 1008
+</code></pre>
+
+<h2>问题分析</h2>
+
+<p>如前文<a href="http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.12#MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7.E5.B9.B6.E8.A1.8C.E5.A4.8D.E5.88.B6.E5.A4.96.E5.BB.BA.E7.BA.A6.E6.9D.9F.E9.97.AE.E9.A2.98">并行复制外建约束问题</a> 所述，5.6 并行复制已经解了外键问题，遇到被外键约束的表，会先切为串行，当前事务执行完成后，再开始并行，为什么还会出问题呢？分析这个问题前，我们先来看下，5.6 是怎么解决外键约束问题的。</p>
+
+<p>5.6 并行复制是基于db进行分发的，不同的db分发到不同的 worker 线程，对 row 格式的 binlog，分发信息是体现在 table_map event 中的。5.6 对 table_map 中加了一个专门的 flag <code>TM_REFERRED_FK_DB_F</code>，表示当前表被外键约束（具体参考commit <a href="https://github.com/mysql/mysql-server/commit/299ccba1e145c29ed3c242c152ced4cc345328b7">299ccba1e145c29ed3c242c152ced4cc345328b7</a>），这样备库分发线程（Coordinator）在遇到有这种标志的 table_map，就切换为串行，具体逻辑参考<code>Log_event::get_slave_worker()</code> 和<code>apply_event_and_update_pos()</code>。</p>
+
+<p>这个机制是没问题的，如果 flag 能从 A 传到 B 再传到 C，就不会出现这个问题，现在问题的出现是因为备库 B 执行完父表（parent）的更新后，写 binlog 时 flag 没写进去，导致 C 在并行模式下执行 parent 表更新时，没有切换到串行模式，和 child 表的更新同时在跑，如果执行 child 表更新的 worker 先做，那么就会出现外键约束报错。</p>
+
+<h2>问题解决</h2>
+
+<p><code>TM_REFERRED_FK_DB_F</code> 这个 flag 是在 <code>Table_map_log_event::Table_map_log_event()</code> 构造函数中设置的，逻辑如下：</p>
+
+<pre><code>/*
+Marking event to require sequential execution in MTS
+if the query might have updated FK-referenced db.
+Unlike Query_log_event where this fact is encoded through
+the accessed db list in the Table_map case m_flags is exploited.
+*/
+uchar dbs= thd-&gt;get_binlog_accessed_db_names() ?
+thd-&gt;get_binlog_accessed_db_names()-&gt;elements : 0;
+if (dbs == 1)
+{
+  char *db_name= thd-&gt;get_binlog_accessed_db_names()-&gt;head();
+  if (!strcmp(db_name, ""))
+  m_flags |= TM_REFERRED_FK_DB_F;
+}
+</code></pre>
+
+<p>如果当前访问到的 db 个数为1，并且 db 是空字符串 <code>""</code> 的话，就设置这个 flag。<code>binlog_accessed_db_names</code> 中只有 <code>""</code> 这一个元素是一个特殊构造的场景，正常情况下db不会是 <code>""</code>的，构造这样 db 的逻辑在 <code>THD::decide_logging_format</code>，如下:</p>
+
+<pre><code>if (is_write &amp;&amp;
+    lex-&gt;sql_command != SQLCOM_END /* rows-event applying by slave */)
+{
+  /*
+    Master side of DML in the STMT format events parallelization.
+    All involving table db:s are stored in a abc-ordered name list.
+    In case the number of databases exceeds MAX_DBS_IN_EVENT_MTS maximum
+    the list gathering breaks since it won't be sent to the slave.
+  */
+  for (TABLE_LIST *table= tables; table; table= table-&gt;next_global)
+  {
+    if (table-&gt;placeholder())
+      continue;
+
+    DBUG_ASSERT(table-&gt;table);
+
+    if (table-&gt;table-&gt;file-&gt;referenced_by_foreign_key())
+    {
+      /*
+         FK-referenced dbs can't be gathered currently. The following
+         event will be marked for sequential execution on slave.
+      */
+      binlog_accessed_db_names= NULL;
+      add_to_binlog_accessed_dbs("");
+      break;
+    }
+    if (!is_current_stmt_binlog_format_row())
+      add_to_binlog_accessed_dbs(table-&gt;db);
+  }
+}
+</code></pre>
+
+<p>可以看到，如果有当前表被外键约束的话（<code>table-&gt;table-&gt;file-&gt;referenced_by_foreign_key()</code>）,会清掉<code>binlog_accessed_db_names</code>，只放一个空字符串进去。</p>
+
+<p>但是 SQL 线程在应用 row_event 时，不会走到上面的逻辑，因为 <code>lex-&gt;sql_command</code> 的值为 <code>SQLCOM_END</code>，所以备库 B 生成的 parent 表的 table_map 就不包含这个 flag。</p>
+
+<p>修复也比较简单，把 <code>lex-&gt;sql_command != SQLCOM_END</code> 这个条件去掉即可，或者参考官方 <a href="http://bugs.mysql.com/bug.php?id=80474">bug</a> 这里提供的修复方法，也是可以的。</p>
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>

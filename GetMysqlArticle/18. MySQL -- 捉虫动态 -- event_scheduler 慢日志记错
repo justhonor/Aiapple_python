@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · 捉虫动态 · event_scheduler 慢日志记错</title>
+  <meta name="description" content="问题背景">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2017/01/05/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2017/01">
+    <h1>数据库内核月报 － 2017 / 01</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2017/01/04/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2017/01/06/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/01/01/" target="_blank">
+                
+                MySQL · 引擎特性 · InnoDB 同步机制
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/01/02/" target="_blank">
+                
+                MySQL · myrocks · myrocks index condition pushdown
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/01/03/" target="_blank">
+                
+                PgSQL · 案例分享 · PostgreSQL+HybridDB解决企业TP+AP混合需求
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/01/04/" target="_blank">
+                
+                MongoDB · 特性分析 · 网络性能优化
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2017/01/05/" target="_blank">
+                
+                MySQL · 捉虫动态 · event_scheduler 慢日志记错
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/01/06/" target="_blank">
+                
+                PgSQL · 引擎介绍 · 向量化执行引擎简介
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/01/07/" target="_blank">
+                
+                SQL Server · 特性分析 ·  2012列存储索引技术
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/01/08/" target="_blank">
+                
+                PgSQL · 乱入拜年 · 小鸡吉吉和小象Pi吉(PostgreSQL)的鸡年传奇
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/01/09/" target="_blank">
+                
+                MySQL · 特性分析 · 5.7 error log 时区和系统时区不同
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/01/10/" target="_blank">
+                
+                TokuDB · 源码分析 · 一条query语句的执行过程
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · 捉虫动态 · event_scheduler 慢日志记错
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <h2>问题背景</h2>
+
+<p>最近遇到了 event_scheduler 在记录慢日志时的一个 bug，在这里分享给大家。</p>
+
+<p>为了方便描述问题，先构造一个简单的 event，如下：</p>
+
+<pre><code>delimiter //
+create event event1 on schedule every 5 second starts now() ends date_add(now(), interval 1 hour)
+do begin
+select sleep(1);
+select * from t1;
+select sleep(2);
+end //
+delimiter ;
+</code></pre>
+<p>其中的 t1 表中，有 2 条记录。</p>
+
+<p>同时打开 event_scheduer 和 slow_log，并把慢日志的时间设置为 1s。</p>
+
+<pre><code>set global event_scheduler = on;
+set global slow_query_log = on;
+set global long_query_time = 1;
+set global log_output = 'TABLE';
+</code></pre>
+
+<p>待 event 执行段时间后，查询 slow_log 会看到如下的结果：</p>
+
+<pre><code>+---------------------+------------+------------+-----------+-----------+---------------+------+----------------+-----------+-----------+------------------+-----------+
+| start_time          | user_host  | query_time | lock_time | rows_sent | rows_examined | db   | last_insert_id | insert_id | server_id | sql_text         | thread_id |
++---------------------+------------+------------+-----------+-----------+---------------+------+----------------+-----------+-----------+------------------+-----------+
+| 2017-01-14 16:15:33 | root[root] | 00:00:01   | 00:00:00  |         1 |             0 | test |              0 |         0 |         1 | select sleep(1)  |         4 |
+| 2017-01-14 16:15:33 | root[root] | 00:00:01   | 00:00:01  |         3 |             2 | test |              0 |         0 |         1 | select * from t1 |         4 |
+| 2017-01-14 16:15:35 | root[root] | 00:00:03   | 00:00:01  |         4 |             0 | test |              0 |         0 |         1 | select sleep(2)  |         4 |
+| 2017-01-14 16:15:38 | root[root] | 00:00:01   | 00:00:00  |         1 |             0 | test |              0 |         0 |         1 | select sleep(1)  |         5 |
+| 2017-01-14 16:15:38 | root[root] | 00:00:01   | 00:00:01  |         3 |             2 | test |              0 |         0 |         1 | select * from t1 |         5 |
+| 2017-01-14 16:15:40 | root[root] | 00:00:03   | 00:00:01  |         4 |             0 | test |              0 |         0 |         1 | select sleep(2)  |         5 |
++---------------------+------------+------------+-----------+-----------+---------------+------+----------------+-----------+-----------+------------------+-----------+
+</code></pre>
+
+<p>可以看到，slow_log 中的 <code>select * from t1</code> 和 <code>select sleep(2)</code> 相关记录是有问题的：</p>
+
+<ol>
+  <li><code>select * from t1</code> 不应该被记为慢日志，同时其中的 lock_time(应该为0) 和 rows_sent(应该为2) 都是错的；</li>
+  <li><code>select sleep(2)</code> 的 query_time(应该为2)，lock_time(应该为0)，和 rows_sent(应该为1) 也都是错的。</li>
+</ol>
+
+<p>rows_sent 记错比较好确认，query_time 和 lock_time 记错我们可以从 start_time 和 thread_id 对照确认，另外<code>select sleep(2)</code> 是没有拿锁的，不应该有等锁的时间。</p>
+
+<h2>问题分析</h2>
+
+<p>为了搞清楚这个问题，我们需要了解 slow_log 是怎么记的。</p>
+
+<p>slow_log 是在语句执行完后记录的，因为加锁时间和返回记录数这些信息，在执行之后才知道，general_log 记录是在语句解析完执行前。</p>
+
+<p>slow_log 是否记录判读的逻辑在 <code>log_slow_applicable()</code> 中：</p>
+
+<p>a) 是否没有用到索引，并且 <code>log_queries_not_using_indexes</code> 打开（这种情况下还可能触发 throttle 导致不记录）<br />
+b) 被标记为慢 SQL(<code>thd-&gt;server_status &amp; SERVER_QUERY_WAS_SLOW</code>)</p>
+
+<p>我们这里只关心 b) 这种 case。</p>
+
+<p>在 SQL 执行结束时，会先调用 <code>update_server_status()</code> 来判断是否是慢 SQL，逻辑如下：</p>
+
+<pre><code>void update_server_status()
+{
+  ulonglong end_utime_of_query= current_utime();
+  if (end_utime_of_query &gt; utime_after_lock + variables.long_query_time)
+    server_status|= SERVER_QUERY_WAS_SLOW;
+}
+</code></pre>
+
+<p>utime_after_lock 表示的是拿到锁的时间点，server 层通过 <code>THD::set_time_after_lock()</code> 设置，引擎层(目前只有 InnoDB 支持)如果有锁请求等待时间的话，会累加到这个变量上，通过 <code>thd_storage_lock_wait()</code> 函数。</p>
+
+<blockquote>
+  <p>因此一个 SQL 因为等锁而导致执行时间长的话，是不会记入慢 SQL 的。</p>
+</blockquote>
+
+<p><code>select * from t1</code> 语句执行结束，调用 <code>update_server_status()</code> 时，根据执行时间判断是不满足慢 SQL 的，但是因为 event 在执行前 server_status 没有重置，后面调用 <code>log_slow_applicable()</code> 时，<code>SERVER_QUERY_WAS_SLOW</code> 这个标志位还在，因此最终记到 slow_log 里了。</p>
+
+<p>因此一个 event 在执行中，其中只要有一个语句是慢 SQL，那么后面所有的都会被记成慢SQL。</p>
+
+<p>而其中时间记错的原因也是这样，每次执行语句前，start_utime 没有重置，而 <code>utime_after_lock</code> 会在执行 <code>select * from t1</code> 时拿锁被更新。</p>
+
+<p>query_time 和 lock_time 的计算逻辑如下(<code>LOGGER::slow_log_print()</code>)：</p>
+
+<pre><code> if (thd-&gt;start_utime)
+ {
+   query_utime= (current_utime - thd-&gt;start_utime);
+   lock_utime=  (thd-&gt;utime_after_lock - thd-&gt;start_utime);
+ }
+</code></pre>
+
+<p>因此 event 中语句的 query_time 一直是增加的，lock_time 也不是 0。</p>
+
+<blockquote>
+  <p>需要注意的是，start_time 记录的并不是语句开始执行的时间，而是记入 slow_log 时的时间。</p>
+</blockquote>
+
+<p>rows_sent 也是因为没有重置，一直都是累加的，而 rows_examined 会在 <code>JOIN::exec()</code> 中被重置，因此记的是对的。</p>
+
+<h2>问题影响和解决</h2>
+
+<p>出现这种问题的前提是:</p>
+
+<ol>
+  <li>用了 MySQL 的 event_scheduler，并且 event 有多个 SQL 语句；</li>
+  <li>其中有一个 SQL 是慢SQL。</li>
+</ol>
+
+<p>这个 bug 目前最新的 5.6.35/5.7.17 都受影响，官方已经确认，详见 <a href="http://bugs.mysql.com/bug.php?id=84450">bug#84450</a>。</p>
+
+<p>知道原因后，fix 也就比较简单了，在 event 中每个 SQL 语句执行前，把 server_status, start_utime, m_sent_rows_count 重置掉就好了。</p>
+
+<p>正常的用户 SQL 的执行逻辑就是这么干的，在 <code>mysql_parse()</code> 里会调用 <code>THD::reset_for_next_command()</code>，但是 event 执行过程中并没有调用这个函数。</p>
+
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>

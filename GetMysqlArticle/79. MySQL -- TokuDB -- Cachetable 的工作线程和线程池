@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · TokuDB · Cachetable 的工作线程和线程池</title>
+  <meta name="description" content="介绍">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2016/01/06/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2016/01">
+    <h1>数据库内核月报 － 2016 / 01</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2016/01/05/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2016/01/07/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/01/01/" target="_blank">
+                
+                MySQL · 引擎特性 · InnoDB 事务锁系统简介
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/01/02/" target="_blank">
+                
+                GPDB &nbsp; · 特性分析· GreenPlum Primary/Mirror 同步机制
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/01/03/" target="_blank">
+                
+                MySQL · 专家投稿 · MySQL5.7 的 JSON 实现
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/01/04/" target="_blank">
+                
+                MySQL · 特性分析 · 优化器 MRR & BKA
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/01/05/" target="_blank">
+                
+                MySQL · 答疑解惑 · 物理备份死锁分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2016/01/06/" target="_blank">
+                
+                MySQL · TokuDB · Cachetable 的工作线程和线程池
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/01/07/" target="_blank">
+                
+                MySQL · 特性分析 · drop table的优化
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/01/08/" target="_blank">
+                
+                MySQL · 答疑解惑 · GTID不一致分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/01/09/" target="_blank">
+                
+                PgSQL · 特性分析 · Plan Hint
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/01/10/" target="_blank">
+                
+                MariaDB · 社区动态 · MariaDB on Power8 (下)
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · TokuDB · Cachetable 的工作线程和线程池
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <h2>介绍</h2>
+
+<p>TokuDB也有类似InnoDB的buffer pool叫做cachetable，存储数据节点（包括叶节点和中间节点）和rollback段，本文中为了表达简单，叶节点，中间节点和rollback段统称数据节点。Cachetable是全局唯一的，它与MySQL实例存在一一对应的关系。TokuDB没有采用常见的BTREE(BTREE+，BTREE*)表示索引，而是采用Fractal Tree，简称FT。FT跟BTREE+类似，维护了一个树形的有序结构，中间节点存储pivot（TokuDB的中间节点还包含message buffer），叶节点存储数据。</p>
+
+<p>数据库启动的时候会去初始化cachetable。Client线程（调用栈上下文所在的线程）要访问某个数据节点会首先在cachetable里面查找，找到就立即返回；否则会在cachetable申请一个cache项，然后从磁盘上加载数据到那个cache项。TokuDB里表示cache项的数据结构叫做pair，记录(节点块号/页号，数据节点）的对应关系。在MySQL的缺省引擎InnoDB中，数据和索引是存储在一个文件里的，而TokuDB中每个索引对应一个单独的磁盘文件。</p>
+
+<p>Cachetable是一个hash表，每个bucket里面包含多个pair，共1024*1024个bucket。属于相同索引的pair由cachefile来管理。TokuDB有一个优化在后面会涉及到，这里先简单提一下。当server层显示关闭某个TokuDB表时FT层会调用<code>toku_cachefile_close</code>关闭表或者索引，并把缓存的数据节点从cachetable删除；但这些数据节点仍然保留在cachefile中（保留在内存中）。这种cachefile会被加到的stale列表里面，它包含的数据节点会在内存里呆一段时间。近期再次访问这个索引时，首先会在active列表里查找索引对应的cachefile。若没有找到会尝试在stale列表查找并把找到的cachefile的数据节点重新加到cachetable里去。近期再次访问相同的数据集就不必从磁盘上加载了。</p>
+
+<h2>Cachetable的工作线程(worker thead)</h2>
+
+<p>Cachetable创建了三个工作线程：</p>
+
+<ol>
+  <li>evictor线程：释放部分cachetable内存空间；</li>
+  <li>cleaner线程：flush中间节点的message buffer到叶节点；</li>
+  <li>checkpointer线程：写回dirty数据。</li>
+</ol>
+
+<h2>Cachetable的线程池</h2>
+
+<p>Cachetable创建了三个线程池：</p>
+
+<ol>
+  <li>client线程池：帮助cleaner线程flush中间节点的message buffer；</li>
+  <li>cachetable线程池：
+    <ul>
+      <li>帮助client线程fetch/partial fetch数据节点</li>
+      <li>帮助evictor线程evict/partial evict数据节点</li>
+      <li>从cachetable删除时，后台删除数据节点</li>
+    </ul>
+  </li>
+  <li>checkpoint线程池：帮助client线程写回处于checkpoint_pending状态的数据节点。</li>
+</ol>
+
+<h2>Cachetable的几个主要队列</h2>
+
+<ol>
+  <li>m_clock_head：新加载的数据节点除了加入hash方便快速定位，也会加入此队列。可以理解成cachetable的LRU队列；</li>
+  <li>m_cleaner_head：指向m_clock_head描述LRU队列，cleaner线程从这个位置开始扫描找到memory pressure最大的中间节点发起message buffer flush操作；</li>
+  <li>m_checkpoint_head：指向m_clock_head描述LRU队列，checkpointer线程在begin checkpoint阶段从这个位置开始扫描，把每个数据节点加到m_pending_head队列；</li>
+  <li>m_pending_head：checkpointer线程在end checkpoint阶段从这个位置开始扫描，把ditry数据节点写回到磁盘上。</li>
+</ol>
+
+<h2>Evictor线程</h2>
+
+<p>随着数据逐渐加载到cachetable，其消耗的内存空间越来越大，当达到一定程度时evictor工作线程会被唤醒尝试释放一些数据节点。Evitor线程定期运行(缺省1秒)。Evictor定义四个watermark来评价当前cachetable消耗内存的程度：</p>
+
+<ol>
+  <li>m_low_size_watermark: 达到此watermark以后，evictor线程停止释放内存空间。通俗的说，这就是cachetable消耗内存的上限；</li>
+  <li>m_low_size_hysteresis： 达到此watermark以后，client线程（也就是server层线程）唤醒evictor线程释放内存。一般是m_low_size_watermark的1.1倍；</li>
+  <li>m_high_size_hysteresis: 达到此watermark以后，阻塞的client线程会被唤醒。一般是m_low_size_watermark的1.2倍；</li>
+  <li>m_high_size_watermark：达到此watermark以后，client线程会被阻塞在m_flow_control_cond条件变量上等待evictor线程释放内存。一般是m_low_size_watermark的1.5倍。</li>
+</ol>
+
+<h3>Evictor线程被唤醒的时机</h3>
+
+<ol>
+  <li>添加新pair；</li>
+  <li>Get pair时，需要fetch或者partial fetch数据节点；</li>
+  <li>Evictor destroy时，唤醒等待的client线程；</li>
+  <li>释放若干数据节点后，Evictor判断是否要继续运行。</li>
+</ol>
+
+<p>铺垫了这么多，下面一起来看一下evictor线程的主体函数<code>run_eviction</code>。<code>run_eviction</code>是一个while循环调用<code>eviction_needed</code>判断是否要进行eviction。如下所示：m_size_current表示cachetable的当前size，m_size_evicting表示当前正在evicting的数据节点消耗的内存空间。两者的差就是这次eviction运行前，cachetable最终能到达的size。<br />
+伪码如下：</p>
+
+<pre><code>bool eviction_needed() {
+    return (m_size_current - m_size_evicting) &gt; m_low_size_watermark;
+}
+void run_eviction(){
+    uint32_t num_pairs_examined_without_evicting = 0;
+    while (eviction_needed()) {
+        if (m_num_sleepers &gt; 0 &amp;&amp; should_sleeping_clients_wakeup()) {
+            /* signal the waiting client threads */
+        }
+        bool some_eviction_ran = evict_some_stale_pair();
+        if (!some_eviction_ran) {
+            get m_pl-&gt;read_list_lock;
+            if (!curr_in_clock) {
+                /* nothing to evict */
+               break;
+            }
+            if (num_pairs_examined_without_evicting &gt; m_pl-&gt;m_n_in_table) {
+                /* everything is in use */
+                break;
+            }
+            bool eviction_run = run_eviction_on_pair(curr_in_clock);
+            if (eviction_run) {
+                // reset the count
+                num_pairs_examined_without_evicting = 0;
+            }
+            else {
+                num_pairs_examined_without_evicting++;
+            }
+            release m_pl-&gt;read_list_lock;
+        }
+    }
+}
+</code></pre>
+
+<p>eviction_needed 返回true时evictor尝试释放内存。它首先看一下当前的cachetable是否降到m_high_size_hysteresis以下，若是就唤醒等待在m_flow_control_cond条件变量上的client线程。然后，cachetable会先尝试回收stale列表里面cachefile上的数据节点。若stale列表里面没有可回收的数据节点，就会从m_clock_head开始尝试回收内存。对于近期没有被访问过的数据节点，会调用<code>try_evict_pair</code>尝试回收；否则会使之逐渐退化并尝试partial evict。如果把整个m_clock_head队列扫描一遍都没发现可回收的数据节点，那么这次evictor线程的工作就完成了，等下次被唤醒时再次尝试回收内存。</p>
+
+<h2>Cleaner线程</h2>
+
+<p>Cleaner是另一个定期运行(缺省1秒)的工作线程，从m_cleaner_head开始最多扫8个数据节点，从中找到cache pressure最大的节点（这个过程会skip掉正在被其他线程访问的节点）。由于叶节点和rollback段的cache pressure为0，找到的节点一定是中间节点。如果这个节点设置了checkpoint_pending标记，那么需要先调用<code>write_locked_pair_for_checkpoint</code>把数据写回再调用<code>cleaner_callback</code>把中间节点的message buffer刷到叶节点上去。数据写回的过程，如果节点设置了<code>clone_callback</code>，写回是由checkpoint线程池来完成的；没有设置<code>clone_callback</code>的情况，写回是由cleaner线程完成的。中间节点flush message buffer是一个很复杂的过程，涉及到message apply和merge等操作，打算另写一篇文章介绍。<br />
+伪码如下：</p>
+
+<pre><code>run_cleaner(){
+    uint32_t num_iterations = get_iterations(); // by default, iteration == 1
+    for (uint32_t i = 0; i &lt; num_iterations; ++i) {
+        get pl-&gt;read_list_lock;
+        PAIR best_pair = NULL;
+        int n_seen = 0;
+        long best_score = 0;
+        const PAIR first_pair = m_cleaner_head;
+        if (first_pair == NULL) {
+            /* nothing to clean */
+            break;
+        }
+        /* pick up best_pair */
+        do {
+            get m_cleaner_head pair lock;
+            skip m_cleaner_head if which was being referenced by others
+            n_seen++;
+            long score = 0;
+            bool need_unlock = false;
+            score = m_cleaner_head cache pressure
+            if (best_score &lt; score) {
+                best_score = score;
+                if (best_pair) {
+                    need_unlock = true;
+                }
+                best_pair = m_cleaner_head;
+            } else {
+                need_unlock = true;
+            }
+            if (need_unlock) {
+                release m_cleaner_head pair lock;
+            }
+            m_cleaner_head = m_cleaner_head-&gt;clock_next;
+        } while (m_cleaner_head != first_pair &amp;&amp; n_seen &lt; 8);
+        release m_pl-&gt;read_list_lock;
+        if (best_pair) {
+            get best_pair-&gt;value_rwlock;
+            if (best_pair-&gt;checkpoint_pending) {
+                write_locked_pair_for_checkpoint(ct, best_pair, true);
+            }
+            bool cleaner_callback_called = false;
+            if (best_pair cache pressure &gt; 0) {
+                r = best_pair-&gt;cleaner_callback(best_pair-&gt;value_data, best_pair-&gt;key, best_pair-&gt;fullhash, best_pair-&gt;write_extraargs);
+                cleaner_callback_called = true;
+            }
+            if (!cleaner_callback_called) {
+                release best_pair-&gt;value_rwlock;
+            }
+        }
+    }
+}
+</code></pre>
+
+<h2>Checkpointer线程</h2>
+
+<p>Cachetable的脏数据是由checkpointer线程定期(缺省60秒)刷到磁盘上。<br />
+Checkpointer线程执行过程分为两个阶段：</p>
+
+<p><strong>begin checkpoint阶段</strong></p>
+
+<ol>
+  <li>为每个active的cache file打for_checkpoint标记；</li>
+  <li>写日志；</li>
+  <li>为每个数据节点打checkpoint_pending标记，并加到m_pending_head队列；</li>
+  <li>clone checkpoint_header: FT的metadata在内存中的数据结构是FT_HEADER，这个header有两个版本:
+    <ul>
+      <li>h表示当前版本</li>
+      <li>checkpoint_header表示当前正在进行checkpoint的版本，是h在checkpoint开始时刻的副本</li>
+    </ul>
+  </li>
+  <li>clone BTT（block translation table）: TokuDB采用BTT记录逻辑页号（blocknum）到文件offset的映射关系。每次刷新数据节点时申请一个未使用的offset，把脏页刷到新的offset位置上，不覆盖老的数据。<br />
+BTT表也采用类似的机制被映射到FT文件不同的offset上。BTT的起始地址记录在FT_HEADER中。checkpoint完成时FT_HEADER会被更新，使新数据生效。用户可以使用checkpoint机制生成backup加速重建数据库的过程。BTT表有三个版本
+    <ul>
+      <li>当前版本(_current)</li>
+      <li>正在checkpoint的版本(_inprogress)</li>
+      <li>上次checkpoint的版本(_checkpointed)</li>
+    </ul>
+  </li>
+</ol>
+
+<p><strong>end checkpoint阶段</strong></p>
+
+<ol>
+  <li>
+    <p>把m_pending_head队列里的数据节点挨个写回到磁盘。写的时候首先检查是否设置<code>clone_callback</code>方法，如有调用<code>clone_callback</code>生成clone节点，在<code>clone_callback</code>里可能会对叶节点做rebalance操作，clone完成后调用<code>cachetable_only_write_locked_data</code>把cloned pair写回。没有设置clone_callback的情况会直接调用<code>cachetable_write_locked_pair</code>把节点写回。<br />
+伪码如下：</p>
+
+    <pre><code> void write_pair_for_checkpoint_thread (evictor* ev, PAIR p) {
+     get p-&gt;value_rwlock.write_lock;
+     if (p-&gt;dirty &amp;&amp; p-&gt;checkpoint_pending) {
+         if (p-&gt;clone_callback) {
+             get p-&gt;disk_nb_mutex;
+             clone_pair(ev, p);
+         } else {
+             cachetable_write_locked_pair(ev, p, true /* for_checkpoint */);
+         }
+     }
+     p-&gt;checkpoint_pending = false;
+     put p-&gt;value_rwlock.write_lock;
+     if (p-&gt;clone_callback) {
+         cachetable_only_write_locked_data(ev, p, true /* for_checkpoint */,
+ &amp;attr, true /* is_clone */);
+     }
+ }
+</code></pre>
+  </li>
+  <li>调用<code>checkpoint_userdata</code>：
+    <ul>
+      <li>写回BTT的_inprogress版本</li>
+      <li>写回FT_HEADER的checkpoint_header版本，后面会把checkpoint_header释放掉</li>
+    </ul>
+  </li>
+  <li>调用<code>end_checkpoint_userdata</code>：
+    <ul>
+      <li>释放BTT _checkpointed版本占用的地址空间</li>
+      <li>把_inprogress版本切换成_checkpointed</li>
+    </ul>
+  </li>
+</ol>
+
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>

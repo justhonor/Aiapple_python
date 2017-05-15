@@ -1,0 +1,1569 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · TokuDB · 疯狂的 filenum++</title>
+  <meta name="description" content="问题描述">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2015/08/08/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2015/08">
+    <h1>数据库内核月报 － 2015 / 08</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2015/08/07/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2015/08/09/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2015/08/01/" target="_blank">
+                
+                MySQL · 社区动态 · InnoDB Page Compression
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2015/08/02/" target="_blank">
+                
+                PgSQL · 答疑解惑 · RDS中的PostgreSQL备库延迟原因分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2015/08/03/" target="_blank">
+                
+                MySQL · 社区动态 · MySQL5.6.26 Release Note解读
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2015/08/04/" target="_blank">
+                
+                PgSQL · 捉虫动态 · 执行大SQL语句提示无效的内存申请大小
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2015/08/05/" target="_blank">
+                
+                MySQL · 社区动态 · MariaDB InnoDB表空间碎片整理
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2015/08/06/" target="_blank">
+                
+                PgSQL · 答疑解惑 · 归档进程cp命令的core文件追查
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2015/08/07/" target="_blank">
+                
+                MySQL · 答疑解惑 · open file limits
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2015/08/08/" target="_blank">
+                
+                MySQL · TokuDB · 疯狂的 filenum++
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2015/08/09/" target="_blank">
+                
+                MySQL · 功能分析 · 5.6 并行复制实现分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2015/08/10/" target="_blank">
+                
+                MySQL · 功能分析 · MySQL表定义缓存
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · TokuDB · 疯狂的 filenum++
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <h2>问题描述</h2>
+
+<p>收到一枚RDS TokuDB实例crash导致HA切换的报警，上去一看错误如下：</p>
+
+<pre><code>tokudb/ft-index/ft/cachetable/cachetable.cc toku_cachetable_openfd_with_filenum: Assertion `filenum.fileid != FILENUM_NONE.fileid' failed
+/bin/mysqld(_Z19db_env_do_backtraceP8_IO_FILE+0x1b)[0xc57ddb]
+/bin/mysqld(_Z35toku_cachetable_openfd_with_filenumPP9cachefileP10cachetableiPKc7FILENUMPb+0x223)[0xbb49b3]
+/bin/mysqld(_Z19toku_ft_handle_openP9ft_handlePKciiP10cachetableP7tokutxn+0x135)[0xbf3c05]
+/bin/mysqld(_Z20toku_ft_handle_clonePP9ft_handleS0_P7tokutxn+0xb5)[0xbf42f5]
+/bin/mysqld(_Z29toku_db_lt_on_create_callbackPN4toku8locktreeEPv+0x2a)[0xb801ba]
+/bin/mysqld(_Z18toku_db_open_inameP9__toku_dbP13__toku_db_txnPKcji+0x276)[0xb805b6]
+/bin/mysqld(_ZN9ha_tokudb20open_main_dictionaryEPKcbP13__toku_db_txn+0x1ab)[0xb50a0b]
+/bin/mysqld(_ZN9ha_tokudb16initialize_shareEPKci+0x2c8)[0xb70848]
+/bin/mysqld(_ZN9ha_tokudb4openEPKcij+0x5e9)[0xb71349]
+/bin/mysqld(_ZN7handler7ha_openEP5TABLEPKcii+0x33)[0x5e74b3]
+</code></pre>
+
+<p>这个错误信息在RDS上第一次碰到，隐隐感到这是一个“可遇不可求”的bug导致，开始捉虫。</p>
+
+<h2>问题分析</h2>
+
+<p>每个表(索引)文件被打开后，TokuDB都会为这个文件赋予一个唯一id，即filenum。</p>
+
+<p>filenum有什么作用？<br />
+TokuDB在写redo log的时候，每个事务里会带一个filenum属性，用来标示该事务属于哪个表文件，在崩溃恢复的时候，会根据这个filenum回放到相应的表里。</p>
+
+<p>filenum在什么时候被分配？<br />
+表(索引)文件被打开的时候会被分配。</p>
+
+<p>filenum如何分配？<br />
+为了保证唯一性，TokuDB维护了一个filenum数据结构(类似binary tree) : m_active_filenum，分配算法：</p>
+
+<pre><code class="language-C">uint32_t m_next_filenum_to_use;  //全局变量，用来标识已分配的最大filenum
+lock();
+retry:
+int ret = m_active_filenum.find(m_next_filenum_to_use);
+if (ret == 0) {
+  //m_next_filenum_to_use被占用
+  m_next_filenum_to_use++;
+  goto retry;
+}
+filenum = m_next_filenum_to_use; //得到我们想要的filenum
+m_next_filenum_to_use++;
+unlock();
+</code></pre>
+
+<p>这样问题就来了，如果用户有非常多的表(索引)文件，不停的被打开和关闭，m_next_filenum_to_use会一直递增下去，由于是uint32_t类型，小宇宙终于爆发了，filenum 递增到4294967295(UINT_MAX)，从而导致assert失败。</p>
+
+<h2>问题修复</h2>
+
+<p>当一些表(索引)文件被close后，这些filenum可以被回收再利用，所以当filenum递增到UINT_MAX后，重置到0即可:</p>
+
+<pre><code class="language-C">uint32_t m_next_filenum_to_use;  //全局变量，用来标识已分配的最大filenum
+lock();
+retry:
+int ret = m_active_filenum.find(m_next_filenum_to_use);
+if (ret == 0) {
+  //m_next_filenum_to_use被占用
+  m_next_filenum_to_use++;
+  goto retry;
+}
+// 从0开始重新获取未被使用的filenum
+if (m_next_filenum_to_use == UINT_MAX) {
+  m_next_filenum_to_use = 0;
+  goto retry;
+}
+filenum = m_next_filenum_to_use; //得到我们想要的filenum
+m_next_filenum_to_use++;
+unlock();
+</code></pre>
+
+<p>RDS版本已修复此问题，官方patch戳<a href="https://github.com/percona/PerconaFT/commit/1b289f788c6b50956321f4d977ac1cb63bd72013">这里</a>。</p>
+
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>

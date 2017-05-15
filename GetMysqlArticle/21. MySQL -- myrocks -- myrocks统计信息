@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · myrocks · myrocks统计信息</title>
+  <meta name="description" content="概述mysql查询优化主要是在代价统计分析的基础上进行的。合理的代价模型和准确的代价统计信息决定了查询优化的优劣。myrocks基于mysql5.6, 目前的代价模型依赖的主要因素是IO和CPU，mysql5.7及以上的版本代价模型做了较多改进，具体可以参考这里  IO主要跟数据量和缓存相关，而CPU主要跟参与排...">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2016/12/02/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2016/12">
+    <h1>数据库内核月报 － 2016 / 12</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2016/12/01/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2016/12/03/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/12/01/" target="_blank">
+                
+                MySQL · 引擎特性 · Infobright 列存数据库
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2016/12/02/" target="_blank">
+                
+                MySQL · myrocks · myrocks统计信息
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/12/03/" target="_blank">
+                
+                SQL Server · 特性介绍 · 统计信息
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/12/04/" target="_blank">
+                
+                PgSQL · 案例分享 · 从春运抢火车票思考数据库设计
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/12/05/" target="_blank">
+                
+                HybridDB · 最佳实践 · OLAP和OLTP一体化打造
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/12/06/" target="_blank">
+                
+                TokuDB · 特性分析 · 导入数据大杀器：Loader
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/12/07/" target="_blank">
+                
+                PgSQL · 案例分享 · PostgreSQL 性能诊断指南
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/12/08/" target="_blank">
+                
+                MySQL · 捉虫动态 · 5.6中ORDER BY + LIMIT 错选执行计划
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/12/09/" target="_blank">
+                
+                Redis · 最佳实践 · 阿里云Redis助力双11业务
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/12/10/" target="_blank">
+                
+                PgSQL · 案例分享 · 递归收敛优化
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · myrocks · myrocks统计信息
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <h2>概述</h2>
+<p>mysql查询优化主要是在代价统计分析的基础上进行的。合理的代价模型和准确的代价统计信息决定了查询优化的优劣。myrocks基于mysql5.6, 目前的代价模型依赖的主要因素是IO和CPU，mysql5.7及以上的版本代价模型做了较多改进，具体可以参考<a href="https://yq.aliyun.com/articles/57650">这里</a><br />
+  IO主要跟数据量和缓存相关，而CPU主要跟参与排序比较的记录数相关。 因此mysql5.6的统计信息的指标主要是数据量和记录数。例如：</p>
+
+<ul>
+  <li>table scan：全表扫描统计信息包括数据量和记录数。</li>
+  <li>index scan：索引统计信息，索引键值分布情况，即cardinality。</li>
+  <li>range scan：索引范围扫描统计信息，一定范围内的记录数和数据量。</li>
+</ul>
+
+<h2>统计信息</h2>
+<p>mysql5.6 代价计算都是在server层完成，且代价只关心引擎层的数据量和行数，没有考虑不同引擎存储方式的差异，其代价也会存在差异。相对来说，5.7的代价统计方式更为合理。<br />
+ 对server层来说，不同存储引擎都应提供以下统计信息</p>
+
+<ul>
+  <li>索引的大小</li>
+  <li>索引的总行数</li>
+  <li>索引的键值分布, 不同长度前缀的键值分布</li>
+  <li>一定范围内的记录数</li>
+</ul>
+
+<p>下面分别介绍innodb和rocksdb的统计信息</p>
+
+<h2>InnoDB统计分析</h2>
+
+<h3>统计信息存储</h3>
+<p>innodb的统计信息可以通过下列表查询</p>
+
+<pre><code>information.statistics
+mysql.innodb_table_stats
+mysql.innodb_index_stats 
+</code></pre>
+
+<p>实际上innodb的统计信息持久化在mysql.innodb_table_stats和mysql.innodb_index_stats这两个表中</p>
+
+<pre><code>CREATE TABLE `innodb_table_stats` (
+  `database_name` varchar(64) COLLATE utf8_bin NOT NULL,
+  `table_name` varchar(64) COLLATE utf8_bin NOT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `n_rows` bigint(20) unsigned NOT NULL,
+  `clustered_index_size` bigint(20) unsigned NOT NULL,
+  `sum_of_other_index_sizes` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`database_name`,`table_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin STATS_PERSISTENT=0
+
+ CREATE TABLE `innodb_index_stats` (
+  `database_name` varchar(64) COLLATE utf8_bin NOT NULL,
+  `table_name` varchar(64) COLLATE utf8_bin NOT NULL,
+  `index_name` varchar(64) COLLATE utf8_bin NOT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `stat_name` varchar(64) COLLATE utf8_bin NOT NULL,
+  `stat_value` bigint(20) unsigned NOT NULL,
+  `sample_size` bigint(20) unsigned DEFAULT NULL,
+  `stat_description` varchar(1024) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`database_name`,`table_name`,`index_name`,`stat_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin STATS_PERSISTENT=0
+</code></pre>
+
+<h3>统计方法</h3>
+
+<ul>
+  <li>索引大小  <br />
+    从segment描述项直接得到索引占用的page数(btr_get_size)，索引总数据量=总page数*page大小。 索引大小的计算是比较精确的。</li>
+  <li>
+    <p>索引键值分布  <br />
+    通过扫描所有数据的方式来统计键值分布虽然得到的数据是准确的，但是非常耗时。因此innodb是通过采样的方式来实现的，参数innodb_stats_persistent_sample_pages、innodb_stats_sample_pages  、innodb_stats_transient_sample_pages可以控制采样的page数。一般来说采样的page越分散，数据越准确。</p>
+
+    <p>采样有两种方式，transient方式和persistent方式。<br />
+    1) transient方式：快速但不精确(dict_stats_update_transient)<br />
+     从根开始每层随机取一条记录到下一层，直到叶子节点。这样采样得到page过于随机，采样page可能出现比较集中的情况，极端情况下多次采样的page有可能是重复的。<br />
+<img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/ce1b8c90150d16cb582e049152bf07fb.png" alt="屏幕快照 2016-12-07 上午11.50.07.png" /><br />
+    2) persistent方式：慢但相对精确(dict_stats_update_persistent)<br />
+    presistent方式分为两个阶段。第一阶段，找到一个合适的层次（非叶子层）用于分段，这个层次的不同值个数须&gt;=10*采样页个数即N_DIFF_REQUIRED(index))。第二阶段，在找到的层次上进行分段，分段个数为N(N&lt;=采样数)，再从每个分段随机取记录向下层找采样页，如果下层节点所有记录都相等，那么采样可以提前结束，不需要一直向下找到叶子节点，因为叶子节点中记录必定也是相同的。<br />
+    persistent方式采样比较分散，但第一阶段分段可能比较耗时，如果索引区分度不高，可能需要到Level=1层才分段。<br />
+    <img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/762e2938771669fe073aeb6f61a8c34a.png" alt="innodb persistent stat.png" /><br />
+    遍历采样页可以得到采样页的键值分布情况，从segment描述项可以得到叶子节点page数，再根据叶子节点page数和采样页比例可以得出最终的键值分布情况。</p>
+  </li>
+  <li>
+    <p>总行数  <br />
+  前面已经计算出主键索引的分布情况， 总行数=主键不同值的个数。</p>
+  </li>
+  <li>范围统计  <br />
+  范围统计，先从B树中查找起始值和结束值，并记录查找路径，从而每层的范围能够确定下来。<br />
+有一个规律是，<strong>上层范围内的记录数等于下层范围内的page数</strong>。<br />
+每层最多读取10个page，此层每页记录平均数=读取的记录数/读取的page数。  <br />
+假如此层范围内page数&gt;10, 那么范围内的记录数=此层每页记录平均数*上层的范围内的记录数。  <br />
+下层范围内的记录数依赖于上层范围内的记录数。这样每层计算直到叶子层。<br />
+<img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/acad9f7cb1f2d982195da74a24f2d6ca.png" alt="innodb records in range.png" /></li>
+</ul>
+
+<h3>统计信息更新</h3>
+<p>以下情况会触发统计信息更新</p>
+
+<ul>
+  <li>analyze table</li>
+  <li>距离上一次更新统计信息，发生变化的行数超过一定数值时自动更新(transient：1/16， persistent ：1/10）</li>
+  <li>create table/truncate table 会初始化统计信息</li>
+  <li>查询information_schema.tables information_schema.statistic(innodb_stats_on_metadata=ON)</li>
+</ul>
+
+<h2>Rocksdb统计分析</h2>
+
+<h3>统计信息存储</h3>
+<p>从server层来看，rocksdb统计信息存储在rocksdb数据字典INDEX_STATISTICS中</p>
+
+<pre><code>key: Rdb_key_def::INDEX_STATISTICS(0x6) + global_index_id
+value: version, {materialized PropertiesCollector::IndexStats}
+</code></pre>
+<p>实际包含以下信息</p>
+
+<pre><code>struct Rdb_index_stats
+{
+ ......
+  GL_INDEX_ID m_gl_index_id;
+  int64_t m_data_size, m_rows, m_actual_disk_size;
+  int64_t m_entry_deletes, m_entry_single_deletes;
+  int64_t m_entry_merges, m_entry_others;
+  std::vector&lt;int64_t&gt; m_distinct_keys_per_prefix;
+ ......
+}
+</code></pre>
+<p>INDEX_STATISTICS并没有像innodb统计信息一样提供mysql 下的表来查询，但我们仍可以从information_schema.statistic查看部分统计信息。</p>
+
+<p>从rocksdb层来看，统计信息在每个SST file meta中都单独保存了自己的统计信息<br />
+<img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/b7d8d4887e0298133d44179bf1308def.png" alt="rocksdb sst indexstat meta.png" /></p>
+
+<p>而数据字典NDEX_STATISTICS的数据是汇总了memtable和所有sstable统计信息后的数据。</p>
+
+<h3>统计方法</h3>
+<p>memtable 每插入一行数据会统计行数(num_entries_)和数据量(data_size_)<br />
+ memtable flush时会将SST 统计信息持久化到SST的meta中。<br />
+ compact时新的统计信息也会持久化到新生成的SST的meta中。</p>
+
+<ul>
+  <li>范围分布  <br />
+  范围分布需从memtable和sstable中查找<br />
+<img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/6e4bddcefb8d104497aa9eae2f51bef1.png" alt="rocksdb records in range.png" /></li>
+</ul>
+
+<p>查找memtable(skiplist)，一个估算规则是, <strong>下层范围内节点数=上层节点数*branching_factor</strong>。根据此规则可以估算memtable范围内的数据。<br />
+<img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/d640d6702b99cb2381f6ffb126878693.png" alt="skiplist in range.png" />  <br />
+   相关代码如下</p>
+
+<pre><code>template &lt;typename Key, class Comparator&gt;
+uint64_t SkipList&lt;Key, Comparator&gt;::EstimateCount(const Key&amp; key) const {
+  uint64_t count = 0;
+
+  Node* x = head_;
+  int level = GetMaxHeight() - 1;
+  while (true) {
+    assert(x == head_ || compare_(x-&gt;key, key) &lt; 0);
+    Node* next = x-&gt;Next(level);
+    if (next == nullptr || compare_(next-&gt;key, key) &gt;= 0) {
+      if (level == 0) {
+        return count;
+      } else {
+        // Switch to next list
+        count *= kBranching_;
+        level--;
+      }
+    } else {
+      x = next;
+      count++;
+    }
+  }
+}
+</code></pre>
+
+<p>查sstable，先定位每层范围涉及的sstable，再估算范围内的数据大小。如果某个sstable全包含在范围内，则大小可以直接从sstable 的meta中获取；如果sstable只是半包含，那么需要计算范围在sstable中的offset，从而得到sstable中被包含的数据大小。<br />
+<img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a2053299e37d5b505811acb7cb3ffc28.png" alt="screenshot.png" />  <br />
+     算出每层的范围内的数据大小，汇总得到范围内的总大小。<br />
+     范围内的总行数=范围内的sstable总大小*sstable总行数/sst总大小 + memtable范围内的总行数。</p>
+
+<blockquote>
+  <p>官方代码存在bug，已提交给官方，详见<a href="https://github.com/facebook/mysql-5.6/issues/461">这里</a></p>
+</blockquote>
+
+<ul>
+  <li>总行数  <br />
+     总行数=memtable中行数+sstable中行数<br />
+     memtable中行数估算方法同上一节</li>
+</ul>
+
+<blockquote>
+  <p>官方代码实现假设记录大小为100字节(ROCKSDB_ASSUMED_KEY_VALUE_DISK_SIZE)，stats.records = sz/ROCKSDB_ASSUMED_KEY_VALUE_DISK_SIZE; 实际没有必要，实际上是可以通过上面的方法估算的。</p>
+</blockquote>
+
+<p>sstable中行数只需要从meta中获取并汇总即可。<br />
+而实际上如果每此从memtable估算行数还是有一定开销的。所以，官方在仅有memtable而没有sstable的情况下才估算memtable的行数。而对于memtable和sstable共存的情况则只考虑sstable，忽略memtable中行数。</p>
+
+<blockquote>
+  <p>这里应该可以优化，比如可以考虑immutable memtable的行数</p>
+</blockquote>
+
+<ul>
+  <li>
+    <p>总大小  <br />
+     不需要统计memtable，只需要汇总sstable meta中的大小。</p>
+  </li>
+  <li>
+    <p>键值分布  <br />
+     每个sstable meta有键值分布信息，只需要汇总即可。</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p>这里也存在一个<a href="https://github.com/facebook/mysql-5.6/issues/466">bug</a></p>
+</blockquote>
+
+<p>对于memtable，如果仅有memtableer没有sstable，那么键值分布只是简单的给了初始值。</p>
+
+<pre><code>    // Fake cardinality implementation. For example, (idx1, idx2, idx3) index
+    // will have rec_per_key for (idx1)=4, (idx1,2)=2, and (idx1,2,3)=1.
+    // rec_per_key for the whole index is 1, and multiplied by 2^n if
+    // n suffix columns of the index are not used.
+    x = 1 &lt;&lt; (k-&gt;actual_key_parts-j-1);
+</code></pre>
+
+<p>而对于memtable和sstable共存的情况则只考虑sstable，忽略memtable的键值分布</p>
+
+<h3>统计信息更新</h3>
+
+<ul>
+  <li>实例启动时会从数据字典INDEX_STATISTICS读取并初始化所有索引统计信息。</li>
+  <li>analyze table  汇总memtable和所有sstable的统计信息，并持久化到数据字典INDEX_STATISTICS。</li>
+  <li>flush memtable/compact  都会更新内存统计信息，并不持久化。<br />
+    flush memtable 新文件的统计信息会merge加入内存统计信息中。<br />
+    compact时会去掉老文件的统计信息，同时加上新生成文件的统计信息。<br />
+<img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/c8b2de1f8decff46dc8f086d85cdd0f4.png" alt="屏幕快照 2016-12-07 上午11.50.29.png" /></li>
+  <li>后台线程会定时持久化统计信息到数据字典INDEX_STATISTICS</li>
+</ul>
+
+<h2>总结</h2>
+<p>rocksdb和innodb统计信息有很多相似之处，但rocksdb sstable单独维护了统计信息，因此rocksdb的统计信息收集比innodb更快也更精确。同时，我们也看到了rocksdb的统计信息还有需要改进的地方，官方也逐步在完善。</p>
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>

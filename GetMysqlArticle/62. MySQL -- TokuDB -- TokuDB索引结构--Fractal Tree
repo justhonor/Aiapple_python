@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · TokuDB · TokuDB索引结构--Fractal Tree</title>
+  <meta name="description" content="背景介绍">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2016/04/09/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2016/04">
+    <h1>数据库内核月报 － 2016 / 04</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2016/04/08/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2016/04/10/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/01/" target="_blank">
+                
+                MySQL · 参数故事 · innodb_additional_mem_pool_size
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/02/" target="_blank">
+                
+                GPDB · 特性分析 · Segment事务一致性与异常处理
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/03/" target="_blank">
+                
+                GPDB · 特性分析 · Segment 修复指南
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/04/" target="_blank">
+                
+                MySQL · 捉虫动态 · 并行复制外键约束问题二
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/05/" target="_blank">
+                
+                PgSQL · 性能优化 · 如何潇洒的处理每天上百TB的数据增量
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/06/" target="_blank">
+                
+                Memcached · 最佳实践 · 热点 Key 问题解决方案
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/07/" target="_blank">
+                
+                MongoDB · 最佳实践 · 短连接Auth性能优化
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/08/" target="_blank">
+                
+                MySQL · 最佳实践 · RDS 只读实例延迟分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2016/04/09/" target="_blank">
+                
+                MySQL · TokuDB · TokuDB索引结构--Fractal Tree
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/04/10/" target="_blank">
+                
+                MySQL · TokuDB · Savepoint漫谈
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · TokuDB · TokuDB索引结构--Fractal Tree
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <h2>背景介绍</h2>
+
+<p>TokuDB采用的是Fractal Tree作为索引的数据组织方式。它是一种面向磁盘I/O优化的数据结构，采用“分期偿还”策略减少在数据插入过程中从root节点到leaf节点的搜索过程。这种搜索过程可以简称为locate_position，就是寻找要插入key在Tree中位置的过程。</p>
+
+<p>一般B+Tree的插入过程分为两个部分：</p>
+
+<ol>
+  <li>Locate_position: 从root开始使用binary search方法递归地寻找应该插入到哪个子节点上，直到在leaf节点找到应该插入的位置然后返回；</li>
+  <li>Insert_into_postion: 在locate_position返回的位置进行插入操作，如果当前leaf节点存储的key个数超过预定义的最大值可能会引起split操作，最坏的情况是引起从leaf节点到root节点的split。</li>
+</ol>
+
+<p>Fractal Free把每个操作都看成一个message。每个internal节点维护了一个msg_buffer按照FIFO顺序缓存message；索引的有序序列是在leaf节点维护的。所谓采用“分期偿还”是指：在Fractal Tree中插入时，只需要把(key, value)对插入到root节点（或者若干深度的internal节点）的msg_buffer就可以返回了，这个过程可以简称为<code>push_into_root</code>。中间节点msg_buffer中的message是由后台工作线程分批地flush到子节点上，最终刷到leaf节点上的，这个过程简称为<code>push_into_child</code>。与Fractal Tree类似的面向磁盘I/O优化的数据结构还有Buffer Tree <a href="http://www.cs.cmu.edu/~guyb/realworld/slidesF10/buffertree.pdf">论文链接</a> 和Log Structured Merge Tree, 感兴趣的朋友可以看一下。</p>
+
+<p>下面我一起看一下Fractal Tree的数据结构定义，维护Fractal Tree的基本算法的插入，删除，分裂，合并和查询过程。</p>
+
+<h2>Fractal Tree数据结构</h2>
+
+<p>大多数情况下message不是直接插入到leaf节点上，而是被缓存在internal节点，由后台工作线程异步flush到leaf节点上。在某个时间段，对同一个key可能存在多个未applied到leaf节点的修改，每个修改对应一个message，这些message有可能缓存被在不同的internal节点上（这些internal节点一定都在从root到leaf路径上）。为了区分message的先后顺序，在插入到root节点（<code>push_into_root</code>）时，每个message被赋予了一个有序递增的序列号（msn），它是全局唯一的。</p>
+
+<pre><code>struct ftnode {
+    MSN max_msn_applied_to_node_on_disk;  // applied最大的msn
+    unsigned int flags; // 创建标志，等于ft-&gt;h-&gt;flags
+    BLOCKNUM blocknum; // 节点对应的块号
+    int    height; // 高度：0表示leaf节点，&gt;0表示中间节点
+    int    dirty; // 脏页标记，用于cachetable脏页回刷
+    uint32_t fullhash; // 在cachetable的哪个bucket上
+    int n_children; // partition个数
+    ftnode_pivot_keys pivotkeys; // 每个partition的key值区间
+    TXNID oldest_referenced_xid_known; // 最近一次push_into_root操作时系统可能的最老事务id
+struct ftnode_partition *bp; // internal节点：子节点的msg_buffer; leaf节点：有序数据结构
+    struct ctpair *ct_pair; // 对应cachetable的pair（cache entry）
+};
+</code></pre>
+
+<h2>Fractal Tree layout</h2>
+
+<p><img src="http://img2.tbcdn.cn/L1/461/1/5ed42c5fe91b30effec027162c31632c55ff27f4" alt="screenshot" /></p>
+
+<p>上图中蓝色圆圈表示internal节点，旁边的白色矩形表示msg_buffer; 最下面一层蓝色矩形表示leaf节点 Fractal Tree 的bp域指向partition。对于Internal节点，bp域指向每个子节点对应的msg_buffer。一个internal节点最多有16个（可配置）的子节点，每个子节点对应的子树保存某个key值区间的数据。对于leaf节点，bp域指向leaf节点的有序数据结构。Leaf节点可以由多个有序的子结构组成，每个子结构构称作basement节点，实际上是一个弱平衡树形结构（或者数组）。Internal节点和leaf节点的缺省大小是4M字节，basement节点的缺省大小是128K字节。从root节点到leaf节点查询的过程，是通过各级节点的 pivotkeys 来路由的。</p>
+
+<p>Pivotkeys域表示子节点的key值范围：</p>
+
+<ul>
+  <li>第0个子节点的key范围在 ( -∞, pivotkeys[0] ]</li>
+  <li>第1个子节点的key范围在( pivotkeys[0]，pivotkeys[1] ]</li>
+  <li>第i个子节点的key范围在( pivotkeys[i-1]，pivotkeys[i] ]</li>
+  <li>最后一个子节点的key范围在( pivotkeys[n_children-1]，+∞)</li>
+</ul>
+
+<p>Bp域表示每个partition：</p>
+
+<ul>
+  <li>第0个partition：bp[0]</li>
+  <li>第1个partition：bp[1]</li>
+  <li>第i个partition：bp[i]</li>
+  <li>最后一个partition：bp[n_children-1]</li>
+</ul>
+
+<h3>Partition信息</h3>
+
+<pre><code>struct ftnode_partition {
+BLOCKNUM  blocknum; // internal节点：子节点块号;  leaf节点：unused
+uint64_t     workdone; // internal节点：applied message字节数; leaf节点：unused
+struct ftnode_child_pointer ptr; // internal节点：子节点msg_buffer信息; leaf节点：basement节点
+enum pt_state state; // internal节点：子节点状态; leaf节点：basement节点状态
+    uint8_t clock_count; // evictor线程根据此变量判断是否可以partial evict
+};
+enum pt_state {
+    PT_INVALID = 0, // 无效
+    PT_ON_DISK = 1, // 在磁盘上
+    PT_COMPRESSED = 2, // 已读入内存，压缩格式
+    PT_AVAIL = 3 // 已读入内存，解压缩格式
+};
+typedef struct ftnode_child_pointer {
+    union {
+        struct sub_block *subblock;  //压缩后的buffer
+        struct ftnode_nonleaf_childinfo *nonleaf;  // internal节点：msg_buffer
+        struct ftnode_leaf_basement_node *leaf; // leaf节点：basement节点
+    } u;
+ } FTNODE_CHILD_POINTER;
+</code></pre>
+
+<h3>Internal节点存储的msg_buffer</h3>
+
+<pre><code>struct ftnode_nonleaf_childinfo {
+    message_buffer msg_buffer; // 缓存的message
+    off_omt_t broadcast_list; // 用于支持on-line add index, on-line add column
+    marked_off_omt_t fresh_message_tree; // 未apply的message在msg_buffer 里的offset，按（key，msn）顺序排序
+    off_omt_t stale_message_tree; // 已经applied过的message在msg_buffer里的offset，按（key，msn）顺序排序
+    uint64_t flow[2]; // 流控
+};
+</code></pre>
+
+<h3>Leaf节点的basement节点</h3>
+
+<pre><code>struct ftnode_leaf_basement_node {
+    bn_data data_buffer; // 有序序列，弱平衡树形结构（或者数组）
+    unsigned int seqinsert; // 判断顺序 insert的hint
+    MSN max_msn_applied; // applied最大的msn
+};
+</code></pre>
+
+<h2>维护Fractal Tree的基本操作</h2>
+
+<h3>创建新的Fractal Tree的索引</h3>
+
+<p>每个Fractal Tree由FT来表示。下面是列举了FT中比较重要的域。</p>
+
+<pre><code>struct ft {
+    FT_HEADER h; // header
+    FT_HEADER checkpoint_header; // checkpoint开始时刻header的克隆
+    CACHEFILE cf; // 描述了FT对应的磁盘文件和数据节点信息。
+    toku::comparator cmp; // DBT compare函数
+    block_table blocktable; // FT逻辑块号到文件offset的映射表
+    struct toku_list live_ft_handles; // 打开此FT的handle列表
+    uint32_t num_txns;  // 访问此FT的事务个数
+    bool pinned_by_checkpoint; // 表示checkpoint正在进行
+    BLOCKNUM rightmost_blocknum; // 最右leaf节点块号，用于顺序insert优化
+} ;
+typedef struct ft *FT;
+struct ft_header {
+    enum ft_type type; // header类型
+    int dirty; // 脏标记
+    uint64_t checkpoint_count; // checkpoint计数
+    LSN checkpoint_lsn; // checkpoint开始时刻的lsn
+    const uint64_t time_of_creation; // FT创建时间
+    TXNID root_xid_that_created; //创建FT的事务ID
+    uint64_t time_of_last_modification; // 最近一次更新时间
+    BLOCKNUM root_blocknum; // root节点块号
+    const unsigned int flags; // 创建标志
+    unsigned int nodesize; // 节点大小，缺省值4M字节
+    unsigned int basementnodesize; // basement节点大小，缺省值128K字节
+    enum toku_compression_method compression_method; // 压缩算法
+    unsigned int fanout; // internal节点的fanout
+    MSN max_msn_in_ft; // FT最大的msn
+};
+enum ft_type {
+    FT_CURRENT = 1, // FT header
+    FT_CHECKPOINT_INPROGRESS // checkpoint开始时刻FT header的克隆
+};
+</code></pre>
+
+<p>创建新的Fractal Tree索引（简称FT）时候，调用函数<code>toku_ft_create</code>做一些必要的初始化工作：创建FT索引的header，创建block table（FT逻辑块号到文件offset的映射表），以及创建FT的root节点。创建root节点的过程很简单：初始化一个空的leaf节点（块号为0），并把它加到cachetable中，此时的root节点只包含一个basement节点。在leaf节点被回刷到磁盘之前会把leaf节点按照128K为单位分割成多个basement节点，这样做的好处是加速leaf节点上的查询过程。</p>
+
+<h3>Fractal Tree insert</h3>
+
+<p>在第一节背景介绍里面谈到的，向Fractal Tree插入（key,value）对的操作是<code>push_into_root</code>。在TokuDB代码实现里面，insert操作是通过调用<code>toku_ft_root_put_msg</code>给FT发一个FT_INSERT/FT_INSERT_NO_OVERWRITE（出现duplicate key时保留老值）消息实现的。</p>
+
+<p>向FT发送一个message的过程如下：</p>
+
+<ul>
+  <li>调用<code>toku_pin_ftnode</code>获取root节点（加share锁），这个过程中可能会引起从磁盘读取root节点的操作，在这里假设所有节点都已缓存在内存中；</li>
+  <li>调用<code>toku_ftnode_get_reactivity</code>判断root节点是否需要split。Leaf节点需要split的条件是：leaf节点所需的磁盘空间大于nodesize（缺省4M）；internal节点需要split的条件是：子节点个数大于fanout（缺省16）。如果需要split，root节点需要把share锁升级为exclusive锁，拿到exclusive锁后调用<code>ft_init_new_root</code>进行root分裂并生成新的root节点，这个返回时root节点块号保持不变（还是0），并持有exclusive锁，<code>ft_init_new_root</code>返回后需要把exclusive锁降级为share锁。一般情况下root节点是不要split的；</li>
+  <li>向root节点push message。</li>
+</ul>
+
+<p>下面就是push message的过程：</p>
+
+<ul>
+  <li>如果root是leaf节点或者message是广播消息的话（比如on-line add index或者on-line add column）就把message放到root节点就可以返回了。这里需要解释一下，广播消息是需要apply到每一个leaf节点上的，所以需要从root节点向下逐级flush，不能跳过任何一个范围；</li>
+  <li>如果Fractal Tree的高度大于1，调用<code>push_something_in_subtree</code>把message放到root的节点的某个子树上；</li>
+  <li>如果Fractal Tree的高度等于1，首先调用<code>toku_ftnode_which_child</code>确定应该把message放到哪个leaf节点上。如果目标的leaf节点是最左（childnum == 0）或者最右（childnum == node-&gt;n_children - 1) 的情况，调用<code>push_something_in_subtree</code>把message放到目标leaf节点上；否则放到root节点即可返回，最左最右的情况是优化顺序查询。最后一节会看到，一般的FT search是需要把root到leaf搜索路径上所有落在bounds区间internal节点上的message先apply到leaf节点，然后再leaf节点上进行搜索的。在TokuDB的engine层，<code>get_first/get_last</code>操作直接读取最左/最右的leaf节点，所以最左最右插入的时候需要把message 同步apply到leaf节点上的。伪代码如下：</li>
+</ul>
+
+<pre><code>void toku_ft_root_put_msg(FT ft, const ft_msg &amp;msg, txn_gc_info *gc_info) {
+    ftnode_fetch_extra bfe;
+    bfe.create_for_full_read(ft); // fetch整个node
+    pair_lock_type lock_type = PL_READ; // 初始状态：申请读锁
+change_lock_type:
+    toku_pin_ftnode(ft, root_key, fullhash, &amp;bfe, lock_type, &amp;node, true);
+    enum reactivity re = toku_ftnode_get_reactivity(ft, node);
+    switch (re) {
+    case RE_STABLE:
+case RE_FUSIBLE:
+        // root节点不支持merge操作
+        if (lock_type != PL_READ) {
+            // 其他thread抢先做了split
+            toku_unpin_ftnode_read_only(ft, node);
+            lock_type = PL_READ;
+            goto change_lock_type;
+        }
+        break;
+    case RE_FISSIBLE:
+        if (lock_type == PL_READ) {
+            // 需要split，升级为写锁
+            toku_unpin_ftnode_read_only(ft, node);
+            lock_type = PL_WRITE_CHEAP;
+            goto change_lock_type;
+        } else {
+            // root节点split
+            ft_init_new_root(ft, node, &amp;node);
+            // split完成，降级为读锁
+            toku_unpin_ftnode(ft, node);
+            lock_type = PL_READ;
+            goto change_lock_type;
+        }
+        break;
+    }
+    if (root -&gt;height == 0 || ft_msg_type_is_broadcast(msg.type())) {
+        // root是leaf节点或者messsage是广播消息，把message放到root节点上
+        // 这里释放锁的原因是：inject_message_at_this_blocknum里面会重新拿锁
+        toku_unpin_ftnode_read_only(ft, root);
+        inject_message_at_this_blocknum(ft, root_key, fullhash, msg, flow_deltas, gc_info);
+    } else if (root-&gt;height &gt; 1) {
+        // root高度大于1时，把message加到root节点的某个子树上
+        push_something_in_subtree(ft, node, -1, msg, flow_deltas, gc_info, 0, LEFT_EXTREME |  RIGHT_EXTREME, false);
+    } else {
+        // root高度等于1时，确定message应该放到哪个leaf节点上
+        int childnum = toku_ftnode_which_child(node, msg.kdbt(), ft-&gt;cmp);
+        // 目标leaf节点是root的最左或最右子节点时，把message放到相应的leaf节点上
+        if (childnum == 0 || childnum == node-&gt;n_children - 1) {
+            push_something_in_subtree(ft, node, childnum, msg, flow_deltas, gc_info, 0, LEFT_EXTREME | RIGHT_EXTREME, false);
+        } else {
+            // 把message放到root节点上
+            // 这里释放锁的原因是：inject_message_at_this_blocknum里面会重新拿锁
+            toku_unpin_ftnode_read_only(ft, node);
+            inject_message_at_this_blocknum(ft, root_key, fullhash, msg, flow_deltas, gc_info);
+        }
+    }
+}
+toku_ftnode_get_reactivity返回的reactivity定义如下：
+enum reactivity {
+    RE_STABLE,    // 正常状态
+    RE_FUSIBLE,   // 需要merge
+    RE_FISSIBLE    // 需要split
+};
+</code></pre>
+
+<p>下面我们一起看一下<code>push_something_in_subtree</code>的处理过程。这里有个promotion的概念：message有可能不会直接放到root节点上，而是放到root的第一级子节点或者第二级子节点上（至多往下看两级子节点）。Promotion的一般原则：</p>
+
+<ul>
+  <li>只promote非广播message；</li>
+  <li>如果子节点对应的msg_buffer非空，就不会递归向下promote；</li>
+  <li>为了优化顺序insert，如果是最左/最右的情况一定要把message apply到leaf节点上；</li>
+  <li>非最左/最右的情况，遇到height == 1的internal节点或者depth ==2 (已做了两级的promotion)，promote就停止了；</li>
+  <li>修改leaf节点是很耗时的（在后面会看到），所以一般选择把message放到internal节点上；</li>
+</ul>
+
+<p>函数<code>inject_message_in_locked_node</code>实现了把message push到node节点上。伪代码如下：</p>
+
+<pre><code>static void inject_message_in_locked_node(FT ft, FTNODE node, int childnum, const ft_msg &amp;msg, size_t flow_deltas[],txn_gc_info *gc_info) {
+    // 生成全局（FT内）唯一的msn
+    MSN msg_msn = { .msn = toku_sync_add_and_fetch(&amp;ft-&gt;h-&gt;max_msn_in_ft.msn, 1) };
+ft_msg msg_with_msn(msg.kdbt(), msg.vdbt(), msg.type(), msg_msn, msg.xids());
+    toku_ftnode_put_msg(ft-&gt;cmp, ft-&gt;update_fun, node, childnum, msg_with_msn, true, gc_info, flow_deltas, &amp;stats_delta);
+if (node-&gt;height &gt; 0 &amp;&amp; toku_ftnode_nonleaf_is_gorged(node, ft-&gt;h-&gt;nodesize)) {
+    // 如果node节点是internal节点，msg_buffer非空并且node节点所需的磁盘空间 + 各个子节点的workdone（query过程中同步flush的message大小的总和）大于nodesize（缺省4M），trigger client线程池的工作线程异步flush这个节点。
+    // msg_buffer非空并且node节点所需的磁盘空间 + 各个子节点的workdone: 表示node节点逻辑上的size
+   toku_ft_flush_node_on_background_thread(ft, node);
+    } else {
+        toku_unpin_ftnode(ft, node);
+}
+}
+</code></pre>
+
+<p>函数<code>toku_ftnode_put_msg</code>的作用是把message push到node节点上。如果node是internal节点，调用函数<code>ft_nonleaf_put_msg把message</code>加到msg_buffer里面。Internal节点维护了一个FIFO队列msg_buffer，按照message到达节点的顺序追加到FIFO尾部。Internal节点里面还维护了两个有序结构：<code>fresh_message_tree</code>和<code>stale_message_tree</code>，这两个有序结构记录了按照（key,msn）排序的message（实际上存的是message在msg_buffer中的offset）。<code>fresh_message_tree</code>保存的是未apply的message；<code>stale_message_tree</code>保存的是在query过程中同步applied过的message。<code>inject_message_in_locked_node</code>在退出之前判断internal节点是否缓存了大量message，如果是则会把当前这个节点放到cachetable （TokuDB的buffer pool）的client线程池，让工作线程在后台把这个节点上的message flush到下一级节点。其实cachetable有个后台线程cleaner线程也在做同样的事情，但是cleaner线程是每1秒钟启动一次，而且一个cleaner线程负责处理cachetable所有需要flush的internal节点，是很有可能来不及处理的。</p>
+
+<p>这里重点看一下把message 放到leaf节点的过程，这里我们不考虑广播消息。首先是调用<code>toku_ftnode_which_child</code>判断message应放到哪个basement节点上，然后调用<code>toku_ft_bn_apply_msg</code>把message放到目标basement节点上。前面函数中都没有考虑message的类型，直到这个函数才会根据message类型做不同的处理。对应insert操作，首先尝试顺序insert的优化（即跟basement最后一个key作比较，若大于最后一个key表示是升序顺序insert情况）。如果不是顺序insert的pattern，会在basement节点的有序数据结构bn里面进行binary search查找key对应的LEAFENTRY，然后调用<code>toku_ft_bn_apply_msg_once</code>在basement节点进行insert。</p>
+
+<p><code>toku_ft_bn_apply_msg_once</code>是<code>toku_le_apply_msg</code>的简单封装。<code>toku_le_apply_msg</code>伪代码如下：</p>
+
+<pre><code>toku_le_apply_msg(const ft_msg &amp;msg,
+                 LEAFENTRY old_leafentry,    // 老的LEAFENTRY
+                 bn_data* data_buffer,       // basement节点的bn，如果是basement节点上第一个message，这个值NULL
+                 uint32_t idx,               // old_leafentry在bn上的index
+                 uint32_t old_keylen, txn_gc_info *gc_info,
+                 LEAFENTRY *new_leafentry_p,  //新的LEAFENTRY
+                 int64_t * numbytes_delta_p) {
+    if (old_leafentry == NULL) {
+        msg_init_empty_ule(&amp;ule);
+    } else {
+        le_unpack(&amp;ule, old_leafentry); // 把LEAFENTRY转成ULE
+    }
+    msg_modify_ule(&amp;ule, msg);          // 把message加到ULE的MVCC
+    // 把ULE转成LEAFENTRY
+    // 若data_buffer == NULL，le_pack分配basement节点的bn
+    int r = le_pack(&amp;ule, data_buffer, idx, msg.kdbt()-&gt;data, keylen, old_keylen, oldmemsize, new_leafentry_p, &amp;maybe_free);
+}
+</code></pre>
+<p>如果是FT_INSERT_NO_OVERWRITE，需要检查key是否已存在。若存在，直接退出。否则在ULE的MVCC结构添加一个类型为XR_INSERT的provisional txn。</p>
+
+<pre><code>msg_modify_ule(ULE ule, const ft_msg &amp;msg) {
+    switch (type) {
+    case FT_INSERT_NO_OVERWRITE: {
+        UXR old_innermost_uxr = ule_get_innermost_uxr(ule);
+        // key已存在，保留老值
+        if (uxr_is_insert(old_innermost_uxr)) break;
+    }
+    case FT_INSERT: {
+        uint32_t vallen = msg.vdbt()-&gt;size;
+        void * valp = msg.vdbt()-&gt;data;
+        ule_apply_insert(ule, xids, vallen, valp);
+        break;
+}
+</code></pre>
+
+<h2>Fractal Tree delete</h2>
+
+<p>在Fractal Tree删除一个&lt;key, value&gt;对的方法是：调用函数 <code>toku_ft_root_put_msg</code> 给FT发送一个类型为 FT_DELETE_ANY 的message。其处理过程与insert类似，函数<code>msg_modify_ule</code>会判断message的类型，如果是FT_DELETE_ANY，就会给ULE的MVCC添加一个 XR_DELETE 类型的provisional txn。</p>
+
+<pre><code>msg_modify_ule(ULE ule, const ft_msg &amp;msg) {
+    switch (type) {
+    case FT_DELETE_ANY:
+        ule_apply_delete(ule, xids);
+        break;
+    }
+}
+</code></pre>
+
+<h2>LEAFENTRY的隐式提交</h2>
+
+<p>之前有篇月报<a href="http://mysql.taobao.org/monthly/2016/03/01/">《MySQL·TokuDB·事务子系统和 MVCC 实现》</a>讨论TokuDB在事务提交一节里有这样的描述：</p>
+
+<blockquote>
+  <p>如果是root txn调用apply_txn对rollback log的每一个item进行commit操作。如果是nested child txn把child txn的rollback log挂到parent的rollback log尾部，等到root txn 提交的时候对所有rollback log的item进行commit。需要注意的是，对于大部分DML操作rollback log item-&gt;commit都是noop。</p>
+</blockquote>
+
+<p>那么在LEAFENTRY里面provisional txn是如何提交的呢？LEAFENTRY采用LAZY的方式提交，就是说provisional txn并不会在txn commit的时候变成commit txn，而是推迟到下一次修改这个LEAFENTRY的时候隐式提交。</p>
+
+<p>原因是：修改LEAFENTRY需要先转成ULE结构，做完修改再把ULE转成LEAFENTRY。这样做的好处是把两次LEAFENTRY=&gt;ULE=&gt;LEAFENTRY合并了。Txn rollback时候，会对DML操作的key发FT_ABORT_ANY类型的message，这种message也是采用push到root节点（或者其下面的某个子节点）就返回。</p>
+
+<pre><code>static void
+msg_modify_ule(ULE ule, const ft_msg &amp;msg) {
+    XIDS xids = msg.xids();
+    enum ft_msg_type type = msg.type();
+    if (type != FT_OPTIMIZE &amp;&amp; type != FT_OPTIMIZE_FOR_UPGRADE) {
+        ule_do_implicit_promotions(ule, xids);
+    }
+}
+static void
+ule_do_implicit_promotions(ULE ule, XIDS xids) {
+    if (ule-&gt;num_puxrs &gt; 0) {
+        int num_xids = toku_xids_get_num_xids(xids);
+        uint32_t max_index = ule-&gt;num_cuxrs + min_i32(ule-&gt;num_puxrs, num_xids) - 1;
+        uint32_t ica_index = max_index;
+        uint32_t index;
+        for (index = ule-&gt;num_cuxrs; index &lt;= max_index; index++) {
+            TXNID current_msg_xid = toku_xids_get_xid(xids, index - ule-&gt;num_cuxrs);
+            TXNID current_ule_xid = ule_get_xid(ule, index);
+            if (current_msg_xid != current_ule_xid) {
+                //ICA表示innermost common ancestor
+                ica_index = index - 1;
+                break;
+            }
+        }
+        if (ica_index &lt; ule-&gt;num_cuxrs) {
+            // 隐式提交上一次对这个LEAFENTRY的修改
+            invariant(ica_index == ule-&gt;num_cuxrs - 1);
+            ule_promote_provisional_innermost_to_committed(ule);
+        }
+        else if (ica_index &lt; ule-&gt;num_cuxrs + ule-&gt;num_puxrs - 1) {
+            ule_promote_provisional_innermost_to_index(ule, ica_index);
+        }
+    }
+}
+</code></pre>
+
+<h2>Cleaner线程异步flush机制</h2>
+
+<p>Cleaner线程找到消耗内存最多的internal节点，调用<code>cleaner_callback</code>去做flush。在<code>get_write_callbacks_for_node</code>注册的<code>cleaner_callback</code>是<code>toku_ftnode_clone_callback</code>。这个函数首先把node的所有partition读到内存，然后选择内存消耗最大的子节点，把那个节点对应的bnc缓存的message flush到相应的子节点上。</p>
+
+<p>Flush bnc的过程：</p>
+
+<ul>
+  <li>记下需要flush的bnc；</li>
+  <li>新创建一个空的bnc记做new_bnc，并用new_bnc代替bnc来缓存新的message；</li>
+  <li>调用<code>toku_bnc_flush_to_child</code>把bnc缓存的message flush到子节点上。</li>
+</ul>
+
+<p><code>toku_bnc_flush_to_child</code>会遍历bnc的所有message，然后对每个message调用<code>toku_ftnode_put_msg</code>把message放到子节点上的。一个bnc被flush完之后，可能会引起子节点递归的flush，也可能引起节点的split或者merge。由于篇幅有限请大家自己分析。</p>
+
+<h2>Fractal Tree split和merge</h2>
+
+<p>Fractal Tree节点的split和merge操作是自上而下进行的，这些操作都是在向这个节点push一个message之后触发的。</p>
+
+<h3>Fractal Tree split</h3>
+
+<p>Fractal Tree节点split的条件是：</p>
+
+<ul>
+  <li>leaf节点：所需磁盘空间大于nodesize（缺省4M）</li>
+  <li>Internal节点：子节点个数大于fanout（缺省16）</li>
+</ul>
+
+<p>Split的过程分为两个部分：</p>
+
+<ul>
+  <li>分割数据：对于leaf节点来说是把basement和其存储的LEAFENTRY按照split类型分为两部分；对于internal节点来说是把msg_buffer平均分成两部分；</li>
+  <li>分割pivotkeys：按照第一步分割数据的方式把pivotkeys分成两部分，并把splitk加到父节点上。Split完成后这两个节点拥有相同的<code>max_msn_applied_to_node_on_disk</code>和<code>oldest_referenced_xid_known</code>。</li>
+</ul>
+
+<p>Fratcal Tree支持的split类型：</p>
+
+<pre><code>enum split_mode {
+    SPLIT_EVENLY,
+    SPLIT_LEFT_HEAVY,
+    SPLIT_RIGHT_HEAVY
+};
+</code></pre>
+
+<p>Split之后，internal节点可能会选择进一步做flush message的操作。为什么split之后还需要flush呢？这部分代码比较晦涩，笔者认为可能是因为split的条件是子节点个数大于fanout，没有考虑到节点的逻辑大小。</p>
+
+<h3>Fractal Tree merge：把相邻的两个节点合并成一个节点。</h3>
+
+<p>Fractal Tree节点merge的条件是：</p>
+
+<ul>
+  <li>Leaf节点：所需磁盘空间小于1/4 nodesize（缺省4M）</li>
+  <li>Internal节点：子节点个数小于1/4 fanout（缺省16）</li>
+</ul>
+
+<p>节点merge的过程也分成两种情况：</p>
+
+<ul>
+  <li>Leaf节点：如果nodea大小+nodeb大小&lt;3/4 nodesize才会考虑合并；否则，如果nodea大小&lt;1/4 nodesize或者nodeb大小&lt;1/4, 会balance这两个节点（先合并，再平均split成两个节点）</li>
+  <li>Internal节点：把msg_buffer合并</li>
+</ul>
+
+<h2>Rebalance leaf节点</h2>
+
+<p>Leaf节点被回刷到磁盘之前会调用<code>toku_ftnode_leaf_rebalance</code>函数把leaf节点的basement节点按照basementnodesize（缺省128K）大小平均分割成若干个basement节点。还记得吗？root节点刚创建的时候只有1个basement节点的。</p>
+
+<h2>Fractal Tree上的查询</h2>
+
+<p>Fractal Free在查询方面是比较特殊的：</p>
+
+<ul>
+  <li>FT需要先同步flush root-&gt;leaf路径上满足查询条件的所有message</li>
+  <li>FT形态与B+Tree不同：leaf节点没有双向链表</li>
+</ul>
+
+<p><img src="http://img3.tbcdn.cn/L1/461/1/7764a95ca3c408048a92e05cbc7af1181cab8153" alt="screenshot" /><br />
+<img src="http://img3.tbcdn.cn/L1/461/1/1a899e34b6397e427fb1677e9aace49af6b7cfa5" alt="screenshot" /></p>
+
+<p>上面的图是FT的树形结构，下面的图是B+Tree的树形结构</p>
+
+<p>FT查询每次都是从root节点开始的，在internal节点中的查找是由pivotkeys路由到相应的子节点上，在leaf节点上是由pivotkeys路由到basement节点，然后在basement节点进行binary search寻找search key所在的位置。当要进行一个range查询的时候，首先使用set_range方法找到满足查询range区间的第一个key，然后把上一次得到的key作为参数调用get_next方法。</p>
+
+<p><img src="http://img1.tbcdn.cn/L1/461/1/f4147490dbf5cbf6959adb7d7e91bc930b62a2c9" alt="screenshot" /></p>
+
+<p>FT中查找key的入口函数是<code>toku_ft_search</code>。这个函数读取root节点，并根据search-&gt;key找到需要读取的子节点（<code>bfe.child_to_read</code>），然后调用<code>ft_search_node</code>在root节点的相应子节点查找。读root节点的时候，<code>bfe.read_all_partitions</code>被设置被TRUE。Root节点包含的所有paritition的信息都会从磁盘上读上来。即当root是internal节点的时候，所有子节点的msg_buffer信息都会读到内存来；root是leaf节点的时候，所有的basement节点的有序结构都会读到内存来。伪代码如下：</p>
+
+<pre><code>int toku_ft_search(FT_HANDLE ft_handle, ft_search *search, FT_GET_CALLBACK_FUNCTION getf, void *getf_v, FT_CURSOR ftcursor, bool can_bulk_fetch)
+{
+try_again:
+    trycount++;
+    ftnode_fetch_extra bfe;
+    // 只读取包含search key的那个子节点
+    bfe.create_for_subset_read(ft, search, &amp;ftcursor-&gt;range_lock_left_key,
+                           &amp;ftcursor-&gt;range_lock_right_key, ftcursor-&gt;left_is_neg_infty,
+                           Ftcursor-&gt;right_is_pos_infty,ftcursor-&gt;disable_prefetching, true);
+    FTNODE node = NULL;
+    {
+        //读取root节点，并设置bfe.child_to_read为包含search key的子节点
+        toku_pin_ftnode(ft, root_key, fullhash, &amp;bfe, PL_READ, &amp;node, true);
+    }
+    struct unlock_ftnode_extra unlock_extra   = {ft_handle,node,false};
+    struct unlockers  unlockers      = {true, unlock_ftnode_fun, (void*)&amp;unlock_extra,          (UNLOCKERS)NULL};
+    {
+        bool doprefetch = false; bfe.child_to_read
+        r = ft_search_node(ft_handle, node, search, bfe.child_to_read, getf, getf_v, &amp;doprefetch, ftcursor, &amp;unlockers, (ANCESTORS)NULL, pivot_bounds::infinite_bounds(), can_bulk_fetch);
+        if (r==TOKUDB_TRY_AGAIN) {
+            // 获取锁时需要等待或者需要partial fetch
+            if (unlockers.locked) {
+                toku_unpin_ftnode_read_only(ft_handle-&gt;ft, node);
+            }
+            goto try_again;
+        } else {
+            assert(unlockers.locked);
+        }
+    }
+    assert(unlockers.locked);
+    toku_unpin_ftnode_read_only(ft_handle-&gt;ft, node);
+}
+</code></pre>
+
+<p><code>ft_search_node</code> 是一个递归调用的函数，它根据 node-&gt;height 决定调用<code>ft_search_child</code>（internal节点）或者<code>ft_search_basement_node</code>（leaf节点）。<code>ft_search_basement_node</code>就是在（<code>node</code>，<code>bfe.child_to_read</code>）对应的basement节点的有序数据结构里面查找满足cmp函数的key。<code>ft_search_child</code>调用<code>toku_pin_ftnode_for_query</code>读取（<code>node</code>，<code>bfe.child_to_read</code>）表示子节点childnode。每次进入<code>ft_search_child</code>定义了一个新的bfe（记做bfe_1）表示读取childnode节点的hint信息。读取的时候指定了<code>bfe_1.read_all_partitions = (childnode-&gt;height &gt;=1)</code>。当childnode是internal节点时，会把所有partition的msg_buffer都读到内存来；childnode是leaf节点的时候，只读search-&gt;key对应basement节点。<code>toku_pin_ftnode_for_query</code>采用non-blocking的方式获取childnode上的锁（这里是读锁）。Non-blocking的含义是说如果这个锁可以获取就立即返回；否则在等待之前把之前获得的从root到父节点的锁全部释放掉，然后阻塞在那个锁上。被唤醒以后立即释放锁返回TRY_AGAIN重新从root开始search。从父节点到root节点获得的锁被记录在unlockers队列里面，队列尾部是root节点。</p>
+
+<p>函数<code>toku_pin_ftnode_for_query</code>返回成功以后，会间接递归调用<code>ft_search_node</code>在childroot节点上进行搜索。<code>ft_search_node</code>还有一个副产品就是把上层传过来的bounds映射到(<code>node</code>,<code>bfe.child_to_read</code>)的key值区间，经过几次间接递归调用<code>ft_search_node</code>最终会到达leaf节点。如果是leaf节点<code>toku_pin_ftnode_for_query</code>需要检查bounds对应的key值区间的msg是否都applied过了，如果有未apply的msg，则遍历unlockers队列记录的祖先节点，把祖先节点key值在bounds范围的message flush到leaf节点上。确保所有在bounds范围的message都apply到leaf节点以后，在leaf节点对应的basement节点上进行搜索。</p>
+
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>

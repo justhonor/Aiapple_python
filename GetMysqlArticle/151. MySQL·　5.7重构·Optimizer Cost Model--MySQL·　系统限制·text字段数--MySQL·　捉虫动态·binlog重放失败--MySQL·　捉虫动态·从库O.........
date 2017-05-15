@@ -1,0 +1,610 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="zh-cn" dir="ltr">
+<head>
+<title>MySQL内核月报 2014.10 - 淘宝数据库研发组</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="MediaWiki 1.16.5" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="淘宝数据库研发组 (zh-cn)" />
+<link title="Creative Commons" type="application/rdf+xml" href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10&amp;action=creativecommons" rel="meta" />
+<link rel="copyright" href="http://www.gnu.org/copyleft/fdl.html" />
+<link rel="alternate" type="application/atom+xml" title="淘宝数据库研发组的Atom订阅" href="/index.php?title=%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9&amp;feed=atom" />
+<link rel="stylesheet" href="/skins/common/shared.css?270" media="screen" />
+<link rel="stylesheet" href="/skins/common/commonPrint.css?270" media="print" />
+<link rel="stylesheet" href="/skins/monobook/main.css?270" media="screen" />
+<!--[if lt IE 5.5000]><link rel="stylesheet" href="/skins/monobook/IE50Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 5.5000]><link rel="stylesheet" href="/skins/monobook/IE55Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 6]><link rel="stylesheet" href="/skins/monobook/IE60Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" href="/skins/monobook/IE70Fixes.css?270" media="screen" /><![endif]-->
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Common.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" />
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Print.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" media="print" />
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Monobook.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" />
+<link rel="stylesheet" href="/index.php?title=-&amp;action=raw&amp;maxage=18000&amp;gen=css" />
+<script>
+var skin="monobook",
+stylepath="/skins",
+wgUrlProtocols="http\\:\\/\\/|https\\:\\/\\/|ftp\\:\\/\\/|irc\\:\\/\\/|gopher\\:\\/\\/|telnet\\:\\/\\/|nntp\\:\\/\\/|worldwind\\:\\/\\/|mailto\\:|news\\:|svn\\:\\/\\/",
+wgArticlePath="/index.php?title=$1",
+wgScriptPath="",
+wgScriptExtension=".php",
+wgScript="/index.php",
+wgVariantArticlePath=false,
+wgActionPaths={},
+wgServer="http://mysql.taobao.org",
+wgCanonicalNamespace="",
+wgCanonicalSpecialPageName=false,
+wgNamespaceNumber=0,
+wgPageName="MySQL内核月报_2014.10",
+wgTitle="MySQL内核月报 2014.10",
+wgAction="view",
+wgArticleId=123,
+wgIsArticle=true,
+wgUserName=null,
+wgUserGroups=null,
+wgUserLanguage="zh-cn",
+wgContentLanguage="zh-cn",
+wgBreakFrames=false,
+wgCurRevisionId=949,
+wgVersion="1.16.5",
+wgEnableAPI=true,
+wgEnableWriteAPI=true,
+wgSeparatorTransformTable=["", ""],
+wgDigitTransformTable=["", ""],
+wgMainPageTitle="首页",
+wgFormattedNamespaces={"-2": "媒体", "-1": "特殊", "0": "", "1": "讨论", "2": "用户", "3": "用户讨论", "4": "淘宝数据库研发组", "5": "淘宝数据库研发组讨论", "6": "文件", "7": "文件讨论", "8": "MediaWiki", "9": "MediaWiki讨论", "10": "模板", "11": "模板讨论", "12": "帮助", "13": "帮助讨论", "14": "分类", "15": "分类讨论"},
+wgNamespaceIds={"媒体": -2, "特殊": -1, "": 0, "讨论": 1, "用户": 2, "用户讨论": 3, "淘宝数据库研发组": 4, "淘宝数据库研发组讨论": 5, "文件": 6, "文件讨论": 7, "mediawiki": 8, "mediawiki讨论": 9, "模板": 10, "模板讨论": 11, "帮助": 12, "帮助讨论": 13, "分类": 14, "分类讨论": 15, "对话": 1, "用户对话": 3, "图像": 6, "档案": 6, "image": 6, "image_talk": 7, "图像对话": 7, "图像讨论": 7, "档案对话": 7, "档案讨论": 7, "文件对话": 7, "模板对话": 11, "帮助对话": 13, "分类对话": 15},
+wgSiteName="淘宝数据库研发组",
+wgCategories=[],
+wgRestrictionEdit=[],
+wgRestrictionMove=[];
+</script><script src="/skins/common/wikibits.js?270"></script>
+<script src="/skins/common/ajax.js?270"></script>
+<script src="/index.php?title=-&amp;action=raw&amp;gen=js&amp;useskin=monobook&amp;270"></script>
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-MySQL内核月报_2014_10 skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content" >
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">MySQL内核月报 2014.10</h1>
+	<div id="bodyContent">
+		<h3 id="siteSub">出自淘宝数据库研发组</h3>
+		<div id="contentSub"></div>
+		<div id="jump-to-nav">跳转到： <a href="#column-one">导航</a>, <a href="#searchInput">搜索</a></div>
+		<!-- start content -->
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>目录</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#MySQL.C2.B7.E3.80.805.7.E9.87.8D.E6.9E.84.C2.B7Optimizer_Cost_Model"><span class="tocnumber">1</span> <span class="toctext">MySQL·　5.7重构·Optimizer Cost Model</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#MySQL.C2.B7.E3.80.80.E7.B3.BB.E7.BB.9F.E9.99.90.E5.88.B6.C2.B7text.E5.AD.97.E6.AE.B5.E6.95.B0"><span class="tocnumber">2</span> <span class="toctext">MySQL·　系统限制·text字段数</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7binlog.E9.87.8D.E6.94.BE.E5.A4.B1.E8.B4.A5"><span class="tocnumber">3</span> <span class="toctext">MySQL·　捉虫动态·binlog重放失败</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7.E4.BB.8E.E5.BA.93OOM"><span class="tocnumber">4</span> <span class="toctext">MySQL·　捉虫动态·从库OOM</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7.E5.B4.A9.E6.BA.83.E6.81.A2.E5.A4.8D.E5.A4.B1.E8.B4.A5"><span class="tocnumber">5</span> <span class="toctext">MySQL·　捉虫动态·崩溃恢复失败</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#MySQL.C2.B7.E3.80.80.E5.8A.9F.E8.83.BD.E6.94.B9.E8.BF.9B.C2.B7InnoDB_Warmup.E7.89.B9.E6.80.A7"><span class="tocnumber">6</span> <span class="toctext">MySQL·　功能改进·InnoDB Warmup特性</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="#MySQL.C2.B7.E3.80.80.E6.96.87.E4.BB.B6.E7.BB.93.E6.9E.84.C2.B7.E5.91.8A.E5.88.ABfrm.E6.96.87.E4.BB.B6"><span class="tocnumber">7</span> <span class="toctext">MySQL·　文件结构·告别frm文件</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="#MariaDB.C2.B7_.E6.96.B0.E9.B2.9C.E7.89.B9.E6.80.A7.C2.B7ANALYZE_statement_.E8.AF.AD.E6.B3.95"><span class="tocnumber">8</span> <span class="toctext">MariaDB· 新鲜特性·ANALYZE statement 语法</span></a></li>
+<li class="toclevel-1 tocsection-9"><a href="#TokuDB.C2.B7.E3.80.80.E4.B8.BB.E5.A4.87.E5.A4.8D.E5.88.B6.C2.B7Read_Free_Replication"><span class="tocnumber">9</span> <span class="toctext">TokuDB·　主备复制·Read Free Replication</span></a></li>
+<li class="toclevel-1 tocsection-10"><a href="#TokuDB.C2.B7_.E5.BC.95.E6.93.8E.E7.89.B9.E6.80.A7.C2.B7.E5.8E.8B.E7.BC.A9"><span class="tocnumber">10</span> <span class="toctext">TokuDB·  引擎特性·压缩</span></a></li>
+</ul>
+</td></tr></table><script>if (window.showTocToggle) { var tocShowText = "显示"; var tocHideText = "隐藏"; showTocToggle(); } </script>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.805.7.E9.87.8D.E6.9E.84.C2.B7Optimizer_Cost_Model"> MySQL·　5.7重构·Optimizer Cost Model </span></h2>
+<p>为了生成执行计划，优化器会使用一个基于估算查询执行过程中各种操作开销的成本模型。MySQL优化器有一组在编译时默认指定的“成本常量”（例如CPU算几个因子、IO算几个因子），用于决策执行计划的生成。
+</p><p>从5.7.5开始，优化器在执行计划的生成过程中有了额外的成本估算项可用。这些估算项存在在mysql系统库的server_cost和engine_cost表中，并且任何时候都可以通过修改表中的值来配置这些估算项。这些表存在的目的是，可以通过简单的调整这些表中的成本估算项来影响执行计划的生成，来达到调整执行计划的目的。
+</p><p>两张表的结构和内容如下：
+</p>
+<pre>root@localhost&nbsp;: test 12:38:41&gt; select * from mysql.server_cost; 
++------------------------------+------------+---------------------+---------+
+| cost_name                    | cost_value | last_update         | comment |
++------------------------------+------------+---------------------+---------+
+| disk_temptable_create_cost   |       NULL | 2014-10-15 11:34:11 | NULL    |
+| disk_temptable_row_cost      |       NULL | 2014-10-15 11:34:11 | NULL    |
+| key_compare_cost             |       NULL | 2014-10-15 11:34:11 | NULL    |
+| memory_temptable_create_cost |       NULL | 2014-10-15 11:34:11 | NULL    |
+| memory_temptable_row_cost    |       NULL | 2014-10-15 11:34:11 | NULL    |
+| row_evaluate_cost            |       NULL | 2014-10-15 11:34:11 | NULL    | 
++------------------------------+------------+---------------------+---------+
+</pre>
+<pre>root@localhost&nbsp;: test 12:38:51&gt; select * from mysql.engine_cost;
++-------------+-------------+--------------------+------------+---------------------+---------+
+| engine_name | device_type | cost_name          | cost_value | last_update         | comment |
++-------------+-------------+--------------------+------------+---------------------+---------+
+| default     |           0 | io_block_read_cost |       NULL | 2014-10-15 11:34:11 | NULL    |
++-------------+-------------+--------------------+------------+---------------------+---------+
+</pre>
+<p><br />
+<b>成本模型的工作方式</b>
+</p><p><br />
+可配置的优化器成本模型按如下方式工作：
+</p><p>MySQL Server在启动时读取成本模型表，并且在运行时使用内存中存贮的值。表中任何非NULL的成本估算项的值都会覆盖在代码中写死的默认成本常数，优先参与优化器成本计算。任何NULL值的成本估算项优化器都会认为用户没有指定特定的值，而使用代码中默认的成本常数。
+</p><p>在MySQL运行时，Server可能会重新读取成本表，可以通过动态载入存储引擎或者执行FLUSH OPTIMIZER_COSTS语句来触发。
+</p><p>成本估算表可以让管理员通过简单的方式去调整成本估算项，也可以通过把估算项设置为NULL来恢复原来的内置默认值。优化器使用的是内存中缓存的开销值，所以修改了表中的值后记得用FLUSH OPTIMIZER_COSTS命令让修改生效。
+</p><p>内存中缓存的成本项对当前正在执行的Session是不起效果的，一个Session内执行的Query其成本项的值是不会变动的。即使Server触发了重新读取成本表，任何估算项的变更也只影响后来链接上来的Session。
+</p><p>成本开销表是不参与复制的，只影响修改的本地实例，不会通过复制把开销表的变更复制到备库。
+</p><p><br />
+<b>成本模型数据库</b>
+</p><p><br />
+优化器成本模型库由mysql系统库下的两张表组成，包含了Query执行过程中一些操作项的成本估算值：
+</p><p>server_cost: Server层一些操作的成本估算项的值
+</p><p>engine_cost: 特定引擎的一些操作的成本估算项的值
+</p><p><br />
+server_cost表包含这些字段:
+</p><p>cost_name
+</p><p>成本模型中的成本估算项的名称（不区分大小写）。如果Server无法识别名称，在读取的时候会打一个报错在error log中。
+</p><p>cost_value
+</p><p>成本估算项的值。如果值是非NULL的，那么Server就使用这个值作为成本，否则就用编译时内置的值，DBA可以通过UPDATE这个列来修改响应的成本项。如果Server读到无效的值（例如负数），会在errorlog中打一条Warning。
+</p><p>要覆盖内置的默认值就需要设置一个非NULL值，如果要恢复默认值，就把值重新改为NULL，然后执行FLUSH OPTIMIZER_COSTS 告诉Server重新读取成本表。
+</p><p>last_update
+</p><p>这一行的最后修改时间。
+</p><p>comment
+</p><p>成本项的描述注释。DBA可以利用这个这个列来记录为什么修改了这个成本项的值，用于备查。
+</p><p><br />
+server_cost表的主键是server_cost，所以不能创建名称相同的成本项。
+</p><p><br />
+Server可以识别server_cost表中如下的cost_name:
+</p><p>disk_temptable_create_cost, disk_temptable_row_cost
+</p><p>内部创建磁盘临时表的成本开销。增加这些成本项的值可以让优化器更偏向于生成不使用磁盘临时表的执行计划。
+</p><p>key_compare_cost
+</p><p>比较记录键值的成本开销。增加这个值可以让执行计划中比较键值的操作成本变的更加昂贵。例如，一个执行计划执行了filesort，那么它的代价会比利用索引避免排序的代价要大得多。
+</p><p>memory_temptable_create_cost, memory_temptable_row_cost
+</p><p>内部创建内存临时表的成本开销。增加这些值可以使得建立内部临时表成本增加，因而优化器会偏向于不使用临时表。
+</p><p>row_evaluate_cost
+</p><p>扫描记录行的成本开销。增加这个会导致执行计划中扫描很多行数据的操作变得更加昂贵，因而执行计划会偏向扫描更少的函数。例如，一个全表扫描会比范围扫描要昂贵的多。
+</p><p><br />
+engine_cost 表包含这些列:
+</p><p>engine_name
+</p><p>要应用这个成本项的存储引擎的名称（不区分大小写）。如果这些值是default，那么对所有没在表里指定的存储引擎都会生效。如果Server无法认出引擎名称，会在errorlog输出一条Warning。
+</p><p>device_type
+</p><p>这个成本项适用的设备类型。这个列可以为不同的存储设备指定不同的成本开销，例如SAS盘和SSD盘是不一样的。不过目前，这个信息还没启用，只有0可以设置。
+</p><p>cost_value，last_update，comment
+</p><p>这三列的含义跟server_cost表中的字段含义一样.
+</p><p><br />
+engine_cost表的主键是 (cost_name, engine_name, device_type)，所以不允许为一个引擎的同一类存储设备创建相同的成本项。
+</p><p><br />
+目前Server只识别engine_cost表中的一个cost_name：
+</p><p>io_block_read_cost
+</p><p>这个成本项表示从磁盘读取一个数据的成本。增加这个值会导致执行计划中读取磁盘块会有更高的成本，因此优化器会偏向于读取更少的磁盘块。例如，一个全表扫描会比一个范围扫描读取更少的磁盘块，因此优化器会偏向范围扫描。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E7.B3.BB.E7.BB.9F.E9.99.90.E5.88.B6.C2.B7text.E5.AD.97.E6.AE.B5.E6.95.B0">MySQL·　系统限制·text字段数 </span></h2>
+<p><b>背景</b>
+</p><p>　　当用户从oracle迁移到MySQL时，可能由于原表字段太多建表不成功，这里讨论一个问题：一个InnoDB表最多能建多少个text字段。
+</p><p>　　我们后续的讨论基于创建表的语句形如：create table t(f1 text, f2 text, ..., fN text)engine=innodb;
+</p><p><br />
+<b>默认配置</b>
+</p><p>　　在默认配置下，上面的建表语句，N取值范围为[1, 1017]。 为什么是1017这个“奇怪”的数字。实际上单表的最大列数目是1024-1，但是由于InnoDB会增加三个系统内部字段（主键ID、事务ID、回滚指针），因此需要减3。而用于记录系统字典表也受1023的限制，又需要再增加三个该表的系统字段，因此每个表的最大字段数是1023-3*2。
+</p><p><br />
+<b>插入异常</b>
+</p><p>　　上述描述说明的是表能够创建成功的最大字段数。但是这样的表是“插入不安全”的。我们知道text的长度上限是64k。而往上表中插入一行，每个字段长度为7，就会报错：Row size too large (&gt; 8126).
+</p><p>　　一个page是16k，空page扣掉页信息占用空间是16252，需要除以2，原因是每个page至少要包含两个记录。
+</p><p>　　也就是说，虽然可以创建一个包含1017个text字段的表，但是很容易碰到插入失败。
+</p><p><br />
+<b>如何保证插入安全</b>
+</p><p>　　上面的表结构，在保证插入安全的情况下，N的最大值是多少？text在存储的时候，当超过768字节的时候，剩余部分会保存在另外的页面（off-page），因此每个字段占用的最大空间为768+20+2=788. 20字节存储最短剩余部分的位置（SPACEID+PAGEID+OFFSET）。2字节存储本地实际长度。
+</p><p>　　因此N最大值为lower(8126/790)=10。
+</p><p>　　如果我们想在创建的表的时候，保证创建的表中的text字段都能安全的达到64k上限（而不是等插入的时候才发现），那么需要将默认为OFF的innodb_strict_mode设置为ON，这样在建表时会先做判断。
+</p><p>　　但是，在设置为严格模式后，上述建表语句的最大N却并非10.
+</p><p><br />
+<b>ROW_FORMAT</b>
+</p><p>　　在off-page存储时，本地占用790个字节，是基于默认的ROW_FORMAT，即为COMPACT，此时插入安全的N上限为10。
+</p><p>　　而在InnoDB新格式Barracuda支持下，Dynamic格式的off-page存储时，在local保存的上限不再是768，而是20个字节。这样每个字段在数据页里面占用的最大值是40byte，再需要一个额外的字节存储实际的本地长度，因此每个text最大占用41字节。
+</p><p>　　实际上很容易测试在严格模式下，建表的最大N为196. 以下为N=197时计算过程：
+</p><p><br />
+　　每行记录预留header 5个字节。
+</p><p>　　每个bit保存是否允许null，需要 upper(197/8)=25个字节。
+</p><p>　　三个系统保留字段 6+6+7=19.
+</p><p>　　因此总占用空间 5+25+19+41*197=8126！
+</p><p><br />
+　　也就是说，当N=197时，刚好长度为8126，而代码中实现是  if(rec_max_size &gt;= page_rec_max) reutrn(error). 
+</p><p>　　就这么不巧！
+</p><p><br />
+<b>作为补充</b>
+</p><p>　　有经验的读者可以联想到，如果我们的表中自己定义一个int型主键呢？此时系统不需要额外增加主键，因此整个表结构比之前少2字节。
+</p><p>　　也就是说，建表语句修改为: create table t(id int primary key, f1 text, f2 text, ..., fN text)engine=innodb;
+</p><p>　　则此时的N上限能达到197。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7binlog.E9.87.8D.E6.94.BE.E5.A4.B1.E8.B4.A5">MySQL·　捉虫动态·binlog重放失败 </span></h2>
+<p><b> 背景 </b>
+</p><p>在 MySQL 日常维护中，要回滚或者恢复数据，我们经常会用 binlog 来在数据库上重放，执行类似下面的语句：
+</p><p>mysqlbinlog mysql-bin.000001 | mysql -hxxxx -Pxx -u
+</p><p>最近遇到了这样一个问题，在重放 binlog 时，mysqld 报这样的错
+</p><p>ERROR 1064 (42000) at line 25: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER&nbsp;;
+</p><p><br />
+<b> 分析 </b>
+</p><p>上面的错是说语法不对，难道是 binlog 写错了，为了方便查看，先把 mysqlbinlog 解析结果保存到一个文件
+</p><p>mysqlbinlog mysql-bin.000001 &gt; abc.sql
+</p><p>然后打开 abc.sql 文件，会看到这样的语句
+</p><p>"CREATE TABLE t_binlog_sbr(a int)^@"
+</p><p>最后面的奇怪的 "^@" 这是啥呢，我们用二进制方式打开文件后，发现这个其实是1个字节，值是 00，被显示成 "^@"了。
+</p><p>为啥后面会多 1 个 0 呢，后来发现是用户在用 MySQL C  API 时用错了，具体是这个函数 mysql_real_query，基原型是
+</p><p>int mysql_real_query(MYSQL *mysql, const char *stmt_str, unsigned long length)
+</p><p>详细说明参考<a href="http://dev.mysql.com/doc/refman/5.6/en/mysql-real-query.html" class="external text" rel="nofollow">这里</a>，length 参数表示 stmt_str 的长度，所以正常的调用应该是这样的：
+</p><p>mysq_real_query(mysql, sql, strlen(sql))
+</p><p>可是用户在使用时多加了个1，变成这样
+</p><p>mysq_real_query(mysql, sql, strlen(sql) + 1)
+</p><p>最终导致记录的 binlog 后面多了个 '\0'。 这个问题只在 statement  格式有，row 格式没有。
+</p><p><br />
+<b> 解决方法 </b>
+</p><p>有同学会问，+1 可以，+2、 +3 呢，这个是不可以的，&gt;=2 的都是不行的，语句发过来后，mysqld 在 parse_sql 阶段直接报错返回了，后面就不会执行了。
+</p><p>1) 修改代码
+</p><p>mysq_real_query(mysql, sql, strlen(sql) + 1) 这种用法是不对的，但是 MySQL 却允许，虽然这么用是不对的，但是为了兼容性，最好还是允许这种使用方式，但是在写binlog的时候做个判断，长度是不是写错了，错了的话纠正过来，在 THD::binlog_query 里面改。
+</p><p><br />
+2) 5.6 版本加参数
+</p><p>如果是用 5.6 版本的 mysql client 的话，在重放时出错提示信息不一样，是类似下面这样的，更加友好，这个错误是 mysql client 报的，不是mysqld报的：
+</p><p>ERROR at line 24: ASCII '\0' appeared in the statement, but this is not allowed unless option --binary-mode is enabled and mysql is run in non-interactive mode. Set --binary-mode to 1 if ASCII '\0' is expected....
+</p><p>5.6 版本的 mysql client 多了一个参数 --binary-mode，允许语句里有 '\0'，所以如果是用5.6的话，就可以不用修改代码，重放binlog时这样做就可以了：
+</p><p>mysqlbinlog mysql-bin.000001 | mysql --binary-mode -hxxxx -Pxx -u
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7.E4.BB.8E.E5.BA.93OOM"> MySQL·　捉虫动态·从库OOM </span></h2>
+<p><b> bug背景 </b>
+</p><p>官方最近发布的版本(5.7.5)修复了这样一个bug，主备复制场景下，如果主库和备库对应的表结构中有数据类型不一致，并且主库的 binlog 是 row 格式的，这时候如果主库对不一致的表做了一个大事务更新，备库在应用 relay-log 的时候报OOM(Out of Memory)。bug地址在<a href="http://bugs.mysql.com/bug.php?id=72610" class="external text" rel="nofollow">这里</a>，主备数据类型不一致主要发生在这2种情况下：
+</p>
+<ol><li> 主备库版本不一致，不同版本之间的数据类型可能存在不一致。用户在报这个bug时，就是在5.5到5.6的复制场景下，用到了时间类型，时间类型在5.6.4版本时<a href="http://dev.mysql.com/doc/refman/5.6/en/storage-requirements.html#data-types-storage-reqs-date-time" class="external text" rel="nofollow">发生了变化</a>
+</li><li> 人为直接的连上从库 alter 表
+</li></ol>
+<p><br />
+<b> bug分析 </b>
+</p><p>为啥数据类型不一致会导致 OOM 呢？OOM 表示程序在持续申请内存，把内存给用爆了。从库的slave thread在应用Rows_log_event时，如果发现主库的表和从库的表不兼容，就会创建一个临时中间表，做数据转化：
+</p>
+<pre>Rows_log_event::do_apply_event()
+    table_def::compatible_with()
+         table_def::create_conversion_table()
+              create_conversion_table()
+</pre>
+<p>在此过程中用的临时表结构和field字段都是从thd的mem_root分配的，而每个Rows_log_event应用时分配内存空间再do_apply_event后就不会再用了，但是 Rows_log_event::do_apply_event() 结束后并没有free_root释放，而是在事务所有event做完后释放的。类似下面这种包含大量更新语句的事务，每一个更新对应一个Rows_log_event，备库在应用时，在事务执行中间所有申请的内存都会保持，如果语句非常多的话，就导致OOM了。
+</p>
+<pre>begin;
+insert into t1 values (xxx); /* 1 */
+insert into t1 values (xxx); /* 2 */
+insert into t1 values (xxx); /* 3 */
+....
+insert into t1 values (xxx); /* 1000000 */
+end;
+</pre>
+<p><br />
+<b> bug 修复 </b>
+</p><p>像 Query_log_event::do_apply_event() 在结束会调用free_root，来释放thd-&gt;mem_root空间，而Rows_log_event::do_apply_event()却不能这样干，因为在下面的场景下，用户的线程会调用 Rows_log_event::do_apply_event()
+</p><p>mysqlbinlog mysql-bin.00000x | mysql -hxxxx -Pxx -u
+</p><p>如果在中间释放用户线程的thd-&gt;mem_root的话，会有问题。 
+</p><p>因此官方的修复方法是在Log_event类构造函数初始化一个属于log_event的 mem_root
+</p>
+<pre>Log_event::Log_event()
+    init_sql_alloc(PSI_INSTRUMENT_ME, &amp;m_event_mem_root, 4096, 0);
+</pre>
+<p>在析构函数里释放
+</p>
+<pre>virtual ~Log_event()
+    free_root(&amp;m_event_mem_root, MYF(MY_KEEP_PREALLOC));
+</pre>
+<p>然后把Rows_log_event::do_apply_event()本来从thd-&gt;mem_root申请的内存改为从自身的 m_event_mem_root 申请，这样每个event应用完，被delete时其转化过程中申请的内存也一并被释放，避免了OOM的产生。
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7.E5.B4.A9.E6.BA.83.E6.81.A2.E5.A4.8D.E5.A4.B1.E8.B4.A5"> MySQL·　捉虫动态·崩溃恢复失败 </span></h2>
+<p><b>现象</b>
+</p><p>　　5.6版本，在创建InnoDB表过程中，若发生crash，会导致服务无法启动。
+</p><p><br />
+<b>背景</b>
+</p><p>　　每个InnoDB表A创建成功后有两个文件A.frm和A.ibd。建表流程如下：
+</p><p>　　1、创建A.frm
+</p><p>　　2、创建A.ibd
+</p><p>　　3、初始化A.ibd 
+</p><p>　　4、将表A加入InnoDB字典
+</p><p><br />
+　　若crash发生在步骤2之后，则只保留一个完整的A.frm和一个空文件A.idb。
+</p><p><br />
+</p><p><b>崩溃恢复</b>
+</p><p>　　在上述的crash发生后，下一次启动则需要做崩溃恢复。崩溃恢复的一个逻辑是需要遍历数据目录下的所有.ibd文件，验证文件与字典的一致性。
+</p><p>　　对于长度为0的.ibd 文件，报错并跳过，继续检测下一个表。
+</p><p>　　以上是5.5和5.6共有的逻辑。但5.6的一个新特性破坏了这个规则。
+</p><p><br />
+</p><p><b>远程目录</b>
+</p><p>　　5.6支持create table的时候指定其他目录。语法是create table 里新增参数DATA DIRECTORY.这样一个表就可能存在多个表空间。每个表空间对应一个数据结构(fsp_open_info).
+</p><p>　　这意味着在崩溃恢复过程中，需要验证哪一个表空间是可用的(fil_validate_single_table_tablespace)，
+</p><p>　　验证的方法是尝试读取该表空间的第一个page，若可用则将对应的fsp_open_info::success设置为TRUE。
+</p><p>　　而在读取本地默认表空间的第一个页时，若碰到读取失败，直接exit(1)，导致程序直接退出。“若文件小于4个page就报错”的逻辑，是在这个exit之后。
+</p><p><br />
+<b>分析改进</b>
+</p><p>　　其实在这个场景下，多出来的A.frm和A.ibd并不会导致系统严重问题。由于表A还没有记录入系统字典，实际上只需要将这两个文件直接删掉即可。
+</p><p>　　因此5.6的这个新增要求过于苛刻。改进方法是将文件大小的判断提前，若发现小于4个page，则直接报错跳过这个表。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E5.8A.9F.E8.83.BD.E6.94.B9.E8.BF.9B.C2.B7InnoDB_Warmup.E7.89.B9.E6.80.A7">MySQL·　功能改进·InnoDB Warmup特性</span></h2>
+<p><b>提要</b>
+</p><p>相对于纳秒级的内存访问延时，普通的机械盘达到了毫秒级的随机访问延时，对于OLTP应用来说，物理IO绝对是目前数据库管理系统的最大性能杀手，所以增加内存的大小，提高IO的命中率无疑可以作为一种降低时延的常用优化手段。
+</p><p>针对使用InnoDB引擎的MySQL实例来说，增加buffer pool的大小，尽可能的提高buffer pool的命中率，减少物理IO的概率，能极大的提升系统的吞吐量。
+</p><p>但是，随着内存越来越大，面临着一个很严重的问题：当内存突然失效，或者实例异常crash后，面对相同的请求压力，或者突然的大压力，系统由于内存未命中会耗尽IO资源，并导致request响应变慢，形成雪崩效应。
+</p><p><b>Warmup特性</b>
+</p><p>MySQL 5.6 Innodb提供了warmup的功能，并增加了三个控制参数：
+</p>
+<dl><dd>innodb_buffer_pool_dump_at_shutdown
+</dd><dd>innodb_buffer_pool_filename
+</dd><dd>innodb_buffer_pool_load_at_startup
+</dd></dl>
+<p><b>工作原理</b>
+</p><p>InnoDB启动一个后台线程，等待一个条件变量：
+</p><p>1. 当系统shutdown的时候，如果innodb_buffer_pool_dump_at_shutdown=on，系统会notify condition，从buffer pool的LRU链表中，读取spaceid+page_no到innodb_buffer_pool_file文件中，然后正常关闭。
+</p><p>2. 当系统startup的时候，如果innodb_buffer_pool_load_at_startup=on，并且存在innodb_buffer_pool_file，会读取元信息，进行异步IO读取数据加载到buffer pool中。
+</p><p>3. 为了防止系统运行过久，innodb_buffer_pool_file过时，无法反映当前热点数据的情况，InnoDB又提供了一个innodb_buffer_pool_dump_now参数，set后会即时进行一次dump，覆盖掉老的文件。
+</p><p><b>那么问题来了</b>
+</p><p>1. Warmup是否影响startup的速度：
+</p>
+<dl><dd>不影响.启动的时候，读取innodb_buffer_pool_file, 排序后，进行异步IO，不影响startup的速度。但现实的情况是：如果你是在业务高峰期出现crash，其实对于系统来说，先warmup后，再开放提供服务，更合适。
+</dd></dl>
+<p>2. 异常crash的时候，使用过时的元数据：
+</p>
+<dl><dd>如果异常crash，那么就存在过时的innodb_buffer_pool_file，如果想避免这种情况，系统可以每隔一段时间，进行一次dump。
+</dd></dl>
+<p>3. dump是否导致系统抖动
+</p>
+<dl><dd>dump的过程，会持有mutex，扫描LRU链表，读取元数据，如果在系统业务高峰期，可能会产生抖动。
+</dd></dl>
+<p><b>改进</b>
+</p><p>MySQL 5.7 又增强了warmup功能的使用：
+</p><p>1. 新增参数innodb_buffer_pool_dump_pct
+</p>
+<dl><dd>当前InnoDB的buffer pool可能设置的比较大，可以通过设置dump的比例，控制dump的速度和load时的量。
+</dd></dl>
+<p>2. innodb_io_capacity
+</p>
+<dl><dd>控制load过程中，防止过量使用IO资源，如果单机多实例的情况下，同时启动实例，会使IO过载。
+</dd></dl>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.96.87.E4.BB.B6.E7.BB.93.E6.9E.84.C2.B7.E5.91.8A.E5.88.ABfrm.E6.96.87.E4.BB.B6">MySQL·　文件结构·告别frm文件</span></h2>
+<p><b>提要</b>
+</p><p>长久以来，server层和InnoDB层都保存了表的元数据，server使用frm文件保存了column，data_types等信息，而InnoDB使用data dictionary来保存meta data。
+</p><p>由于server层使用文件系统，而InnoDB使用事务引擎，所以经常会存在两者不一致的情况，比如：
+</p>
+<dl><dd>create table的过程中实例crash
+</dd><dd>alter table过程中实例crash
+</dd></dl>
+<p>具体可以参见： <a href="http://dev.mysql.com/doc/refman/5.6/en/innodb-troubleshooting-datadict.html" class="external free" rel="nofollow">http://dev.mysql.com/doc/refman/5.6/en/innodb-troubleshooting-datadict.html</a> 包括相关的解决方法。
+</p><p><b>改进</b>
+</p><p>MySQL 后续的版本准备做相关的改进：
+</p>
+<dl><dd>1. 使用native InnoDB-based Data Dictionary保存meta data，不再需要frm文件
+</dd></dl>
+<dl><dd>2. 使用InnoDB引擎保存MySQL的系统表，比如privileges和timezones相关的表
+</dd></dl>
+<p><br />
+使用new Data Dictionary，去掉frm文件，目前还在MySQL lab版本中。
+</p><p>而在MySQL 5.7的版本中，以下的系统表已不再使用MyISAM，而使用InnoDB引擎保存数据：
+</p>
+<pre> - help_category
+ - help_keyword
+ - help_relation
+ - help_topic
+ - time_zone
+ - time_zone_leap_second
+ - time_zone_name
+ - time_zone_transition,
+ - time_zone_transition_type
+</pre>
+<p><b>变化</b>
+</p>
+<dl><dd>1. 由于使用具有ACID特性的InnoDB引擎，由crash导致的元数据不一致情况将不再出现。
+</dd><dd>2. 对于information_schema中元数据的查询，系统将暴露一个基表上的view出来，供查询。
+</dd><dd>3. 由于使用InnoDB引擎来保存数据，--skip-innodb的参数将不再有意义，5.7版本中做删除处理。
+</dd></dl>
+<p><b>问题</b>
+</p>
+<dl><dd>1. 系统表切换到InnoDB引擎上，对于版本升级或者降级需要对脚本特殊处理。
+</dd><dd>2. 去掉frm文件，系统如何平滑的进行升级？
+</dd><dd>3. 第三方引擎怎么办？oracle后续的打算是如何？这是一个很大的问题。
+</dd></dl>
+<p>由于去掉frm文件使用native InnoDB-based Data Dictionary的特性还在lab环境中酝酿，期待中。
+</p><p>无论如何，提升failure recovery的水平，对于使用者来说，终归是好事情！
+</p>
+<h2> <span class="mw-headline" id="MariaDB.C2.B7_.E6.96.B0.E9.B2.9C.E7.89.B9.E6.80.A7.C2.B7ANALYZE_statement_.E8.AF.AD.E6.B3.95"> MariaDB· 新鲜特性·ANALYZE statement 语法</span></h2>
+<p>MariaDB 10.1版本中新增加了一个 ANALYZE statement 命令。这个命令跟 EXPLAIN statement 命令类似，但不同的是， ANALYZE statement 命令调用优化器生成执行计划并且会真实的去执行语句，再用 EXPLAIN 的输出来替代结果集，并且 EXPLAIN 结果是实际语句执行中统计出来的。
+</p><p>这个语句可以让你检查优化器估算的执行计划代价和实际执行差多少。
+</p><p><b>命令的输出</b>
+</p>
+<pre>MariaDB&gt; analyze select * from tbl1 where key1 between 10 and 200 and col1 like 'foo%'\G
+*************************** 1. row ***************************
+          id: 1
+ select_type: SIMPLE
+       table: tbl1
+        type: range
+possible_keys: key1
+         key: key1
+     key_len: 5
+         ref: NULL
+        rows: 181
+      r_rows: 181
+    filtered: 100.00
+  r_filtered: 10.50
+       Extra: Using index condition; Using where
+</pre>
+<p>我们可以看到 ANALYZE 命令多了r_rows和r_filterd两行，我们来比较一下 EXPLAIN 计算的 rows/filtered 和 ANALYZE 计算的 r_rows/r_filtered 两列的区别。
+</p><p>r_rows 是基于实际观察的 rows 列，它表示实际从表中读取了多少行数据。
+</p><p>r_filtered 是基于实际观察的 filtered 列，它表示经过应用WHERE条件之后还有百分之多少的数据剩余。
+</p><p><br />
+<b>输出结果解析</b>
+</p><p>让我们来看一个更复杂的SQL。
+</p>
+<pre>analyze select * 
+from orders, customer 
+where 
+  customer.c_custkey=orders.o_custkey and 
+  customer.c_acctbal &lt; 0 and 
+  orders.o_totalprice &gt; 200*1000
+</pre>
+<pre>+----+-------------+----------+------+---------------+-------------+---------+--------------------+--------+--------+----------+------------+-------------+
+| id | select_type | table    | type | possible_keys | key         | key_len | ref                | rows   | r_rows | filtered | r_filtered | Extra       |
++----+-------------+----------+------+---------------+-------------+---------+--------------------+--------+--------+----------+------------+-------------+
+|  1 | SIMPLE      | customer | ALL  | PRIMARY,...   | NULL        | NULL    | NULL               | 149095 | 150000 |    18.08 |       9.13 | Using where |
+|  1 | SIMPLE      | orders   | ref  | i_o_custkey   | i_o_custkey | 5       | customer.c_custkey |      7 |     10 |   100.00 |      30.03 | Using where |
++----+-------------+----------+------+---------------+-------------+---------+--------------------+--------+--------+----------+------------+-------------+
+</pre>
+<p>从上面的结果，我们可以获得如下信息：
+</p><p>对于 customer 表，customer.rows=149095, customer.r_rows=150000. 从这两个值来看，优化器对 customer 表的访问估算还是很准确的。
+</p><p>customer.filtered=18.08, customer.r_filtered=9.13. 优化器有点高估了`customer` 表所匹配的记录的条数。（一般来说，当你有个全表扫描，并且 r_filtered 少于15%的时候，你得考虑为表增加相应的索引了）
+</p><p>orders.filtered=100, orders.r_filtered=30.03. 优化器无法预估经过条件（orders.o_totalprice &gt; 200*1000）检查后还剩多少比例的记录。因此，优化器显示了100%。事实上，这个值是30%，通常来说30%的过滤性并不值得去建一个索引。但是对于多表Join，采集和使用列统计信息也许对查询有帮助，也可能帮助优化器选择更好的执行计划。（因为在关联中，关联条件和普通过滤条件组合以后，可能过滤性会非常好，并且有助于优化器判断哪张表做驱动表比较好）
+</p><p><br />
+然后我们再把前面的例子稍微修改一下
+</p>
+<pre>analyze select * 
+from orders, customer 
+where 
+  customer.c_custkey=orders.o_custkey and 
+  customer.c_acctbal &lt; -0 and customer.c_comment like '%foo%'
+  orders.o_totalprice &gt; 200*1000
++----+-------------+----------+------+---------------+-------------+---------+--------------------+--------+--------+----------+------------+-------------+
+| id | select_type | table    | type | possible_keys | key         | key_len | ref                | rows   | r_rows | filtered | r_filtered | Extra       |
++----+-------------+----------+------+---------------+-------------+---------+--------------------+--------+--------+----------+------------+-------------+
+|  1 | SIMPLE      | customer | ALL  | PRIMARY,...   | NULL        | NULL    | NULL               | 149095 | 150000 |    18.08 |       0.00 | Using where |
+|  1 | SIMPLE      | orders   | ref  | i_o_custkey   | i_o_custkey | 5       | customer.c_custkey |      7 |   NULL |   100.00 |       NULL | Using where |
++----+-------------+----------+------+---------------+-------------+---------+--------------------+--------+--------+----------+------------+-------------+
+</pre>
+<p>这里我们可以看到 orders.r_rows=NULL，以及 orders.r_filtered=NULL。这意味着 orders 表连一次都没有被扫描到。
+</p>
+<h2> <span class="mw-headline" id="TokuDB.C2.B7.E3.80.80.E4.B8.BB.E5.A4.87.E5.A4.8D.E5.88.B6.C2.B7Read_Free_Replication"> TokuDB·　主备复制·Read Free Replication </span></h2>
+<p>尽管MySQL 5.6和MariaDB 10.x在replication上已经做了不少优化，TokuDB 7.5也做了一个＂进一步＂的优化：Read Free Replication(RFR)，目的是提高备库(slave)重放速度，减少主备延迟。
+</p><p>RFR的原理比较简单：就是避免一些＂不必要＂的读来减少read IO。
+</p><p><b>Read IO</b>
+</p><p>当在slave上执行：UPDATE/DELETE操作的时候，MySQL进行read-modify-write操作，可能会产生read IO操作，而INSERT的时候如果需要做＂唯一性＂检查，也可能会产生read IO。
+</p><p>什么条件下，TokuDB才可以read free呢？
+</p>
+<ol><li>主库配置必须BINLOG_FORMAT=ROW
+</li><li>主库上的操作不能违反唯一性约束（比如设置了＂unique_checks=OFF＂，否则主备同步会停止），这样到TokuDB备库的所有log event都默认不需要再做＂unique check＂
+</li><li>备库只读
+</li></ol>
+<p>同时满足以上3个条件，TokuDB的备库认为从主库过来的INSERT/UPDATE/DELETE log event均是安全的，可以不做read，直接做write操作。
+</p><p>从<a href="http://www.tokutek.com/2014/09/tokudb-v7-5-read-free-replication-the-benchmark/" class="external text" rel="nofollow">TokuDB官方测试</a>看效果还是不错的，主库~140TPS，备库~70TPS，当开启RFR的时候，备库可以飚到1400TPS，随后与主库基本持平。
+</p><p>进一步的优化还在继续，希望＂妈妈＂(DBA)再也不用担心我(read only slave)的性能了。
+</p><p><a href="/index.php?title=%E6%96%87%E4%BB%B6:Master-vs-slave-cps.png" class="image"><img alt="Master-vs-slave-cps.png" src="/images/9/97/Master-vs-slave-cps.png" width="800" height="500" /></a>
+</p>
+<h2> <span class="mw-headline" id="TokuDB.C2.B7_.E5.BC.95.E6.93.8E.E7.89.B9.E6.80.A7.C2.B7.E5.8E.8B.E7.BC.A9">TokuDB·  引擎特性·压缩 </span></h2>
+<p>TokuDB除了有着较好的写性能外，还有一个重要的特性：压缩，而且大部分情况下压缩效果很不错。
+</p><p>目前TokuDB有４种压缩算法：
+</p>
+<pre>tokudb_lzma:	压缩比高，CPU消耗也高
+tokudb_zlib:	压缩比和CPU消耗持中(默认压缩算法)
+tokudb_quicklz:	压缩比低，CPU消耗低
+tokudb_uncompressed:无压缩
+</pre>
+<p>使用上也比较简单：
+</p>
+<pre><b>MariaDB:</b>
+CREATE TABLE `t_quicklz` (
+  `x` int(11) DEFAULT NULL,
+  `y` int(11) DEFAULT NULL
+) ENGINE=TokuDB `compression`='tokudb_quicklz'
+</pre>
+<pre><b>MySQL(Percona Server):</b>
+CREATE TABLE `t_quicklz` (
+  `x` int(11) DEFAULT NULL,
+  `y` int(11) DEFAULT NULL
+) ENGINE=TokuDB DEFAULT CHARSET=latin1 ROW_FORMAT=TOKUDB_QUICKLZ
+</pre>
+<p>可能大家会有一个疑问：如果一个表创建的时候压缩算法是tokudb_quicklz，我可以通过ALERT TABLE改成其他算法吗？答案是：可以的！
+</p><p>TokuDB在底层实现上，用1byte来标记当前block的压缩算法，并持久化到磁盘，当压缩算法改变后，从磁盘读取数据然后解压缩的代码类似：
+</p>
+<pre>
+ switch (block_buffer[0] &amp; 0xF) {
+	case TOKU_NO_COMPRESSION:
+		...
+		break;
+
+	case TOKU_ZLIB_METHOD:
+		...
+		break;
+
+	case TOKU_QUICKLZ_METHOD:
+		...
+		break;
+	case TOKU_LZMA_METHOD:
+		...
+		break;
+｝
+</pre>
+<p>是不是很机智？
+</p><p>在使用TokuDB的过程中，一般不会改变压缩算法，除非默认的tokudb_zlib不给力，TokuDB是大block(4MB)，压缩效果较好，enjoy~
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 41/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key tmysqlwikidb-tmysql:pcache:idhash:123-0!1!0!!zh-cn!2!edit=0 and timestamp 20170515091926 -->
+<div class="printfooter">
+取自“<a href="http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10">http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10</a>”</div>
+		<div id='catlinks' class='catlinks catlinks-allhidden'></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>查看</h5>
+		<div class="pBody">
+			<ul>
+				 <li id="ca-nstab-main" class="selected"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10" title="查看页面内容 [c]" accesskey="c">页面</a></li>
+				 <li id="ca-talk" class="new"><a href="/index.php?title=%E8%AE%A8%E8%AE%BA:MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10&amp;action=edit&amp;redlink=1" title="关于页面正文的讨论 [t]" accesskey="t">讨论</a></li>
+				 <li id="ca-viewsource"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10&amp;action=edit" title="此页面已被保护，你可以查看其源代码。 [e]" accesskey="e">查看源代码</a></li>
+				 <li id="ca-history"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10&amp;action=history" title="此页面的早前修订版本 [h]" accesskey="h">历史</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>个人工具</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95&amp;returnto=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10" title="我们鼓励您登录，但这并不是必须的 [o]" accesskey="o">登录</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(/skins/common/images/wiki.png);" href="/index.php?title=%E9%A6%96%E9%A1%B5" title="访问首页"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+	<div class='generated-sidebar portlet' id='p-navigation'>
+		<h5>导航</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage-description"><a href="/index.php?title=%E9%A6%96%E9%A1%B5" title="访问首页 [z]" accesskey="z">首页</a></li>
+				<li id="n-portal"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E7%A4%BE%E5%8C%BA" title="关于本计划，您可以做什么，应该如何做">社区入口</a></li>
+				<li id="n-currentevents"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%BD%93%E5%89%8D%E4%BA%8B%E4%BB%B6" title="查找当前事件的背景信息">当前事件</a></li>
+				<li id="n-recentchanges"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9" title="列出该网站的最近修改 [r]" accesskey="r">最近更改</a></li>
+				<li id="n-randompage"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2" title="随机载入一个页面 [x]" accesskey="x">随机页面</a></li>
+				<li id="n-help"><a href="/index.php?title=%E5%B8%AE%E5%8A%A9:%E7%9B%AE%E5%BD%95" title="寻求帮助">帮助</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="p-search" class="portlet">
+		<h5><label for="searchInput">搜索</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/index.php" id="searchform">
+				<input type='hidden' name="title" value="特殊:搜索"/>
+				<input id="searchInput" title="搜索该网站" accesskey="f" type="search" name="search" />
+				<input type='submit' name="go" class="searchButton" id="searchGoButton"	value="进入" title="如果相同的标题存在的话便直接前往该页面" />&nbsp;
+				<input type='submit' name="fulltext" class="searchButton" id="mw-searchButton" value="搜索" title="搜索该文字的页面" />
+			</form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>工具箱</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%93%BE%E5%85%A5%E9%A1%B5%E9%9D%A2/MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10" title="列出所有与此页相链的页面 [j]" accesskey="j">链入页面</a></li>
+				<li id="t-recentchangeslinked"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%93%BE%E5%87%BA%E6%9B%B4%E6%94%B9/MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10" title="从此页链出的所有页面的更改 [k]" accesskey="k">链出更改</a></li>
+<li id="t-specialpages"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E7%89%B9%E6%AE%8A%E9%A1%B5%E9%9D%A2" title="所有特殊页面列表 [q]" accesskey="q">特殊页面</a></li>
+				<li id="t-print"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10&amp;printable=yes" rel="alternate" title="这个页面的可打印版本 [p]" accesskey="p">可打印版</a></li>				<li id="t-permalink"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.10&amp;oldid=949" title="这个页面修订版本的永久链接">永久链接</a></li>			</ul>
+		</div>
+	</div>
+</div><!-- end of the left (by default at least) column -->
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="/skins/common/images/poweredby_mediawiki_88x31.png" height="31" width="88" alt="Powered by MediaWiki" /></a></div>
+	<div id="f-copyrightico"><a href="http://www.gnu.org/copyleft/fdl.html"><img src="/skins/common/images/gnu-fdl.png" alt="GNU Free Documentation License 1.3" width="88" height="31" /></a></div>
+	<ul id="f-list">
+		<li id="lastmod"> 此页面最后修订于2014年10月15日 (星期三) 10:00。</li>
+		<li id="viewcount">此页面已被浏览过7,736次。</li>
+		<li id="copyright">本站全部文字内容使用<a href="http://www.gnu.org/copyleft/fdl.html" class="external ">GNU Free Documentation License 1.3</a>授权。</li>
+		<li id="privacy"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96" title="淘宝数据库研发组:隐私政策">隐私政策</a></li>
+		<li id="about"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%85%B3%E4%BA%8E" title="淘宝数据库研发组:关于">关于淘宝数据库研发组</a></li>
+		<li id="disclaimer"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%85%8D%E8%B4%A3%E5%A3%B0%E6%98%8E" title="淘宝数据库研发组:免责声明">免责声明</a></li>
+	</ul>
+</div>
+</div>
+
+<script>if (window.runOnloadHook) runOnloadHook();</script>
+<!-- Served in 0.053 secs. --></body></html>

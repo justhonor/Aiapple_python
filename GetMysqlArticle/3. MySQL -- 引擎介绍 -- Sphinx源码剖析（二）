@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · 引擎介绍 · Sphinx源码剖析（二）</title>
+  <meta name="description" content="在本节中，我将会介绍索引文件sph的生成，从上一节我们得知sph文件保存了Sphinx的索引元信息以及一些索引相关的配置信息">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2017/04/03/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2017/04">
+    <h1>数据库内核月报 － 2017 / 04</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2017/04/02/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2017/04/04/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/04/01/" target="_blank">
+                
+                MySQL · 源码分析 · MySQL 半同步复制数据一致性分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/04/02/" target="_blank">
+                
+                MYSQL · 新特性 · MySQL 8.0对Parser所做的改进
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2017/04/03/" target="_blank">
+                
+                MySQL · 引擎介绍 · Sphinx源码剖析（二）
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/04/04/" target="_blank">
+                
+                PgSQL · 特性分析 · checkpoint机制浅析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/04/05/" target="_blank">
+                
+                MySQL · 特性分析 · common table expression
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/04/06/" target="_blank">
+                
+                PgSQL · 应用案例 · 逻辑订阅给业务架构带来了什么？
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/04/07/" target="_blank">
+                
+                MSSQL · 应用案例 · 基于内存优化表的列存储索引分析Web Access Log
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/04/08/" target="_blank">
+                
+                TokuDB · 捉虫动态 · MRR 导致查询失败
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/04/09/" target="_blank">
+                
+                HybridDB · 稳定性 · HybridDB如何优雅的处理Out Of Memery问题
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/04/10/" target="_blank">
+                
+                MySQL · 捉虫动态 · 5.7 mysql_upgrade 元数据锁等待
+              </a>
+            </li>
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · 引擎介绍 · Sphinx源码剖析（二）
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <p>在本节中，我将会介绍索引文件sph的生成，从上一节我们得知sph文件保存了Sphinx的索引元信息以及一些索引相关的配置信息</p>
+
+<h2>SPH文件生成</h2>
+
+<p>先来看代码，其中sph文件的生成是在CSphIndex_VLN::WriteHeader这个函数中:</p>
+
+<pre><code>	 bool CSphIndex_VLN::WriteHeader ( const BuildHeader_t &amp; tBuildHeader, CSphWriter &amp; fdInfo ) const
+{
+	// version
+	fdInfo.PutDword ( INDEX_MAGIC_HEADER );
+	fdInfo.PutDword ( INDEX_FORMAT_VERSION );
+
+	// bits
+	fdInfo.PutDword ( USE_64BIT );
+
+	// docinfo
+	fdInfo.PutDword ( m_tSettings.m_eDocinfo );
+
+	// schema
+	WriteSchema ( fdInfo, m_tSchema );
+
+	// min doc
+	fdInfo.PutOffset ( tBuildHeader.m_uMinDocid ); // was dword in v.1
+	if ( m_tSettings.m_eDocinfo==SPH_DOCINFO_INLINE )
+		fdInfo.PutBytes ( tBuildHeader.m_pMinRow, m_tSchema.GetRowSize()*sizeof(CSphRowitem) );
+
+	// wordlist checkpoints
+	fdInfo.PutOffset ( tBuildHeader.m_iDictCheckpointsOffset );
+	fdInfo.PutDword ( tBuildHeader.m_iDictCheckpoints );
+	fdInfo.PutByte ( tBuildHeader.m_iInfixCodepointBytes );
+	fdInfo.PutDword ( (DWORD)tBuildHeader.m_iInfixBlocksOffset );
+	fdInfo.PutDword ( tBuildHeader.m_iInfixBlocksWordsSize );
+
+	// index stats
+	fdInfo.PutDword ( (DWORD)tBuildHeader.m_iTotalDocuments ); // FIXME? we don't expect over 4G docs per just 1 local index
+	fdInfo.PutOffset ( tBuildHeader.m_iTotalBytes );
+	fdInfo.PutDword ( tBuildHeader.m_iTotalDups );
+
+	// index settings
+	SaveIndexSettings ( fdInfo, m_tSettings );
+
+	// tokenizer info
+	assert ( m_pTokenizer );
+	SaveTokenizerSettings ( fdInfo, m_pTokenizer, m_tSettings.m_iEmbeddedLimit );
+
+	// dictionary info
+	assert ( m_pDict );
+	SaveDictionarySettings ( fdInfo, m_pDict, false, m_tSettings.m_iEmbeddedLimit );
+
+	fdInfo.PutDword ( tBuildHeader.m_uKillListSize );
+	fdInfo.PutOffset ( tBuildHeader.m_iMinMaxIndex );
+
+	// field filter info
+	SaveFieldFilterSettings ( fdInfo, m_pFieldFilter );
+
+	// average field lengths
+	if ( m_tSettings.m_bIndexFieldLens )
+		ARRAY_FOREACH ( i, m_tSchema.m_dFields )
+			fdInfo.PutOffset ( m_dFieldLens[i] );
+
+	return true;
+}
+</code></pre>
+<p>然后按顺序来解释下每一项字段的含义.</p>
+
+<ul>
+  <li>前两个字段INDEX_MAGIC_HEADER和INDEX_FORMAT_VERSION分别是magic number和索引版本号</li>
+  <li>第三个字段USE_64BIT表示是否使用64位的document和word id(默认是使用).</li>
+  <li>然后是写入docinfo,这个字段也就是配置中的docinfo字段(index block中)</li>
+  <li>接下来将会写入schema，也就是索引的schema信息，比如当前索引的字段名，当前需要建立的属性名等等.</li>
+</ul>
+
+<pre><code>	void WriteSchema ( CSphWriter &amp; fdInfo, const CSphSchema &amp; tSchema )
+{
+	// schema
+	fdInfo.PutDword ( tSchema.m_dFields.GetLength() );
+	ARRAY_FOREACH ( i, tSchema.m_dFields )
+		WriteSchemaColumn ( fdInfo, tSchema.m_dFields[i] );
+
+	fdInfo.PutDword ( tSchema.GetAttrsCount() );
+	for ( int i=0; i&lt;tSchema.GetAttrsCount(); i++ )
+		WriteSchemaColumn ( fdInfo, tSchema.GetAttr(i) );
+}
+</code></pre>
+
+<ul>
+  <li>然后是写入当前索引集的最小doc id(m_uMinDocid)</li>
+  <li>接下来是根据docinfo(也就是属性存储)的配置来选择是否写入行信息(当docinfo为inline的话，表示attribute value 将会存储在spd文件中).</li>
+  <li>然后是写入wordlist的checkpoint.</li>
+  <li>然后是索引的统计信息(m_iTotalDocuments/m_iTotalBytes/m_iTotalDups).</li>
+  <li>接下来是写入对应的索引配置信息</li>
+</ul>
+
+<pre><code>void SaveIndexSettings ( CSphWriter &amp; tWriter, const CSphIndexSettings &amp; tSettings )
+{
+	tWriter.PutDword ( tSettings.m_iMinPrefixLen );
+	tWriter.PutDword ( tSettings.m_iMinInfixLen );
+	tWriter.PutDword ( tSettings.m_iMaxSubstringLen );
+	tWriter.PutByte ( tSettings.m_bHtmlStrip ? 1 : 0 );
+	tWriter.PutString ( tSettings.m_sHtmlIndexAttrs.cstr () );
+	tWriter.PutString ( tSettings.m_sHtmlRemoveElements.cstr () );
+	tWriter.PutByte ( tSettings.m_bIndexExactWords ? 1 : 0 );
+	tWriter.PutDword ( tSettings.m_eHitless );
+	tWriter.PutDword ( tSettings.m_eHitFormat );
+	tWriter.PutByte ( tSettings.m_bIndexSP );
+	tWriter.PutString ( tSettings.m_sZones );
+	tWriter.PutDword ( tSettings.m_iBoundaryStep );
+	tWriter.PutDword ( tSettings.m_iStopwordStep );
+	tWriter.PutDword ( tSettings.m_iOvershortStep );
+	tWriter.PutDword ( tSettings.m_iEmbeddedLimit );
+	tWriter.PutByte ( tSettings.m_eBigramIndex );
+	tWriter.PutString ( tSettings.m_sBigramWords );
+	tWriter.PutByte ( tSettings.m_bIndexFieldLens );
+	tWriter.PutByte ( tSettings.m_eChineseRLP );
+	tWriter.PutString ( tSettings.m_sRLPContext );
+	tWriter.PutString ( tSettings.m_sIndexTokenFilter );
+}
+</code></pre>
+<ul>
+  <li>写入对应的tokenizer的配置信息,</li>
+</ul>
+
+<pre><code>void SaveTokenizerSettings ( CSphWriter &amp; tWriter, ISphTokenizer * pTokenizer, int iEmbeddedLimit )
+{
+	assert ( pTokenizer );
+
+	const CSphTokenizerSettings &amp; tSettings = pTokenizer-&gt;GetSettings ();
+	tWriter.PutByte ( tSettings.m_iType );
+	tWriter.PutString ( tSettings.m_sCaseFolding.cstr () );
+	tWriter.PutDword ( tSettings.m_iMinWordLen );
+
+	bool bEmbedSynonyms = pTokenizer-&gt;GetSynFileInfo ().m_uSize&lt;=(SphOffset_t)iEmbeddedLimit;
+	tWriter.PutByte ( bEmbedSynonyms ? 1 : 0 );
+	if ( bEmbedSynonyms )
+		pTokenizer-&gt;WriteSynonyms ( tWriter );
+
+	tWriter.PutString ( tSettings.m_sSynonymsFile.cstr () );
+	WriteFileInfo ( tWriter, pTokenizer-&gt;GetSynFileInfo () );
+	tWriter.PutString ( tSettings.m_sBoundary.cstr () );
+	tWriter.PutString ( tSettings.m_sIgnoreChars.cstr () );
+	tWriter.PutDword ( tSettings.m_iNgramLen );
+	tWriter.PutString ( tSettings.m_sNgramChars.cstr () );
+	tWriter.PutString ( tSettings.m_sBlendChars.cstr () );
+	tWriter.PutString ( tSettings.m_sBlendMode.cstr () );
+}
+</code></pre>
+
+<ul>
+  <li>写入dictionary的配置信息(比如stop word之类).</li>
+</ul>
+
+<pre><code>void SaveDictionarySettings ( CSphWriter &amp; tWriter, CSphDict * pDict, bool bForceWordDict, int iEmbeddedLimit )
+{
+	assert ( pDict );
+	const CSphDictSettings &amp; tSettings = pDict-&gt;GetSettings ();
+
+	tWriter.PutString ( tSettings.m_sMorphology.cstr () );
+.............................
+
+	bool bEmbedStopwords = uTotalSize&lt;=(SphOffset_t)iEmbeddedLimit;
+	tWriter.PutByte ( bEmbedStopwords ? 1 : 0 );
+	if ( bEmbedStopwords )
+		pDict-&gt;WriteStopwords ( tWriter );
+
+	tWriter.PutString ( tSettings.m_sStopwords.cstr () );
+	tWriter.PutDword ( dSWFileInfos.GetLength () );
+	ARRAY_FOREACH ( i, dSWFileInfos )
+	{
+		tWriter.PutString ( dSWFileInfos[i].m_sFilename.cstr () );
+		WriteFileInfo ( tWriter, dSWFileInfos[i] );
+	}
+
+	const CSphVector &lt;CSphSavedFile&gt; &amp; dWFFileInfos = pDict-&gt;GetWordformsFileInfos ();
+	uTotalSize = 0;
+	ARRAY_FOREACH ( i, dWFFileInfos )
+		uTotalSize += dWFFileInfos[i].m_uSize;
+
+	bool bEmbedWordforms = uTotalSize&lt;=(SphOffset_t)iEmbeddedLimit;
+	tWriter.PutByte ( bEmbedWordforms ? 1 : 0 );
+	if ( bEmbedWordforms )
+		pDict-&gt;WriteWordforms ( tWriter );
+
+	tWriter.PutDword ( dWFFileInfos.GetLength() );
+	ARRAY_FOREACH ( i, dWFFileInfos )
+	{
+		tWriter.PutString ( dWFFileInfos[i].m_sFilename.cstr() );
+		WriteFileInfo ( tWriter, dWFFileInfos[i] );
+	}
+
+	tWriter.PutDword ( tSettings.m_iMinStemmingLen );
+	tWriter.PutByte ( tSettings.m_bWordDict || bForceWordDict );
+	tWriter.PutByte ( tSettings.m_bStopwordsUnstemmed );
+	tWriter.PutString ( pDict-&gt;GetMorphDataFingerprint() );
+}
+</code></pre>
+
+<ul>
+  <li>然后是写入killlist的size（m_uKillListSize)</li>
+  <li>写入m_iMinMaxIndex，这个选项也就是表示document size.</li>
+</ul>
+
+<pre><code>	CSphFixedVector&lt;CSphRowitem&gt; dMinRow ( tNewSchema.GetRowSize() );
+	...............
+	int iNewStride = DOCINFO_IDSIZE + tNewSchema.GetRowSize();
+
+	int64_t iNewMinMaxIndex = m_iDocinfo * iNewStride;
+..............................
+	tBuildHeader.m_iMinMaxIndex = iNewMinMaxIndex;
+</code></pre>
+
+<ul>
+  <li>写入regex相关配置(regexp_filter)</li>
+</ul>
+
+<pre><code>void SaveFieldFilterSettings ( CSphWriter &amp; tWriter, ISphFieldFilter * pFieldFilter )
+{
+	if ( !pFieldFilter )
+	{
+		tWriter.PutDword ( 0 );
+		return;
+	}
+
+	CSphFieldFilterSettings tSettings;
+	pFieldFilter-&gt;GetSettings ( tSettings );
+
+	tWriter.PutDword ( tSettings.m_dRegexps.GetLength() );
+	ARRAY_FOREACH ( i, tSettings.m_dRegexps )
+		tWriter.PutString ( tSettings.m_dRegexps[i] );
+
+	tWriter.PutByte(1); // deprecated utf8 flag
+}
+</code></pre>
+
+<ul>
+  <li>最后是写入对应的schema field长度.</li>
+</ul>
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>

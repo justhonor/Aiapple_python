@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · 专家投稿 · InnoDB物理行中null值的存储的推断与验证</title>
+  <meta name="description" content="前言想写这边文章，是因为之前想写一个解析innodb ibd文件的工具，在写这个工具的过程中，发现逻辑记录转物理记录的转换中，最难的有两部分，一是每行每字段null值占用的字节和存储，二是变长字段占用的字节和存储的格式。本文中重点针对第一种情况。之前看有关介绍compact行记录格式:">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2016/08/07/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2016/08">
+    <h1>数据库内核月报 － 2016 / 08</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2016/08/06/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2016/08/08/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/08/01/" target="_blank">
+                
+                MySQL · 特性分析 ·MySQL 5.7新特性系列四
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/08/02/" target="_blank">
+                
+                PgSQL · PostgreSQL 逻辑流复制技术的秘密
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/08/03/" target="_blank">
+                
+                MySQL · 特性分析 · MyRocks简介
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/08/04/" target="_blank">
+                
+                GPDB · 特性分析· Greenplum 备份架构
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/08/05/" target="_blank">
+                
+                SQLServer · 最佳实践 · RDS for SQLServer 2012权限限制提升与改善
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/08/06/" target="_blank">
+                
+                TokuDB · 引擎特性 · REPLACE 语句优化
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2016/08/07/" target="_blank">
+                
+                MySQL · 专家投稿 · InnoDB物理行中null值的存储的推断与验证
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/08/08/" target="_blank">
+                
+                PgSQL · 实战经验 · 旋转门压缩算法在PostgreSQL中的实现
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/08/09/" target="_blank">
+                
+                MySQL · 源码分析 · Query Cache并发处理
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/08/10/" target="_blank">
+                
+                PgSQL · 源码分析· pg_dump分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · 专家投稿 · InnoDB物理行中null值的存储的推断与验证
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <h2>前言</h2>
+<p>想写这边文章，是因为之前想写一个解析innodb ibd文件的工具，在写这个工具的过程中，发现逻辑记录转物理记录的转换中，最难的有两部分，一是每行每字段null值占用的字节和存储，二是变长字段占用的字节和存储的格式。本文中重点针对第一种情况。<br />
+之前看有关介绍compact行记录格式:</p>
+
+<blockquote>
+  <p>变长字段之后的第二个部分是NULL标志位，该位指示了该行数据中是否有NULL值，有则用1表示。该部分所占字节为1字节<br />
+                                                     —–《InnoDB存储引擎》</p>
+</blockquote>
+
+<p>之后便思考是否不管有多少个列都是NULL，该部分都只占1个字节呢？<br />
+便有了如下测试</p>
+
+<h2>本文约定</h2>
+<p>逻辑记录:record (元组)<br />
+物理记录:row(行)<br />
+只讨论compact行格式</p>
+
+<h2>所用工具</h2>
+<p>自己python写的工具innodb_extract</p>
+
+<h2>测试数据</h2>
+
+<h3>表结构</h3>
+
+<pre><code>localhost.test&gt;desc null_test;
++------------------+--------------+------+-----+---------+----------------+
+| Field            | Type         | Null | Key | Default | Extra          |
++------------------+--------------+------+-----+---------+----------------+
+| id               | bigint(20)   | NO   | PRI | NULL    | auto_increment | 
+| name             | varchar(20)  | YES  |     | NULL    |                | 
+| legalname        | varchar(25)  | YES  |     | NULL    |                | 
+| industry         | varchar(10)  | YES  |     | NULL    |                | 
+| province         | varchar(10)  | YES  |     | NULL    |                | 
+| city             | varchar(15)  | YES  |     | NULL    |                | 
+| size             | varchar(15)  | YES  |     | NULL    |                | 
+| admin_department | varchar(128) | YES  |     | NULL    |                | 
++------------------+--------------+------+-----+---------+----------------+
+8 rows in set (0.00 sec)
+
+
+</code></pre>
+
+<h3>表内数据</h3>
+
+<pre><code>+----+------+-----------+----------+----------+------+------+------------------+
+| id | name | legalname | industry | province | city | size | admin_department |
++----+------+-----------+----------+----------+------+------+------------------+
+|  1 | NULL | NULL      | NULL     | NULL     | NULL | NULL | NULL             | 
+|  2 | TOM  | NULL      | NULL     | NULL     | NULL | NULL | NULL             | 
+|  3 | ALEX | NULL      | NULL     | NULL     | NULL | NULL | HR               | 
++----+------+-----------+----------+----------+------+------+------------------+
+3 rows in set (0.00 sec)
+
+</code></pre>
+
+<h2>分析数据</h2>
+
+<p>通过工具看三行数据</p>
+
+<pre><code>#  python innodb_extract.py null_test.ibd
+infimum
+7f 000010001c 8000000000000001 0000f1e27b17 b5000001680084
+1          
+7e 0000180020 8000000000000002 0000f1e27b17 b5000001680094 544f4d
+
+2   TOM       
+3e 000020ffb6 8000000000000003 0000f1e27b17 b50000016800a4 414c4558 4852
+
+3   ALEX      HR 
+</code></pre>
+
+<p><strong>第一行:</strong><br />
+null标志位:0x7f  (01111111)<br />
+说明:从右向左方向写，一共7个null值<br />
+record header:000010001c<br />
+Transaction Id:0000f1e27b17<br />
+Roll Pointer:b5000001680084<br />
+数据:</p>
+
+<p><strong>第二行:</strong><br />
+null标志位:0x7e (01111110)<br />
+说明：除第二列，其余均是null值<br />
+record header:0000180020<br />
+Transaction Id:0000f1e27b17<br />
+Roll Pointer:b5000001680084<br />
+数据:<br />
+第二列:544f4d =&gt; TOM</p>
+
+<p><strong>第三行:</strong><br />
+null标志位:0x3e (00111110)<br />
+说明:除了第2列和第8列，其余均是null值<br />
+record header:000020ffb6<br />
+Transaction Id:0000f1e27b17<br />
+Roll Pointer:b5000001680084<br />
+数据:<br />
+第二列:414c4558 =&gt; ALEX<br />
+第八列:4852 =&gt; HR</p>
+
+<h2>假设</h2>
+<p>继续上面，如果包含Null值的字段是8个，或者9个会是怎样？</p>
+
+<h2>深度剖析</h2>
+<p>代码片段，该函数将物理记录转化为逻辑记录，版本5.5.31,源文件rem0rec.c，</p>
+
+<pre><code>rec_convert_dtuple_to_rec_comp(
+/*===========================*/
+	rec_t*			rec,	/*!&lt; in: origin of record */
+	const dict_index_t*	index,	/*!&lt; in: record descriptor */
+	const dfield_t*		fields,	/*!&lt; in: array of data fields */
+	ulint			n_fields,/*!&lt; in: number of data fields */
+	ulint			status,	/*!&lt; in: status bits of the record */
+	ibool			temp)	/*!&lt; in: whether to use the
+					format for temporary files in
+					index creation */
+{
+	const dfield_t*	field;
+	const dtype_t*	type;
+	byte*		end;
+	byte*		nulls;
+	byte*		lens;
+	ulint		len;
+	ulint		i;
+	ulint		n_node_ptr_field;
+	ulint		fixed_len;
+	ulint		null_mask	= 1;
+	ut_ad(temp || dict_table_is_comp(index-&gt;table));
+	ut_ad(n_fields &gt; 0);
+
+	if (temp) {
+		ut_ad(status == REC_STATUS_ORDINARY);
+		ut_ad(n_fields &lt;= dict_index_get_n_fields(index));
+		n_node_ptr_field = ULINT_UNDEFINED;
+		nulls = rec - 1;
+		if (dict_table_is_comp(index-&gt;table)) {
+			/* No need to do adjust fixed_len=0. We only
+			need to adjust it for ROW_FORMAT=REDUNDANT. */
+			temp = FALSE;
+		}
+	} else {
+		nulls = rec - (REC_N_NEW_EXTRA_BYTES + 1);
+
+		switch (UNIV_EXPECT(status, REC_STATUS_ORDINARY)) {
+		case REC_STATUS_ORDINARY:
+			ut_ad(n_fields &lt;= dict_index_get_n_fields(index));
+			n_node_ptr_field = ULINT_UNDEFINED;
+			break;
+		case REC_STATUS_NODE_PTR:
+			ut_ad(n_fields
+			      == dict_index_get_n_unique_in_tree(index) + 1);
+			n_node_ptr_field = n_fields - 1;
+			break;
+		case REC_STATUS_INFIMUM:
+		case REC_STATUS_SUPREMUM:
+			ut_ad(n_fields == 1);
+			n_node_ptr_field = ULINT_UNDEFINED;
+			break;
+		default:
+			ut_error;
+			return;
+		}
+	}
+
+	end = rec;
+	lens = nulls - UT_BITS_IN_BYTES(index-&gt;n_nullable);
+	/* clear the SQL-null flags */
+	memset(lens + 1, 0, nulls - lens);
+	
+	
+</code></pre>
+<p>结合COMPACT row格式来看:</p>
+
+<pre><code>row记录格式如下:
+
+|---------------------extra_size-----------------------------------------|---------fields_data------------|
+|--columns_lens---|---null lens----|------fixed_extrasize(5)-------------|--col1---|---col2---|---col2----|
+|end&lt;--------begin|end&lt;-------beign|-------------------------------------|orgin---------------------------|
+
+</code></pre>
+
+<ul>
+  <li>先看nulls = rec - (REC_N_NEW_EXTRA_BYTES + 1)<br />
+rec为记录开始的offset，也就是,extrasize也就是固定长度的record header的长度。注意null标志位和变长字段长度列表是从右-&gt;左的方向写的(原因可参见下部分代码)。所以nulls指向的是<code>null lens</code>后一字节开始的位置。</li>
+  <li>再看lens = nulls - UT_BITS_IN_BYTES(index-&gt;n_nullable)<br />
+index-&gt;n_nullable指的是表结构中定义can be null的字段的个数，一个字段用一个bit来标记，UT_BITS_IN_BYTES将占用bit数转为占用的字节数。所以lens指向的是column_lens后面一个字节的位置，即跳过了Null标志的占用的空间，同样在写入值的时候也是从后面向前面写。</li>
+  <li>memset(lens + 1, 0, nulls - lens) 将nulls空间清零。</li>
+</ul>
+
+<p>之后就是遍历每一个字段，先对定义了can be null字段进行处理</p>
+
+<pre><code>/* Store the data and the offsets */
+
+	for (i = 0, field = fields; i &lt; n_fields; i++, field++) {
+		const dict_field_t*	ifield;
+
+		type = dfield_get_type(field);
+		len = dfield_get_len(field);
+
+		if (UNIV_UNLIKELY(i == n_node_ptr_field)) {
+			ut_ad(dtype_get_prtype(type) &amp; DATA_NOT_NULL);
+			ut_ad(len == REC_NODE_PTR_SIZE);
+			memcpy(end, dfield_get_data(field), len);
+			end += REC_NODE_PTR_SIZE;
+			break;
+		}
+
+		if (!(dtype_get_prtype(type) &amp; DATA_NOT_NULL)) {
+			/* nullable field */
+			ut_ad(index-&gt;n_nullable &gt; 0);
+
+			if (UNIV_UNLIKELY(!(byte) null_mask)) {
+				nulls--;
+				null_mask = 1;
+			}
+			
+			
+</code></pre>
+
+<p>因为方向是从右向左写，也就是从后往前写，如果该字段为null，则将null标志位设为1并向前移1位，如果满了8个，也就是有8个字段都为null则offset向左移1位，并将null_mask置为1</p>
+
+<p>从这段代码看出之前的猜想，也就是并不是Null标志位只固定占用1个字节==，而是以8为单位，满8个null字段就多1个字节，不满8个也占用1个字节，高位用0补齐</p>
+
+<pre><code>			ut_ad(*nulls &lt; null_mask);
+
+			/* set the null flag if necessary */
+			if (dfield_is_null(field)) {
+				*nulls |= null_mask;
+				null_mask &lt;&lt;= 1;
+				continue;
+			}
+
+			null_mask &lt;&lt;= 1;
+		}
+		
+</code></pre>
+
+<p>这段代码是就是设置null字段与null标志位的映射关系，如果字段为null，则设置标志位为1。</p>
+
+<h2>栗子验证</h2>
+
+<p>翻过来再看之前的例子，我们逐步的添加字段并设置default null看下null标志位的变化</p>
+
+<ul>
+  <li>step 1，添加两个并设置default null</li>
+</ul>
+
+<pre><code>localhost.test&gt;alter table null_test add column `kind` varchar(15) DEFAULT NULL after `size`;
+Query OK, 3 rows affected (0.09 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+localhost.test&gt;alter table null_test add column licenseno varchar(15) DEFAULT NULL after `kind`;
+Query OK, 3 rows affected (0.11 sec)
+Records: 3  Duplicates: 0  Warnings: 0.11
+
+</code></pre>
+
+<p>那么理论来讲，第一行数据有9个null列了。满8个null列之后，继续向左写移，写1个bit之后开始占据两个字节。我们通过工具解析之后看下</p>
+
+<pre><code>#  python innodb_extract.py null_test.ibd
+01ff 000010001d 8000000000000001 0000f1e27c81 980000028c0084
+1            
+01fe 0000180021 8000000000000002 0000f1e27c81 980000028c0094 544f4d
+2   TOM         
+00fe 000020ffb3 8000000000000003 0000f1e27c81 980000028c00a4 414c455848
+3   ALEX        HR 
+
+</code></pre>
+
+<p>第一行null标志位变为0x01ff,即<code>00000001 11111111</code>一共有9个null字段，满了8位之后，继续向前占1个字节从右往左继续写<br />
+同理，第二行0x01fe,即<code>00000001 11111110</code><br />
+第三行0x00fe,<code>00000000 11111110</code></p>
+
+<p>再继续添加8个字段并设置default null</p>
+
+<pre><code>localhost.test&gt;desc null_test;
++------------------+--------------+------+-----+---------+----------------+
+| Field            | Type         | Null | Key | Default | Extra          |
++------------------+--------------+------+-----+---------+----------------+
+| id               | bigint(20)   | NO   | PRI | NULL    | auto_increment | 
+| name             | varchar(20)  | YES  |     | NULL    |                | 
+| legalname        | varchar(25)  | YES  |     | NULL    |                | 
+| industry         | varchar(10)  | YES  |     | NULL    |                | 
+| province         | varchar(10)  | YES  |     | NULL    |                | 
+| city             | varchar(15)  | YES  |     | NULL    |                | 
+| size             | varchar(15)  | YES  |     | NULL    |                | 
+| kind             | varchar(15)  | YES  |     | NULL    |                | 
+| licenseno        | varchar(15)  | YES  |     | NULL    |                | 
+| admin_department | varchar(128) | YES  |     | NULL    |                | 
+| null_col1        | varchar(15)  | YES  |     | NULL    |                | 
+| null_col2        | varchar(15)  | YES  |     | NULL    |                | 
+| null_col3        | varchar(15)  | YES  |     | NULL    |                | 
+| null_col4        | varchar(15)  | YES  |     | NULL    |                | 
+| null_col5        | varchar(15)  | YES  |     | NULL    |                | 
+| null_col6        | varchar(15)  | YES  |     | NULL    |                | 
+| null_col7        | varchar(15)  | YES  |     | NULL    |                | 
+| null_col8        | varchar(15)  | YES  |     | NULL    |                | 
++------------------+--------------+------+-----+---------+----------------+
+18 rows in set (0.00 sec)
+
+
+</code></pre>
+<p>最多Null字段的第一行目前有个17个null字段，对应17个Null bit</p>
+
+<pre><code>root@hebe211 ibd]#  python innodb_extract.py null_test.ibd
+
+01ffff 000010001e 8000000000000001 0000f1e27cce c60000017600840301fffe0000
+1                    
+01fffe 0000180022 8000000000000002 0000f1e27cce c6000001760094 544f4d
+2   TOM                 
+01fefe 000020ffb0 8000000000000003 0000f1e27cce c60000017600a4 414c45 5848
+3   ALEX        HR         
+
+</code></pre>
+
+<p>第一行null标志位变为0x01ff,即<code>00000001 11111111 11111111</code> 一共有17个null字段，满了两个8位之后，继续向前占1个字节从右往左继续写<br />
+同理，第二行0x01fe,即<code>00000001 11111111 11111110</code><br />
+第三行0x00fe,<code>00000001 11111110 11111110</code></p>
+
+<h2>结论</h2>
+
+<p>允许null的字段需要额外的空间来保存字段Null到null标志位映射的对应关系，所以保存这个映射关系的null标志位长度并不是固定的。也就是null字段越多并不是越省空间。实际生产环境中应尽量减少can be null的字段。</p>
+
+<blockquote>
+  <p>作者介绍<br />
+赵晨@微博研发中心, 微博：@fiona514</p>
+</blockquote>
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>

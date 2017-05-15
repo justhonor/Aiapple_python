@@ -1,0 +1,645 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="zh-cn" dir="ltr">
+<head>
+<title>MySQL内核月报 2014.11 - 淘宝数据库研发组</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="MediaWiki 1.16.5" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="淘宝数据库研发组 (zh-cn)" />
+<link title="Creative Commons" type="application/rdf+xml" href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11&amp;action=creativecommons" rel="meta" />
+<link rel="copyright" href="http://www.gnu.org/copyleft/fdl.html" />
+<link rel="alternate" type="application/atom+xml" title="淘宝数据库研发组的Atom订阅" href="/index.php?title=%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9&amp;feed=atom" />
+<link rel="stylesheet" href="/skins/common/shared.css?270" media="screen" />
+<link rel="stylesheet" href="/skins/common/commonPrint.css?270" media="print" />
+<link rel="stylesheet" href="/skins/monobook/main.css?270" media="screen" />
+<!--[if lt IE 5.5000]><link rel="stylesheet" href="/skins/monobook/IE50Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 5.5000]><link rel="stylesheet" href="/skins/monobook/IE55Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 6]><link rel="stylesheet" href="/skins/monobook/IE60Fixes.css?270" media="screen" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" href="/skins/monobook/IE70Fixes.css?270" media="screen" /><![endif]-->
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Common.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" />
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Print.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" media="print" />
+<link rel="stylesheet" href="/index.php?title=MediaWiki:Monobook.css&amp;usemsgcache=yes&amp;ctype=text%2Fcss&amp;smaxage=18000&amp;action=raw&amp;maxage=18000" />
+<link rel="stylesheet" href="/index.php?title=-&amp;action=raw&amp;maxage=18000&amp;gen=css" />
+<script>
+var skin="monobook",
+stylepath="/skins",
+wgUrlProtocols="http\\:\\/\\/|https\\:\\/\\/|ftp\\:\\/\\/|irc\\:\\/\\/|gopher\\:\\/\\/|telnet\\:\\/\\/|nntp\\:\\/\\/|worldwind\\:\\/\\/|mailto\\:|news\\:|svn\\:\\/\\/",
+wgArticlePath="/index.php?title=$1",
+wgScriptPath="",
+wgScriptExtension=".php",
+wgScript="/index.php",
+wgVariantArticlePath=false,
+wgActionPaths={},
+wgServer="http://mysql.taobao.org",
+wgCanonicalNamespace="",
+wgCanonicalSpecialPageName=false,
+wgNamespaceNumber=0,
+wgPageName="MySQL内核月报_2014.11",
+wgTitle="MySQL内核月报 2014.11",
+wgAction="view",
+wgArticleId=126,
+wgIsArticle=true,
+wgUserName=null,
+wgUserGroups=null,
+wgUserLanguage="zh-cn",
+wgContentLanguage="zh-cn",
+wgBreakFrames=false,
+wgCurRevisionId=1004,
+wgVersion="1.16.5",
+wgEnableAPI=true,
+wgEnableWriteAPI=true,
+wgSeparatorTransformTable=["", ""],
+wgDigitTransformTable=["", ""],
+wgMainPageTitle="首页",
+wgFormattedNamespaces={"-2": "媒体", "-1": "特殊", "0": "", "1": "讨论", "2": "用户", "3": "用户讨论", "4": "淘宝数据库研发组", "5": "淘宝数据库研发组讨论", "6": "文件", "7": "文件讨论", "8": "MediaWiki", "9": "MediaWiki讨论", "10": "模板", "11": "模板讨论", "12": "帮助", "13": "帮助讨论", "14": "分类", "15": "分类讨论"},
+wgNamespaceIds={"媒体": -2, "特殊": -1, "": 0, "讨论": 1, "用户": 2, "用户讨论": 3, "淘宝数据库研发组": 4, "淘宝数据库研发组讨论": 5, "文件": 6, "文件讨论": 7, "mediawiki": 8, "mediawiki讨论": 9, "模板": 10, "模板讨论": 11, "帮助": 12, "帮助讨论": 13, "分类": 14, "分类讨论": 15, "对话": 1, "用户对话": 3, "图像": 6, "档案": 6, "image": 6, "image_talk": 7, "图像对话": 7, "图像讨论": 7, "档案对话": 7, "档案讨论": 7, "文件对话": 7, "模板对话": 11, "帮助对话": 13, "分类对话": 15},
+wgSiteName="淘宝数据库研发组",
+wgCategories=[],
+wgRestrictionEdit=[],
+wgRestrictionMove=[];
+</script><script src="/skins/common/wikibits.js?270"></script>
+<script src="/skins/common/ajax.js?270"></script>
+<script src="/index.php?title=-&amp;action=raw&amp;gen=js&amp;useskin=monobook&amp;270"></script>
+
+</head>
+<body class="mediawiki ltr ns-0 ns-subject page-MySQL内核月报_2014_11 skin-monobook">
+<div id="globalWrapper">
+<div id="column-content"><div id="content" >
+	<a id="top"></a>
+	
+	<h1 id="firstHeading" class="firstHeading">MySQL内核月报 2014.11</h1>
+	<div id="bodyContent">
+		<h3 id="siteSub">出自淘宝数据库研发组</h3>
+		<div id="contentSub"></div>
+		<div id="jump-to-nav">跳转到： <a href="#column-one">导航</a>, <a href="#searchInput">搜索</a></div>
+		<!-- start content -->
+<p>内核月报2014-11-draft
+</p>
+<table id="toc" class="toc"><tr><td><div id="toctitle"><h2>目录</h2></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7OPTIMIZE_.E4.B8.8D.E5.AD.98.E5.9C.A8.E7.9A.84.E8.A1.A8"><span class="tocnumber">1</span> <span class="toctext">MySQL·　捉虫动态·OPTIMIZE 不存在的表</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7SIGHUP_.E5.AF.BC.E8.87.B4_binlog_.E5.86.99.E9.94.99"><span class="tocnumber">2</span> <span class="toctext">MySQL·　捉虫动态·SIGHUP 导致 binlog 写错</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#MySQL.C2.B7.E3.80.805.7.E6.94.B9.E8.BF.9B.C2.B7Recovery.E6.94.B9.E8.BF.9B"><span class="tocnumber">3</span> <span class="toctext">MySQL·　5.7改进·Recovery改进</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#MySQL.C2.B7.E3.80.805.7.E7.89.B9.E6.80.A7.C2.B7.E9.AB.98.E5.8F.AF.E7.94.A8.E6.94.AF.E6.8C.81"><span class="tocnumber">4</span> <span class="toctext">MySQL·　5.7特性·高可用支持</span></a></li>
+<li class="toclevel-1 tocsection-5"><a href="#MySQL.C2.B7.E3.80.805.7.E4.BC.98.E5.8C.96.C2.B7Metadata_Lock.E5.AD.90.E7.B3.BB.E7.BB.9F.E7.9A.84.E4.BC.98.E5.8C.96"><span class="tocnumber">5</span> <span class="toctext">MySQL·　5.7优化·Metadata Lock子系统的优化</span></a></li>
+<li class="toclevel-1 tocsection-6"><a href="#MySQL.C2.B7.E3.80.805.7.E7.89.B9.E6.80.A7.C2.B7.E5.9C.A8.E7.BA.BFTruncate_undo_log_.E8.A1.A8.E7.A9.BA.E9.97.B4"><span class="tocnumber">6</span> <span class="toctext">MySQL·　5.7特性·在线Truncate undo log 表空间</span></a></li>
+<li class="toclevel-1 tocsection-7"><a href="#MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7hash_scan_.E7.AE.97.E6.B3.95.E7.9A.84.E5.AE.9E.E7.8E.B0.E8.A7.A3.E6.9E.90"><span class="tocnumber">7</span> <span class="toctext">MySQL·　性能优化·hash_scan 算法的实现解析</span></a></li>
+<li class="toclevel-1 tocsection-8"><a href="#TokuDB.C2.B7.E3.80.80.E7.89.88.E6.9C.AC.E4.BC.98.E5.8C.96.C2.B7.E3.80.807.5.0"><span class="tocnumber">8</span> <span class="toctext">TokuDB·　版本优化·　7.5.0</span></a></li>
+<li class="toclevel-1 tocsection-9"><a href="#TokuDB.C2.B7.E3.80.80.E5.BC.95.E6.93.8E.E7.89.B9.E6.80.A7.C2.B7.E3.80.80FAST_UPDATES"><span class="tocnumber">9</span> <span class="toctext">TokuDB·　引擎特性·　FAST UPDATES</span></a></li>
+<li class="toclevel-1 tocsection-10"><a href="#MariaDB.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7filesort_with_small_LIMIT_optimization"><span class="tocnumber">10</span> <span class="toctext">MariaDB·　性能优化·filesort with small LIMIT optimization</span></a></li>
+</ul>
+</td></tr></table><script>if (window.showTocToggle) { var tocShowText = "显示"; var tocHideText = "隐藏"; showTocToggle(); } </script>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7OPTIMIZE_.E4.B8.8D.E5.AD.98.E5.9C.A8.E7.9A.84.E8.A1.A8"> MySQL·　捉虫动态·OPTIMIZE 不存在的表 </span></h2>
+<p><b> bug 描述 </b>
+</p><p>这是一个和 GTID 相关的Bug，也就是说5.6才会有，并且出现这个 bug 需要满足条件：
+</p>
+<ol><li> 做修改性质的表管理操作，如 OPTIMIZE/ANALYZE/REPAIR 可以，CHECK 就不可以
+</li><li> 操作对应的表不存在
+</li><li> gtid_next 被设置为一个固定的值，并且 binlog 开启
+</li></ol>
+<p>在同时满足这3种条件下，会发现记录binlog时，对应的 Gtid_log_event 中的UUID会记为 00000000-0000-0000-0000-000000000000，并且这个对应的 gtid 不会记入 Executed_Gtid_Set。
+</p><p><b> bug影响 </b>
+</p><p>从 bug 描述可以看出，这个 bug 的表现特征就是 gtid_event 记错了，因此单实例的话基本不受影响的，因为主备复制时才会用到 gtid，所以主备场景会受到这个bug的影响。下面我们看下主备场景下这个bug是如何影响的：
+</p><p>M&lt;-&gt;S&nbsp;: M 和 S 互为主备，都是5.6，以 gtid 协议进行复制，M是主库。
+</p><p>假设我们在主库上执行了 OPTIMIZE TABLE non_exist_table，这时候 gtid_next = 'AUTOMATIC'，不是一个固定值，所以主库的 gtid 记录还是正常的，假设这时生成的 gtid_log_event 为 f3c1dd3e-395d-11e4-be45-4cb16c8f4abc:5，binlog 传到备库后，SQL 线程在 apply 的时候，会先将 f3c1dd3e-395d-11e4-be45-4cb16c8f4abc:5 设置为 gtid_next，然后同样做 OPTIMIZE TABLE non_exist_table，这个时候就触发了bug，备库的 gtid_log_event 记为00000000-0000-0000-0000-000000000000:5，并且不记入 Executed_Gtid_Set。主库继续接收用户的更新，同时会将备库的 binlog 拉过去应用，当做到 00000000-0000-0000-0000-000000000000:5 时，发现这个不在 Executed_Gtid_Set 中，就会执行，同样触发 bug， gtid_log_event 记为00000000-0000-0000-0000-000000000000:5，并且同样不记入 Executed_Gtid_Set。如此这样循环往复，会发现 OPTIMIZE TABLE non_exist_table 对应的binlog 在主备之前循环，充斥在 binlog 和 relay log 中。
+</p><p><b> bug 分析 </b>
+</p><p>之所以出现这个bug，是因为表管理操作的特殊性，OPTIMIZE/ANALYZE/REPAIR/CHECK TABLE 这些都统一调用 mysql_admin_table 函数进行管理操作，mysql_admin_table 执行失败的时候，执行线程并不报错，而是在 mysql_admin_table 函数结束前，清空线程中的error，将错误信息封装在结果集(result set)中发送给客户端，所以 OPTIMIZE/ANALYZE/REPAIR 虽然执行失败了，但仍然会记 binlog 。 按照这个逻辑来看，出错了仍然记binlog也是没问题，只要记对就行了，但是这里有一个问题，就是 mysql_admin_table 会调用 open_and_lock_tables，因为表不存在，所以 open_and_lock_tables 打开表的时候就出错，然后调用 trans_rollback_stmt ，之后会调到 gtid_rollback，最终调到 thd-&gt;variables.gtid_next.set_undefined()。
+</p>
+<pre>void set_undefined()
+{
+   if (type == GTID_GROUP)
+     type= UNDEFINED_GROUP;
+ }
+</pre>
+<p>可以看到，如果是 type == GTID_GROUP，就将 type 设置为 UNDEFINED_GROUP。那么什么情况下gtid_next 的 type 会是 GTID_GROUP，答案是为一个固定值的时候，即类似这种 f3c1dd3e-395d-11e4-be45-4cb16c8f4abc:5。
+</p><p>而在 Gtid_log_event::Gtid_log_event 有这段逻辑，
+</p>
+<pre> if (spec.type == GTID_GROUP)
+ {
+   global_sid_lock-&gt;rdlock();
+   sid= global_sid_map-&gt;sidno_to_sid(spec.gtid.sidno);
+   global_sid_lock-&gt;unlock();
+ }
+ else
+   sid.clear();
+</pre>
+<p>我们会发现，这个时候sid会被清掉，clear 操作就是置全0，所以最终写入 binlog 的就是全0。
+</p><p>细心的同学会发现，当 gtid_next = automatic 的时候，也是会被 clear 的（automatic 对应的 group 是 AUTOMATIC_GROUP），其实如果 gtid_next = automatic 的话，只有在 binlog commit 的时候才调用 gtid_before_write_cache 生成 gtid，所以前面的 gtid_rollback 是不会影响 automatic 的。
+</p><p>关于不记 Executed_Gtid_Set 的问题，gtid_rollback 的时候，一方面通过 thd-&gt;variables.gtid_next.set_undefined() 把 gtid_next 的type设成UNDEFINED_GROUP，另一方面用 thd-&gt;clear_owned_gtids()，把 thd-&gt;owned_gtid 的 sidno 设为0，导致最终不会添加到 Executed_Gtid_Set 中。
+</p><p><b> bug修复 </b>
+</p><p>官方已经修复了这个bug，具体可以参见这2个 revno
+</p>
+<ul><li> revno: <a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.6/revision/5749" class="external text" rel="nofollow">5749</a>
+</li><li> revno: <a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.6/revision/5751" class="external text" rel="nofollow">5751</a>
+</li></ul>
+<p>主要是第一个，第二个是post-fix。修复方法是在 THD 中加一个标志 skip_gtid_rollback，在进入 mysql_admin_table 时先根据上下文设置thd-&gt;skip_gtid_rollback ，在退出mysql_admin_table 前重置标志，gtid_rollback 在执行clear前会判断下thd-&gt;skip_gtid_rollback。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.8D.89.E8.99.AB.E5.8A.A8.E6.80.81.C2.B7SIGHUP_.E5.AF.BC.E8.87.B4_binlog_.E5.86.99.E9.94.99"> MySQL·　捉虫动态·SIGHUP 导致 binlog 写错 </span></h2>
+<p><b> bug描述 </b>
+</p><p>这是5.6中和gtid相关的一个bug，当 mysqld 收到 sighup 信号 （比如 kill -1） 的时候，会 flush binlog，但是新生成binlog开头没写 Previous_gtids_log_event，这会导致下面 2 个问题：
+</p>
+<ol><li> 这个时候 mysqld 重启的话，会发现再也起不来了，error log 里有这样的错<p>The binary log file 'mysql/mysql-bin.000020' is logically corrupted: The first global transaction identifier was read, but no other information regarding identifiers existing on the previous log files was found.</p>
+</li><li> 这个时候主库继续更新，然后从库来拉取 binlog 的时候，io 线程会停下来 <p> Last_IO_Error: Got fatal error 1236 from master when reading data from binary log: 'Error reading header of binary log while looking for the oldest binary log that contains any GTID that is not in the given gtid set'</p>
+</li></ol>
+<p><b>  bug 分析 </b>
+</p><p>mysqld 在收到 sighup 信号后，signal_hand 线程会调用 reload_acl_and_cache 函数 (sql_reload.cc)，最终会调用  MYSQL_BIN_LOG::open_binlog，open_binlog 有这段逻辑:
+</p>
+<pre>if (current_thd &amp;&amp; gtid_mode &gt; 0)
+ {
+   if (need_sid_lock)
+     global_sid_lock-&gt;wrlock();
+   else
+     global_sid_lock-&gt;assert_some_wrlock();
+   Previous_gtids_log_event prev_gtids_ev(previous_gtid_set);
+   if (need_sid_lock)
+     global_sid_lock-&gt;unlock();
+   prev_gtids_ev.checksum_alg= s.checksum_alg;
+   if (prev_gtids_ev.write(&amp;log_file))
+     goto err;
+   bytes_written+= prev_gtids_ev.data_written;
+ }
+</pre>
+<p>signal_hand  没有调用 store_globals 设置 THR_THD 这个key，所以这个时候 current_thd 得到的值是空的，因此prev_gtids_event 也就不会写进新binlog中的。
+</p><p><b>  2个问题的分析 </b>
+</p>
+<ol><li> mysqld 重启不起来的原因：<p>mysqld 在启动的时候会通过 mysql_bin_log.init_gtid_sets 来初始化 gtid_executed 和 gtid_purged 2个set，初使化 gtid_executed 时，会读最新的binlog，将文件开头 Previous_gtids_log_event 的 gtid set 和文件里所有的 gtid_event 加起来，放进 gtid_executed，在读文件过程中，如果发现没有 Previous_gtids_log_event ，就报错，程序退出。</p>
+</li><li> 备库的错误信息解释：<p>在gtid协议下，主库向备库发 binlog 是用 com_binlog_dump_gtid 函数，这个函数会调到 MYSQL_BIN_LOG::find_first_log_not_in_gtid_set()，这个函数的作用是找到备库需要的第一个 binlog 文件，逻辑是这样的，从编号最大的binlog 往前找，对每个binlog，读取 Previous_gtids_log_event，如果发现这个集合是备库的发来的 gtid_set 的子集，就停止，当前这个binlog文件就是备库需要的第一个binlog文件。找的过程中，如果发现没有 Previous_gtids_log_event，就把错误信息 ER_MASTER_FATAL_ERROR_READING_BINLOG 发给备库。</p>
+</li></ol>
+<p><b> 问题的解决方法 </b>
+</p>
+<ol><li> 对server 起不来的，只能手动删所有 binlog 文件了，同时还要清空 binlog.index 文件，有备库的话要重搭备库。
+</li><li> 对于主备场景下，备库停掉的，purge 主库的binlog，如果主备不致的话，比如主库sighup后又有新的更新，这时候需要重做备库，因为binlog已经没了，只能拿主库的数据来重新做一个。
+</li></ol>
+<p><br />
+<b> bug 修复 </b>
+</p><p>这个bug官方已经修复，具体可以参考 revno: <a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.6/revision/5908" class="external text" rel="nofollow">5908</a>。
+</p><p>修复方法类似reload_acl_and_cache 中 REFRESH_GRANT 的逻辑，生成一个临时的 THD 作为 current_thd，在flush logs 完后释放掉。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.805.7.E6.94.B9.E8.BF.9B.C2.B7Recovery.E6.94.B9.E8.BF.9B"> MySQL·　5.7改进·Recovery改进</span></h2>
+<p><b>背景</b>
+</p><p>InnoDB作为事务性引擎，使用write-ahead logging(WAL)机制保证ACID中的Atomicity和Durability，使用undo机制保证ACID中的Consistency和Isolation。
+</p><p>按照WAL和undo的机制，形成以下两个原则：
+</p>
+<dl><dd>1. 数据块的更改需要先记录redo日志。
+</dd><dd>2. 数据块的更改需要先写入undo。
+</dd></dl>
+<p>根据这两个原则，InnoDB更新数据的基本流程可以简单的总结为：
+</p>
+<dl><dd>1. 记录需要更改undo record的redo log
+</dd><dd>2. 记录需要更改data record的redo log
+</dd><dd>3. 写入redo log
+</dd><dd>4. 写入undo record
+</dd><dd>5. 更新data record
+</dd></dl>
+<p>这5个步骤。
+</p><p><br />
+</p><p><b>InnoDB Recovery</b>
+</p><p>如果MySQL实例异常crash，那么重启过程中首先会进行InnoDB recovery。 即：根据last checkpoint点，顺序读取后面的redo log，按照先前滚，再回滚的原则， 应用所有的redo log。
+</p><p>因为redo record中记录着数据块的地址(space_id+page_no)，所以recovery的过程首先会执行合并相同数据块的操作，以加快recovery的过程。
+</p><p><br />
+<b>那么问题来了</b>
+</p>
+<dl><dd>根据space_id怎么找到对应IDB数据文件？
+</dd></dl>
+<p>因为在恢复的过程中，InnoDB只load了redo文件和系统表空间文件，如何查找InnoDB的数据文件呢？
+</p>
+<dl><dd>1. InnoDB的数据字典dict_table_t结构中也保存了对应关系，但数据字典受redo保护，recovery的过程中不可用。
+</dd><dd>2. 扫描datadir的所有数据文件，读取page中保存的space_id，建立space_id和数据文件的对应关系。
+</dd></dl>
+<p>MySQL目前采用第二种方式，但带来了一个问题，当设置了innodb_file_per_table后，每一个表对应一个表空间，那么需要读取所有的目录下的所有Innodb数据文件，这样就会严重的影响了recovery的时间。
+</p><p><br />
+<b>MySQL 5.7改进策略：</b>
+</p><p>MySQL 5.7中，在redo log中增加了一种新的record类型，即MLOG_FILE_NAME，记录了自last checkpoint以来更改的数据文件的file name。
+这样在应用的时候，直接根据文件名就可以找到数据文件。
+</p><p><br />
+<b>Oracle的设计机制：</b>
+</p><p>Oracle数据库recovery的过程中，有没有这个问题呢？
+答案是没有。
+</p><p>我们来看下Oracle的设计机制:
+</p>
+<dl><dd>oracle同样在系统表空间中记录了数据字典，受redo保护，可以通过DBA_开头的表来查询。但Oracle还维护了一个control file，控制文件中记录了database name，redo file，datafile，backup等信息，通过v$开头的表查询。
+</dd></dl>
+<dl><dd>当Oracle在recovery的过程中，需要数据库在mount状态下，即打开了控制文件，这时数据字典还不可用(DB没有open)，在应用redo log的时候，根据控制文件中的v$datafile，检索file_id和file_name的对应关系。
+</dd></dl>
+<p>MySQL是根据datadir，innodb_data_home_dir，innodb_log_group_home_dir等几个目录配置，通过文件系统的查找，找到相应文件的，而Oracle维护了一个集中式的control file管理这些初始加载的文件地址。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.805.7.E7.89.B9.E6.80.A7.C2.B7.E9.AB.98.E5.8F.AF.E7.94.A8.E6.94.AF.E6.8C.81"> MySQL·　5.7特性·高可用支持</span></h2>
+<p><b>背景</b>
+</p><p>MySQL的Master-Slave结构提供了实现High Availability的基础，在实现上面通常使用client-proxy-db的三层架构，proxy不单单完成错误检测、实例切换等高可用功能，还可以实现sharding，即scale out。
+</p><p>MySQL Fabric就是Oracle想大力发展的proxy，这里主要介绍为了完成高可用的功能，MySQL 5.7做了哪些事情，我们是否可以使用，实现自己的proxy？
+</p><p><br />
+<b>高可用组件</b>
+</p><p>proxy完成高可用的功能，除了需要MySQL提供的master-slave的基础结构外，还需要:
+</p>
+<dl><dd>1. 在错误检测、进行实例切换时候，需要DB的只读功能，防止m/s双写。
+</dd><dd>2. 在切换完成后，如何实现client重连，或者实现session维持，对client透明。
+</dd></dl>
+<p><br />
+<b>那么问题来了</b>
+</p><p>1. 如何保证切换？
+</p>
+<dl><dd>当前MySQL版本提供了一个read_only的功能，通过添加global read lock和commit锁来实现，可以满足实现单点写入。
+</dd></dl>
+<p>2. client重连或者session维持？
+</p>
+<dl><dd>client重连主要依赖client的API，检测connection的错误。而保持connection不断开，session维持怎么做？
+</dd></dl>
+<p><br />
+<b>MySQL 5.7增加的功能</b>
+</p><p>1. offline mode
+</p>
+<dl><dd>offline mode不光实现了read only的功能，并且会断掉所有的非super用户的connection，并禁止重连。虽然官方文档中介绍是为了支持upgrade，但完全可以使用在切换的过程中。
+</dd></dl>
+<p>2.session回放功能支持
+</p>
+<dl><dd>client-server protocol对于response packet增加了对session state状态改变的支持，对于以下的session state变化：
+</dd><dd>1. User-defined variables
+</dd><dd>2. session-specific values for server variables
+</dd><dd>3. Temporary tables that are created
+</dd><dd>4. Prepared statements
+</dd><dd>5. Current database
+</dd></dl>
+<p>response packet中会添加一个tracker标示其变化。
+有了这个功能就可以容易实现session的回放功能，特别在load balance或者cluster环境中，把一个用户的connection迁移到另外一台实例上，来保持connection不断开，实现切换对client透明。
+</p><p><br />
+使用MySQL 5.7新增的这两个功能，可以帮助proxy实现DB高可用。
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.805.7.E4.BC.98.E5.8C.96.C2.B7Metadata_Lock.E5.AD.90.E7.B3.BB.E7.BB.9F.E7.9A.84.E4.BC.98.E5.8C.96"> MySQL·　5.7优化·Metadata Lock子系统的优化</span></h2>
+<p><b>背景</b>
+</p><p>引入MDL锁的目的，最初是为了解决著名的bug#989，在MySQL 5.1及之前的版本，事务执行过程中并不维护涉及到的所有表的Metatdata 锁，极易出现复制中断，例如如下执行序列：
+</p>
+<dl><dd>Session 1: BEGIN;
+</dd><dd>Session 1: INSERT INTO t1 VALUES (1);
+</dd><dd>Session 2: Drop table t1;   --------SQL写入BINLOG
+</dd><dd>Session 1: COMMIT;  -----事务写入BINLOG
+</dd></dl>
+<p>在备库重放 binlog时，会先执行DROP TABLE，再INSERT数据，从而导致复制中断。
+</p><p><br />
+在MySQL 5.5版本里，引入了MDL, 在事务过程中涉及到的所有表的MDL锁，直到事务结束才释放。这意味着上述序列的DROP TABLE 操作将被Session 1阻塞住直到其提交。
+</p><p><br />
+不过用过5.5的人都知道，MDL实在是个让人讨厌的东西，相信不少人肯定遇到过在使用mysqldump做逻辑备份时，由于需要执行FLUSH TABLES WITH READ LOCK (以下用FTWRL缩写代替)来获取全局GLOBAL的MDL锁，因此经常可以看到“wait for global read lock”之类的信息。如果备库存在大查询，或者复制线程正在执行比较漫长的DDL，并且FTWRL被block住，那么随后的QUERY都会被block住，导致业务不可用引发故障。
+</p><p><br />
+为了解决这个问题，Facebook为MySQL增加新的接口替换掉FTWRL 只创建一个read view ，并返回与read view一致的binlog位点；另外Percona Server也实现了一种类似的办法来绕过FTWRL，具体点击<a href="http://www.percona.com/doc/percona-server/5.6/management/backup_locks.html" class="external text" rel="nofollow">文档连接</a>以及<a href="http://www.mysqlperformanceblog.com/2014/03/11/introducing-backup-locks-percona-server-2/" class="external text" rel="nofollow">percona的博客</a>，不展开阐述。
+</p><p><br />
+MDL解决了<a href="http://bugs.mysql.com/bug.php?id=989" class="external text" rel="nofollow">bug#989</a>，却引入了一个新的热点，所有的MDL锁对象被维护在一个hash对象中；对于热点，最正常的想法当然是对其进行分区来分散热点，不过这也是Facebook的大神Mark Callaghan在report了<a href="http://bugs.mysql.com/bug.php?id=66473" class="external text" rel="nofollow">bug#66473</a>后才加入的，当时Mark观察到MDL_map::mutex的锁竞争非常高，进而推动官方改变。因此在MySQL 5.6.8及之后的版本中，引入了新参数metadata_locks_hash_instances来控制对mdl hash的分区数(<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.6/revision/4350" class="external text" rel="nofollow">Rev:4350</a>)；
+</p><p><br />
+不过故事还没结束，后面的测试又发现哈希函数有问题，类似somedb.someprefix1….somedb.someprefix8的hash key值相同，都被hash到同一个桶下面了，相当于hash分区没生效。这属于hash算法的问题，喜欢考古的同学可以阅读下<a href="http://bugs.mysql.com/bug.php?id=66473" class="external text" rel="nofollow">bug#66473</a>后面Dmitry Lenev的分析。
+</p><p><br />
+Mark进一步的测试发现Innodb的hash计算算法比my_hash_sort_bin要更高效， Oracle的开发人员重开了个<a href="http://bugs.mysql.com/bug.php?id=68487" class="external text" rel="nofollow">bug#68487</a>来跟踪该问题，并在MySQL5.6.15对hash key计算函数进行优化，包括fix 上面说的hash计算问题(<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.6/revision/5459" class="external text" rel="nofollow">Rev:5459</a>)，使用MurmurHash3算法来计算mdl key的hash值。
+</p><p><br />
+<b>MySQL 5.7 对MDL锁的优化</b>
+</p><p>在MySQL 5.7里对MDL子系统做了更为彻底的优化。主要从以下几点出发：
+</p><p><br />
+第一，尽管对MDL HASH进行了分区，但由于是以表名+库名的方式作为key值进行分区，如果查询或者DML都集中在同一张表上，就会hash到相同的分区，引起明显的MDL HASH上的锁竞争
+</p><p>针对这一点，引入了LOCK-FREE的HASH来存储MDL_lock，LF_HASH无锁算法基于论文"Split-Ordered Lists: Lock-Free Extensible Hash Tables"，实现还比较复杂。
+注：实际上LF_HASH很早就被应用于Performance Schema，算是比较成熟的代码模块。
+</p><p>由于引入了LF_HASH，MDL HASH分区特性自然直接被废除了 。
+</p><p>对应<a href="http://dev.mysql.com/worklog/task/?id=7305" class="external text" rel="nofollow">WL#7305</a>， PATCH(<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.7/revision/7249" class="external text" rel="nofollow">Rev:7249</a>)
+</p><p><br />
+第二，从广泛使用的实际场景来看，DML/SELECT相比DDL等高级别MDL锁类型，是更为普遍的，因此可以针对性的降低DML和SELECT操作的MDL开销。
+</p><p>为了实现对DML/SELECT的快速加锁，使用了类似LOCK-WORD的加锁方式，称之为FAST-PATH，如果FAST-PATH加锁失败，则走SLOW-PATH来进行加锁。
+</p><p>每个MDL锁对象（MDL_lock）都维持了一个long long类型的状态值来标示当前的加锁状态，变量名为MDL_lock::m_fast_path_state
+举个简单的例子：（初始在sbtest1表上对应MDL_lock::m_fast_path_state值为0）
+</p>
+<dl><dd>Session 1: BEGIN;
+</dd><dd>Session 1: SELECT * FROM sbtest1 WHERE id =1;  //m_fast_path_state = 1048576, MDL ticket 不加MDL_lock::m_granted队列
+</dd></dl>
+<dl><dd>Session 2: BEGIN;
+</dd><dd>Session 2: SELECT * FROM sbtest1 WHERE id =2; //m_fast_path_state=1048576+1048576=2097152，同上，走FAST PATH
+</dd></dl>
+<dl><dd>Session 3: ALTER TABLE sbtest1 ENGINE = INNODB; //DDL请求加的MDL_SHARED_UPGRADABLE类型锁被视为unobtrusive lock，可以认为这个是比上述SQL的MDL锁级别更高的锁，并且不相容，因此被强制走slow path。而slow path是需要加MDL_lock::m_rwlock的写锁。m_fast_path_state = m_fast_path_state | MDL_lock::HAS_SLOW_PATH | MDL_lock::HAS_OBTRUSIVE
+</dd><dd>注:DDL还会获得库级别的意向排他MDL锁或者表级别的共享可升级锁，但为了表述方便，这里直接忽略了，只考虑涉及的同一个MDL_lock锁对象。
+</dd></dl>
+<dl><dd>Session 4: SELECT * FROM sbtest1 WHERE id =3; // 检查m_fast_path_state &amp;HAS_OBTRUSIVE，如果DDL还没跑完，就会走slow path。
+</dd></dl>
+<p>从上面的描述可以看出，MDL子系统显式的对锁类型进行了区分（OBTRUSIVE  or UNOBTRUSIVE），存储在数组矩阵m_unobtrusive_lock_increment。 因此对于相容类型的MDL锁类型，例如DML/SELECT，加锁操作几乎没有任何读写锁或MUTEX开销。
+</p><p>对应<a href="http://dev.mysql.com/worklog/task/?id=7304" class="external text" rel="nofollow">WL#7304</a>, <a href="http://dev.mysql.com/worklog/task/?id=7306" class="external text" rel="nofollow">WL#7306</a> ， PATCH（<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.7/revision/7067" class="external text" rel="nofollow">Rev:7067</a>,<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.7/revision/7129" class="external text" rel="nofollow">Rev:7129</a>）(<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.7/revision/7586" class="external text" rel="nofollow">Rev:7586</a>)
+</p><p><br />
+第三，由于引入了MDL锁，实际上早期版本用于控制Server和引擎层表级并发的THR_LOCK  对于Innodb而言已经有些冗余了，因此Innodb表完全可以忽略这部分的开销。
+</p><p>不过在已有的逻辑中，Innodb依然依赖THR_LOCK来实现LOCK TABLE tbname READ，因此增加了新的MDL锁类型来代替这种实现。
+</p><p>实际上代码的大部分修改都是为了处理新的MDL类型，Innodb的改动只有几行代码。
+</p><p>对应<a href="http://dev.mysql.com/worklog/task/?id=6671" class="external text" rel="nofollow">WL#6671</a>，PATCH(<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.7/revision/8232" class="external text" rel="nofollow">Rev:8232</a>)
+</p><p><br />
+第四，Server层的用户锁（通过GET_LOCK函数获取）使用MDL来重新实现。
+</p><p>用户可以通过GET_LOCK()来同时获取多个用户锁，同时由于使用MDL来实现，可以借助MDL子系统实现死锁的检测。
+</p><p>注意由于该变化，导致用户锁的命名必须小于64字节，这是受MDL子系统的限制导致。
+</p><p>对应<a href="http://dev.mysql.com/worklog/task/?id=1159" class="external text" rel="nofollow">WL#1159</a>, PATCH(<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.7/revision/8356" class="external text" rel="nofollow">Rev:8356</a>)
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.805.7.E7.89.B9.E6.80.A7.C2.B7.E5.9C.A8.E7.BA.BFTruncate_undo_log_.E8.A1.A8.E7.A9.BA.E9.97.B4">MySQL·　5.7特性·在线Truncate undo log 表空间</span></h2>
+<p><b>背景</b>
+</p><p>Innodb使用undo log来实现MVCC，这意味着如果一个很老的事务长时间不提交，那么新产生的undo log都无法被及时清理掉。在MySQL 5.5及之前版本中，undo log是存储在ibdata中。从5.6开始可以使用独立的undo log表空间来存储undo。但是直到5.6，一旦undo log膨胀，依然没有任何办法为其 “减肥”。因此我们经常看到ibdata被膨胀到几十上百G。
+</p><p><b>改进</b>
+</p><p>在MySQL5.7.5版本中终于增加了这个众望所归的功能，实现了在线truncate undo log的功能。对应的changeling entry如下：
+</p>
+<dl><dd>InnoDB: You can now truncate undo logs that reside in undo tablespaces. This feature is enabled using the innodb_undo_log_truncate configuration option. For more information, see Truncating Undo Logs That Reside in Undo Tablespaces.
+</dd></dl>
+<p>在能够使用该特性之前，需要先打开独立undo表空间，注意现在只能在install db的时候才能开启，因为在初始化阶段是写死占用了最小的几个space id的。这种实现方式。。。只能无限吐槽了。
+</p><p>有几个参数控制undo tablespace：
+</p>
+<dl><dd>innodb_undo_directory：undo文件的存储目录。
+</dd></dl>
+<dl><dd>innodb_undo_tablespaces：undo tablespace的个数，实现在线truncate undo，需要大于等于2，因为在truncate一个undo log文件时，要保证另外一个是可用的，这样就无需停止业务了。
+</dd></dl>
+<dl><dd>innodb_undo_logs：undo回滚段的数量需要大于34。原因是1~32个回滚段会被临时表占用（5.7针对临时表做了大量优化），第33、34分配给undospace1 和undospace2。
+</dd></dl>
+<p>这里有个比较有意思的问题，由于undo 回滚段总是从第一个undospace分配，如果每次从1开始，每次重启递增innodb_undo_logs，所有的回滚段都会被分配到第一个undo space，在truncate第一个undo space时，将无可用的undo回滚分配给正常的用户事务。
+</p>
+<dl><dd>innodb_purge_rseg_truncate_frequency：用于控制purge回滚段的频度。 Innodb Purge操作的协调线程每隔这么多次purge事务分发后，就会触发一次History purge，并检查当前的undo log 表空间状态是否会触发truncate。
+</dd></dl>
+<dl><dd>innodb_max_undo_log_size：控制最大undo tablespace文件的大小，超过这个阀值时才会去尝试truncate。truncate后的大小默认为10M。
+</dd></dl>
+<dl><dd>innodb_undo_log_truncate：用于打开/关闭undo log 在线truncate特性，可动态调整。
+</dd></dl>
+<p><br />
+undo log 的truncate操作由purge 协调线程发起，在truncate 某个undo log 表空间的过程中，保证有一个可用的undo log tablespace能提供给用户使用，从而实现所谓的在线truncate。
+</p><p><br />
+当选定一个需要truncate的undo log space时，需要检查其是否是可释放的，也就是说是否还有活跃的事务可能访问其中的回滚段。如果没有，就将该tablespace中的回滚段设置为不可分配，然后对undo log space文件进行truncate，并重新初始化到10M，初始化文件头等一系列操作。
+</p><p><br />
+这里引入了比较有意思的方法来保证truncate的原子性，即在开始truncate时，创建一个独立的文件，命名为undo_&lt;space_id&gt;_trunc.log，在做完truncate操作后，删除文件。如果在中间发生crash，崩溃恢复时发现该文件，会继续完成truncate操作。
+</p><p><br />
+更具体的参考<a href="http://dev.mysql.com/worklog/task/?id=6965" class="external text" rel="nofollow">WL#6965</a> 及对应补丁<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.7/revision/8615" class="external text" rel="nofollow">Rev:8615</a>
+</p><p><br />
+</p>
+<h2> <span class="mw-headline" id="MySQL.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7hash_scan_.E7.AE.97.E6.B3.95.E7.9A.84.E5.AE.9E.E7.8E.B0.E8.A7.A3.E6.9E.90"> MySQL·　性能优化·hash_scan 算法的实现解析 </span></h2>
+<p><b>问题描述</b>
+</p><p>首先，我们执行下面的TestCase：
+</p>
+<pre> --source include/master-slave.inc
+ --source include/have_binlog_format_row.inc
+ connection slave;
+ set global slave_rows_search_algorithms='TABLE_SCAN';
+ connection master;
+ create table t1(id int, name varchar(20);
+ insert into t1 values(1,'a');
+ insert into t2 values(2, 'b');
+ ......
+ insert into t3 values(1000, 'xxx');
+ delete from t1;
+ ---source include/rpl_end.inc
+</pre>
+<p><br />
+随着 t1 数据量的增大，rpl_hash_scan.test 的执行时间会随着 t1 数据量的增大而快速的增长，因为在执行 'delete from t1;' 对于t1的每一行删除操作，备库都要扫描t1,即全表扫描，如果 select count(*) from t1 = N, 则需要扫描Ｎ次 t1 表， 则读取记录数为：
+O(N + (N-1) + (N-2) + .... + 1) = O(N^2)，在 replication 没有引入 hash_scan，binlog_format=row时，对于无索引表，是通过 table_scan 实现的，如果一个update_rows_log_event/delete_rows_log_event 包含多行修改时，每个修改都要进行全表扫描来实现，其 stack 如下：
+</p>
+<pre>#0 Rows_log_event::do_table_scan_and_update
+#1 0x0000000000a3d7f7 in Rows_log_event::do_apply_event 
+#2 0x0000000000a28e3a in Log_event::apply_event
+#3 0x0000000000a8365f in apply_event_and_update_pos
+#4 0x0000000000a84764 in exec_relay_log_event 
+#5 0x0000000000a89e97 in handle_slave_sql (arg=0x1b3e030) 
+#6 0x0000000000e341c3 in pfs_spawn_thread (arg=0x2b7f48004b20) 
+#7 0x0000003a00a07851 in start_thread () from /lib64/libpthread.so.0
+#8 0x0000003a006e767d in clone () from /lib64/libc.so.6
+</pre>
+<p>这种情况下，往往会造成备库延迟，这也是无索引表所带来的复制延迟问题。
+</p><p><b>如何解决问题：</b>
+</p>
+<ol><li>RDS 为了解这个问题，会在每个表创建的时候检查一下表是否包含主建或者唯一建，如果没有包含，则创建一个隐式主建，此主建对用户透明，用户无感，相应的show create, select * 等操作会屏蔽隐式主建，从而可以减少无索引表带来的影响;
+</li><li>官方为了解决这个问题，在5.6.6 及以后版本引入参数 slave_rows_search_algorithms ，用于指示备库在 apply_binlog_event时使用的算法，有三种算法TABLE_SCAN,INDEX_SCAN,HASH_SCAN，其中table_scan与index_scan是已经存在的，本文主要研究HASH_SCAN的实现方式，关于参数slave_rows_search_algorithms的设置，详情请参考：<a href="http://dev.mysql.com/doc/refman/5.6/en/replication-options-slave.html#option_mysqld_slave-rows-search-algorithms" class="external free" rel="nofollow">http://dev.mysql.com/doc/refman/5.6/en/replication-options-slave.html#option_mysqld_slave-rows-search-algorithms</a>
+</li></ol>
+<p><b>hash_scan 的实现方法：</b>
+</p><p>简单的讲，在 apply rows_log_event时，会将 log_event 中对行的更新缓存在两个结构中，分别是：m_hash, m_distinct_key_list。
+m_hash：主要用来缓存更新的行记录的起始位置，是一个hash表；
+m_distinct_key_list：如果有索引，则将索引的值push 到m_distinct_key_list，如果表没有索引，则不使用这个List结构；
+其中预扫描整个调用过程如下：
+Log_event::apply_event
+</p>
+<pre> Rows_log_event::do_apply_event
+    Rows_log_event::do_hash_scan_and_update 
+      Rows_log_event::do_hash_row  (add entry info of changed records)
+        if (m_key_index &lt; MAX_KEY) (index used instead of table scan)
+          Rows_log_event::add_key_to_distinct_keyset ()
+</pre>
+<p>当一个event 中包含多个行的更改时，会首先扫描所有的更改，将结果缓存到m_hash中，如果该表有索引，则将索引的值缓存至m_distinct_key_list List 中，如果没有，则不使用这个缓存结构，而直接进行全表扫描； 
+</p><p><b>执行 stack 如下：</b>
+</p>
+<pre>#0 handler::ha_delete_row 
+#1 0x0000000000a4192b in Delete_rows_log_event::do_exec_row 
+#2 0x0000000000a3a9c8 in Rows_log_event::do_apply_row
+#3 0x0000000000a3c1f4 in Rows_log_event::do_scan_and_update 
+#4 0x0000000000a3c5ef in Rows_log_event::do_hash_scan_and_update 
+#5 0x0000000000a3d7f7 in Rows_log_event::do_apply_event 
+#6 0x0000000000a28e3a in Log_event::apply_event
+#7 0x0000000000a8365f in apply_event_and_update_pos
+#8 0x0000000000a84764 in exec_relay_log_event 
+#9 0x0000000000a89e97 in handle_slave_sql
+#10 0x0000000000e341c3 in pfs_spawn_thread
+#11 0x0000003a00a07851 in start_thread () 
+#12 0x0000003a006e767d in clone () 
+</pre>
+<p><b>执行过程说明：</b>
+</p><p>Rows_log_event::do_scan_and_update
+</p>
+<pre>    open_record_scan()
+    do
+      next_record_scan()
+        if (m_key_index &gt; MAX_KEY)
+           ha_rnd_next();
+        else
+           ha_index_read_map(m_key from m_distinct_key_list)       
+        entry= m_hash-&gt;get()
+        m_hash-&gt;del(entry);
+        do_apply_row()
+     while (m_hash-&gt;size &gt; 0);
+</pre>
+<p>从执行过程上可以看出，当使用hash_scan时，只会全表扫描一次，虽然会多次遍历m_hash这个hash表，但是这个扫描是O(1),所以，代价很小，因此可以降低扫描次数，提高执行效率。
+</p><p><b> hash_scan 的一个 bug  </b>
+</p><p>bug详情：<a href="http://bugs.mysql.com/bug.php?id=72788" class="external free" rel="nofollow">http://bugs.mysql.com/bug.php?id=72788</a> 
+</p><p>bug原因：m_distinct_key_list 中的index key 不是唯一的，所以存在着对已经删除了的记录重复删除的问题。
+</p><p>bug修复：<a href="http://bazaar.launchpad.net/~mysql/mysql-server/5.7/revision/8494" class="external free" rel="nofollow">http://bazaar.launchpad.net/~mysql/mysql-server/5.7/revision/8494</a>
+</p><p><b>  问题扩展： </b>
+</p>
+<ol><li>在没有索引的情况下，是不是把 hash_scan 打开就能提高效率，降低延迟呢？<p>不一定，如果每次更新操作只一条记录，此时仍然需要全表扫描，并且由于entry 的开销，应该会有后退的情况；</p>
+</li><li>一个event中能包含多少条记录的更新呢？<p>这个和表结构以及记录的数据大小有关，一个event 的大小不会超过9000 bytes, 没有参数可以控制这个size；</p>
+</li><li>hash_scan 有没有限制呢？<p>hash_scan 只会对更新、删除操作有效，对于binlog_format=statement 产生的 Query_log_event 或者binlog_format=row 时产生的 Write_rows_log_event 不起作用；</p>
+</li></ol>
+<h2> <span class="mw-headline" id="TokuDB.C2.B7.E3.80.80.E7.89.88.E6.9C.AC.E4.BC.98.E5.8C.96.C2.B7.E3.80.807.5.0"> TokuDB·　版本优化·　7.5.0</span></h2>
+<p>TokuDB　7.5.0大版本已发布，是一个里程碑的版本，这里谈几点优化，以飨存储引擎爱好者们。
+</p><p><b>a) shutdown加速</b>
+</p><p>有用户<a href="https://tokutek.atlassian.net/browse/FT-312" class="external text" rel="nofollow">反馈</a>TokuDB在shutdown的时候，半个小时还没完事，非常不可接受。<br />
+在shutdown的时候，TokuDB在干什么呢？在做checkpoint，把内存中的节点数据序列化并压缩到磁盘。<br />
+那为什么如此耗时呢？如果tokudb_cache_size开的比较大，内存中的节点会非常多，在shutdown的时候，大家都排队等着被压缩到磁盘（串行的）。<br />
+在7.5.0版本，TokuDB官方针对此问题进行了优化，使多个节点并行压缩来缩短时间。<br />
+</p><p>详细commit见: <a href="https://github.com/Tokutek/ft-index/commit/bd85b8ce7d152412755860976a871fdfc977115c" class="external free" rel="nofollow">https://github.com/Tokutek/ft-index/commit/bd85b8ce7d152412755860976a871fdfc977115c</a> <br />
+BTW: TokuDB在早期设计的时候已保留并行接口，只是一直未开启。
+</p><p><br />
+<b>b) 内节点读取加速</b>
+</p><p>在内存中，TokuDB内节点(internal node)的每个message buffer都有２个重要数据结构：
+</p>
+<pre> 1) FIFO结构，保存{key, value}
+ 2) OMT结构，保存{key, FIFO-offset}
+</pre>
+<p>由于FIFO不具备快速查找特性，就利用OMT来做快速查找(根据key查到value)。
+</p><p>这样，当内节点发生cache miss的时候，索引层需要做：
+</p>
+<pre> 1) 从磁盘读取节点内容到内存
+ 2) 构造FIFO结构
+ 3) 根据FIFO构造OMT结构(做排序)
+</pre>
+<p>由于TokuDB内部有不少性能探(ji)针(shu)，他们发现步骤3)是个不小的性能消耗点，因为每次都要把message buffer做下排序构造出OMT，于是在7.5.0版本，把OMT的FIFO-offset(已排序)也持久化到磁盘，这样排序的损耗就没了。
+</p><p><br />
+<b>c) 顺序写加速</b>
+</p><p>当写发生的时候，会根据当前的key在pivots里查找(二分)当前写要落入哪个mesage buffer，如果写是顺序(或局部顺序，数据走向为最右边路径)的，就可以避免由＂查找＂带来的额外开销。<br />
+<a href="/index.php?title=%E6%96%87%E4%BB%B6:Fractal_tree.png" class="image"><img alt="Fractal tree.png" src="/images/8/8e/Fractal_tree.png" width="740" height="347" /></a><br />
+如何判断是顺序写呢？TokuDB使用了一种简单的启发式方法(heurstic)：seqinsert_score积分式。<br />
+如果：
+</p>
+<pre> 1) 当前写入落入最右节点，对seqinsert_score加一分(原子)
+ 2) 当前写入落入非最右节点，对seqinsert_score清零(原子)
+</pre>
+<p>当seqinsert_score大于100的时候，就可以认为是顺序写，当下次写操作发生时，首先与最右的节点pivot进行对比判断，如果确实为顺序写，则会被写到该节点，省去不少compare开销。<br />
+方法简单而有效。
+</p>
+<h2> <span class="mw-headline" id="TokuDB.C2.B7.E3.80.80.E5.BC.95.E6.93.8E.E7.89.B9.E6.80.A7.C2.B7.E3.80.80FAST_UPDATES"> TokuDB·　引擎特性·　FAST UPDATES</span></h2>
+<p>MySQL的update在执行时需要做read-modify-write：
+</p>
+<pre>1) 从底层存储中读取row数据(read row)
+2) 对row数据做更改(modify row)
+3) 把更改后的数据写回底层存储(write row)
+</pre>
+<p>操作路径还是比较长的，TokuDB提供了fast update语法，让＂某些＂场景下update更快，无需做read和modify直接write。<br />
+用法:
+</p>
+<pre> CREATE TABLE `t1` (
+ `id` int(11) NOT NULL,
+ `count` bigint(20) NOT NULL,
+ PRIMARY KEY (`id`)) ENGINE=TokuDB;
+</pre>
+<p>NOAR语句：
+</p>
+<pre> INSERT NOAR INTO t1 VALUES (1,0) ON DUPLICATE KEY UPDATE count = count + 1;
+</pre>
+<p>语义是：插入一条记录，如果该记录存在(id为1)，就对count的值做加法操作，不存在则做插入。<br />
+注意：
+fast updates的条件是比较苛刻的，必须满足：
+</p>
+<pre>1) 表必须有主键，且只能有一个索引(包含主键)
+2) 主键必须为： int, char或varchar类型，被更新的列也必须为三种类型之一
+3) WHERE子句必须为单行操作
+4) 如果开启binlog，binlog_format必须为STATEMENT
+</pre>
+<p>看了这些苛刻的条件后，有种＂臣妾做不到＂的感觉了吧，可以看出TokuDB一直为细节而努力。
+</p>
+<h2> <span class="mw-headline" id="MariaDB.C2.B7.E3.80.80.E6.80.A7.E8.83.BD.E4.BC.98.E5.8C.96.C2.B7filesort_with_small_LIMIT_optimization"> MariaDB·　性能优化·filesort with small LIMIT optimization</span></h2>
+<p>从MySQL 5.6.2/MariaDB 10.0.0版本开始，MySQL/MariaDB针对"ORDER BY ...LIMIT n"语句实现了一种新的优化策略。当n足够小的时候，优化器会采用一个容积为n的优先队列来进行排序，而不是排序所有数据然后取出前n条。
+这个新算法可以这么描述：（假设是ASC排序）
+</p>
+<ol><li> 建立一个只有n个元素的优先队列（堆），根节点为堆中最大元素
+</li><li> 根据其他条件，依次从表中取出一行数据
+</li><li> 如果当前行的排序关键字小于堆头，则把当前元素替换堆头，重新Shift保持堆的特性
+</li><li> 再取一条数据重复2步骤，如果没有下一条数据则执行5
+</li><li> 依次取出堆中的元素（从大到小排序），逆序输出（从小到大排序），即可得ASC的排序结果
+</li></ol>
+<p>这样的算法，时间复杂度为m*log(n)，m为索引过滤后的行数，n为LIMIT的行数。而原始的全排序算法，时间复杂度为m*log(m)。只要n远小于m，这个算法就会很有效。
+</p><p>不过在MySQL 5.6中，除了optimizer_trace，没有好的方法来看到这个新的执行计划到底起了多少作用。MariaDB 10.013开始，提供一个系统状态，可以查看新执行计划调用的次数：
+</p>
+<pre> Sort_priority_queue_sorts
+ 描述: 通过优先队列实现排序的次数。(总排序次数=Sort_range+Sort_scan)
+ 范围: Global, Session
+ 数据类型: numeric
+ 引入版本: MariaDB 10.0.13
+</pre>
+<p>此外，MariaDB还将此信息打入了Slow Log中。只要指定 log_slow_verbosity=query_plan，就可以在Slow Log中看到这样的记录：
+</p>
+<pre> # Time: 140714 18:30:39
+ # User@Host: root[root] @ localhost []
+ # Thread_id: 3  Schema: test  QC_hit: No
+ # Query_time: 0.053857  Lock_time: 0.000188  Rows_sent: 11  Rows_examined: 100011
+ # Full_scan: Yes  Full_join: No  Tmp_table: No  Tmp_table_on_disk: No
+ # Filesort: Yes  Filesort_on_disk: No  Merge_passes: 0  <b>Priority_queue: Yes</b>
+ SET timestamp=1405348239;SET timestamp=1405348239;
+ select * from t1 where col1 between 10 and 20 order by col2 limit 100;
+</pre>
+<p>"Priority_queue: Yes" 就表示这个Query利用了优先队列的执行计划(pt-query-digest 目前已经可以解析 Priority_queue 这个列)。
+</p>
+<!-- 
+NewPP limit report
+Preprocessor node count: 39/1000000
+Post-expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key tmysqlwikidb-tmysql:pcache:idhash:126-0!1!0!!zh-cn!2!edit=0 and timestamp 20170515043640 -->
+<div class="printfooter">
+取自“<a href="http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11">http://mysql.taobao.org/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11</a>”</div>
+		<div id='catlinks' class='catlinks catlinks-allhidden'></div>		<!-- end content -->
+				<div class="visualClear"></div>
+	</div>
+</div></div>
+<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>查看</h5>
+		<div class="pBody">
+			<ul>
+				 <li id="ca-nstab-main" class="selected"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11" title="查看页面内容 [c]" accesskey="c">页面</a></li>
+				 <li id="ca-talk" class="new"><a href="/index.php?title=%E8%AE%A8%E8%AE%BA:MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11&amp;action=edit&amp;redlink=1" title="关于页面正文的讨论 [t]" accesskey="t">讨论</a></li>
+				 <li id="ca-viewsource"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11&amp;action=edit" title="此页面已被保护，你可以查看其源代码。 [e]" accesskey="e">查看源代码</a></li>
+				 <li id="ca-history"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11&amp;action=history" title="此页面的早前修订版本 [h]" accesskey="h">历史</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>个人工具</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95&amp;returnto=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11" title="我们鼓励您登录，但这并不是必须的 [o]" accesskey="o">登录</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(/skins/common/images/wiki.png);" href="/index.php?title=%E9%A6%96%E9%A1%B5" title="访问首页"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+	<div class='generated-sidebar portlet' id='p-navigation'>
+		<h5>导航</h5>
+		<div class='pBody'>
+			<ul>
+				<li id="n-mainpage-description"><a href="/index.php?title=%E9%A6%96%E9%A1%B5" title="访问首页 [z]" accesskey="z">首页</a></li>
+				<li id="n-portal"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E7%A4%BE%E5%8C%BA" title="关于本计划，您可以做什么，应该如何做">社区入口</a></li>
+				<li id="n-currentevents"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%BD%93%E5%89%8D%E4%BA%8B%E4%BB%B6" title="查找当前事件的背景信息">当前事件</a></li>
+				<li id="n-recentchanges"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E6%9C%80%E8%BF%91%E6%9B%B4%E6%94%B9" title="列出该网站的最近修改 [r]" accesskey="r">最近更改</a></li>
+				<li id="n-randompage"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%9A%8F%E6%9C%BA%E9%A1%B5%E9%9D%A2" title="随机载入一个页面 [x]" accesskey="x">随机页面</a></li>
+				<li id="n-help"><a href="/index.php?title=%E5%B8%AE%E5%8A%A9:%E7%9B%AE%E5%BD%95" title="寻求帮助">帮助</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="p-search" class="portlet">
+		<h5><label for="searchInput">搜索</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/index.php" id="searchform">
+				<input type='hidden' name="title" value="特殊:搜索"/>
+				<input id="searchInput" title="搜索该网站" accesskey="f" type="search" name="search" />
+				<input type='submit' name="go" class="searchButton" id="searchGoButton"	value="进入" title="如果相同的标题存在的话便直接前往该页面" />&nbsp;
+				<input type='submit' name="fulltext" class="searchButton" id="mw-searchButton" value="搜索" title="搜索该文字的页面" />
+			</form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>工具箱</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%93%BE%E5%85%A5%E9%A1%B5%E9%9D%A2/MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11" title="列出所有与此页相链的页面 [j]" accesskey="j">链入页面</a></li>
+				<li id="t-recentchangeslinked"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E9%93%BE%E5%87%BA%E6%9B%B4%E6%94%B9/MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11" title="从此页链出的所有页面的更改 [k]" accesskey="k">链出更改</a></li>
+<li id="t-specialpages"><a href="/index.php?title=%E7%89%B9%E6%AE%8A:%E7%89%B9%E6%AE%8A%E9%A1%B5%E9%9D%A2" title="所有特殊页面列表 [q]" accesskey="q">特殊页面</a></li>
+				<li id="t-print"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11&amp;printable=yes" rel="alternate" title="这个页面的可打印版本 [p]" accesskey="p">可打印版</a></li>				<li id="t-permalink"><a href="/index.php?title=MySQL%E5%86%85%E6%A0%B8%E6%9C%88%E6%8A%A5_2014.11&amp;oldid=1004" title="这个页面修订版本的永久链接">永久链接</a></li>			</ul>
+		</div>
+	</div>
+</div><!-- end of the left (by default at least) column -->
+<div class="visualClear"></div>
+<div id="footer">
+	<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="/skins/common/images/poweredby_mediawiki_88x31.png" height="31" width="88" alt="Powered by MediaWiki" /></a></div>
+	<div id="f-copyrightico"><a href="http://www.gnu.org/copyleft/fdl.html"><img src="/skins/common/images/gnu-fdl.png" alt="GNU Free Documentation License 1.3" width="88" height="31" /></a></div>
+	<ul id="f-list">
+		<li id="lastmod"> 此页面最后修订于2014年11月18日 (星期二) 14:02。</li>
+		<li id="viewcount">此页面已被浏览过6,506次。</li>
+		<li id="copyright">本站全部文字内容使用<a href="http://www.gnu.org/copyleft/fdl.html" class="external ">GNU Free Documentation License 1.3</a>授权。</li>
+		<li id="privacy"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E9%9A%90%E7%A7%81%E6%94%BF%E7%AD%96" title="淘宝数据库研发组:隐私政策">隐私政策</a></li>
+		<li id="about"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%85%B3%E4%BA%8E" title="淘宝数据库研发组:关于">关于淘宝数据库研发组</a></li>
+		<li id="disclaimer"><a href="/index.php?title=%E6%B7%98%E5%AE%9D%E6%95%B0%E6%8D%AE%E5%BA%93%E7%A0%94%E5%8F%91%E7%BB%84:%E5%85%8D%E8%B4%A3%E5%A3%B0%E6%98%8E" title="淘宝数据库研发组:免责声明">免责声明</a></li>
+	</ul>
+</div>
+</div>
+
+<script>if (window.runOnloadHook) runOnloadHook();</script>
+<!-- Served in 0.059 secs. --></body></html>

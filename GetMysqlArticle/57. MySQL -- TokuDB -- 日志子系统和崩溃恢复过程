@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · TokuDB · 日志子系统和崩溃恢复过程</title>
+  <meta name="description" content="TokuDB日志子系统MySQL重启后自动加载InnoDB和其他的动态plugin，包括TokuDB。每一plugin在注册的时候指定init和deinit回调函数。TokuDB的init/deinit函数分别是tokudb_init_func和tokudb_done_func。MySQL重启过程中调用tokud...">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2016/05/07/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2016/05">
+    <h1>数据库内核月报 － 2016 / 05</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2016/05/06/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2016/05/08/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/05/01/" target="_blank">
+                
+                MySQL · 引擎特性 · 基于InnoDB的物理复制实现
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/05/02/" target="_blank">
+                
+                MySQL · 特性分析 · MySQL 5.7新特性系列一
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/05/03/" target="_blank">
+                
+                PostgreSQL · 特性分析 · 逻辑结构和权限体系
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/05/04/" target="_blank">
+                
+                MySQL · 特性分析 · innodb buffer pool相关特性
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/05/05/" target="_blank">
+                
+                PG&GP · 特性分析 · 外部数据导入接口实现分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/05/06/" target="_blank">
+                
+                SQLServer · 最佳实践 · 透明数据加密在SQLServer的应用
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2016/05/07/" target="_blank">
+                
+                MySQL · TokuDB · 日志子系统和崩溃恢复过程
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/05/08/" target="_blank">
+                
+                MongoDB · 特性分析 · Sharded cluster架构原理
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/05/09/" target="_blank">
+                
+                PostgreSQL · 特性分析 · 统计信息计算方法
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2016/05/10/" target="_blank">
+                
+                MySQL · 捉虫动态 · left-join多表导致crash
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · TokuDB · 日志子系统和崩溃恢复过程
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <h2>TokuDB日志子系统</h2>
+<p>MySQL重启后自动加载InnoDB和其他的动态plugin，包括TokuDB。每一plugin在注册的时候指定init和deinit回调函数。TokuDB的init/deinit函数分别是<code>tokudb_init_func</code>和<code>tokudb_done_func</code>。<br />
+MySQL重启过程中调用<code>tokudb_init_func</code>进行必要的初始化。在<code>tokudb_init_func</code>里面，调用<code>db_env_create</code>创建一个env实例，进行参数设置和callback设置。<code>db_env_create</code>是一个简单的封装，最终会调用<code>toku_env_create</code>来进行参数设置，callback设置和初始化的。<code>toku_env_create</code>初始化工作中一个很重要的事情就是调用<code>toku_logger_create</code>初始化TokuDB的日志子系统。<br />
+在TokuDB中，日志子系统是由tokulogger数据结构管理的。下面仅列出了主要的数据成员。</p>
+
+<pre><code>struct tokulogger {
+    struct mylock input_lock;             // 保护lsn和in_buf的mutex
+    toku_mutex_t output_condition_lock;   // 保护written_lsn ，fsynced_lsn ，等待out_buf可用的条件变量的mutex
+    toku_cond_t output_condition;         // 等待out_buf可用的条件变量
+    bool output_is_available;             // 标志out_buf可用的条件
+    bool is_open;                         // 标志logger是否已打开
+    bool write_log_files;                 // 标示是否将redo log buffer写到redo log file
+    bool trim_log_files;                  // 标志是否要trim redo log file
+    char *directory;                      // redo log所在目录
+    int lg_max;                           // redo log最大长度，缺省100M
+    LSN lsn;                              // 下一个可用的lsn
+    struct logbuf inbuf;                  // 接收redo log entry的buffer
+    LSN written_lsn;                      // 最后一次写入的lsn
+    LSN fsynced_lsn;                      // 最后一次fsync的lsn
+    LSN last_completed_checkpoint_lsn;    // 最近一次checkpoint开始时刻的logger的lsn
+    long long next_log_file_number;       // 下一个可用的redo log file的序列号
+    struct logbuf outbuf;                 // 写入redo log file的buf
+    int n_in_file;                        // 当前redo log file存储日志的字节数
+    TOKULOGFILEMGR logfilemgr;            // log file manager的handle
+    TXN_MANAGER txn_manager;              // txn manager的handle
+};
+</code></pre>
+
+<h3>Logger初始化</h3>
+<p>Logger子系统在env-&gt;create阶段由<code>toku_logger_create</code>进行初步的初始化工作。代码片段如下：</p>
+
+<pre><code>int toku_logger_create (TOKULOGGER *resultp) {
+    TOKULOGGER CALLOC(result);
+    if (result==0) return get_error_errno();
+    result-&gt;is_open=false;
+    result-&gt;write_log_files = true;
+    result-&gt;trim_log_files = true;
+    result-&gt;directory=0;
+    result-&gt;lg_max = 100&lt;&lt;20; // 100MB default
+    // lsn is uninitialized
+    result-&gt;inbuf  = (struct logbuf) {0, LOGGER_MIN_BUF_SIZE, (char *) toku_xmalloc(LOGGER_MIN_BUF_SIZE), ZERO_LSN};
+    result-&gt;outbuf = (struct logbuf) {0, LOGGER_MIN_BUF_SIZE, (char *) toku_xmalloc(LOGGER_MIN_BUF_SIZE), ZERO_LSN};
+    // written_lsn is uninitialized
+    // fsynced_lsn is uninitialized
+    result-&gt;last_completed_checkpoint_lsn = ZERO_LSN;
+    // next_log_file_number is uninitialized
+    // n_in_file is uninitialized
+    toku_logfilemgr_create(&amp;result-&gt;logfilemgr);
+    *resultp=result;
+    ml_init(&amp;result-&gt;input_lock);
+    toku_mutex_init(&amp;result-&gt;output_condition_lock, NULL);
+    toku_cond_init(&amp;result-&gt;output_condition, NULL);
+    result-&gt;output_is_available = true;
+    return 0;
+}
+</code></pre>
+
+<p>Logger子系统在env-&gt;open阶段，调用<code>toku_logger_open</code>函数进行进一步的初始化。函数<code>toku_logger_open</code>是<code>toku_logger_open_with_last_xid</code>的简单封装。Env-&gt;open最终调用<code>toku_logger_open_with_last_xid</code>解析redo log file获取下一个可用的lsn，下一个可用的redo log file的序列号index并打开相应redo log file。在env-&gt;open时，调用<code>toku_logger_open_with_last_xid</code>的最后一个参数last_xid为TXNID_NONE，表示由<code>toku_logger_open_with_last_xid</code>指定事务子系统初始化时最新的txnid。<br />
+解析redo log file的过程在函数<code>toku_logfilemgr_init</code>实现，依次解析redo log目录下的每一个文件名符合特定格式的redo log file，从中读取最后一个log entry的lsn保存下来。Redo log文件名遵循”log$index.tokulog$version”格式，$index是64位无符号整数表示的redo log file的序列号index，$version是32位无符号整数表示版本信息。<br />
+如果最新的redo log file最后一个log entry是LT_shutdown（表示正常关闭不需要进行recovery），那么把对应的txnid记录在last_xid_if_clean_shutdown变量，作为TokuDB事务子系统初始化时最新的txnid。在解析redo log file的时候，还会用最新的redo log file的最后一个log entry的lsn更新logger的lsn，written_lsn，fsynced_lsn。接着，<code>toku_logger_find_next_unused_log_file</code>找到下一个可用的redo log文件的序列号，并创建新的redo log file。每个redo log file最开始的12个字节是固定的，首先是8个字节的magic字符串“tokulogg“，紧接着4个字节是log的版本信息。代码片段如下：</p>
+
+<pre><code>int
+toku_logger_open_with_last_xid(const char *directory /* redo log dir */, TOKULOGGER logger, TXNID last_xid) {
+    if (logger-&gt;is_open) return EINVAL;
+    TXNID last_xid_if_clean_shutdown = TXNID_NONE;
+    r = toku_logfilemgr_init(logger-&gt;logfilemgr, directory, &amp;last_xid_if_clean_shutdown);
+    if ( r!=0 )
+        return r;
+    logger-&gt;lsn = toku_logfilemgr_get_last_lsn(logger-&gt;logfilemgr);
+    logger-&gt;written_lsn = logger-&gt;lsn;
+    logger-&gt;fsynced_lsn = logger-&gt;lsn;
+    logger-&gt;inbuf.max_lsn_in_buf  = logger-&gt;lsn;
+    logger-&gt;outbuf.max_lsn_in_buf = logger-&gt;lsn;
+    r = open_logdir(logger, directory);
+    if (r!=0) return r;
+    long long nexti;
+    r = toku_logger_find_next_unused_log_file(logger-&gt;directory, &amp;nexti);
+    if (r!=0) return r;
+    logger-&gt;next_log_file_number = nexti;
+    r = open_logfile(logger);
+    if (r!=0) return r;
+    if (last_xid == TXNID_NONE) {
+        last_xid = last_xid_if_clean_shutdown;
+    }
+    toku_txn_manager_set_last_xid_from_logger(logger-&gt;txn_manager, last_xid);
+    logger-&gt;is_open = true;
+    return 0;
+}
+</code></pre>
+
+<p>到这里，TokuDB的logger子系统就初始化好了，在处理DDL或者DML或者TokuDB执行checkpoint的时候，都需要先写rollback（undo）log，redo log。Rollback在之前的月报<a href="http://mysql.taobao.org/monthly/2016/03/01/">MySQL · TokuDB · 事务子系统和 MVCC 实现</a> 谈到过，这里不再赘述。</p>
+
+<h3>写redo log</h3>
+<p>下面我们一起看一下往redo log新加一条insert的过程。函数<code>toku_log_enq_insert</code>的第2，第5，第6，第7，第8参数表示描述一条insert的五元组(lsn, FT, xid, key, value)。代码片段如下：</p>
+
+<pre><code>void toku_log_enq_insert (TOKULOGGER logger, LSN *lsnp, int do_fsync, TOKUTXN txn, FILENUM filenum, TXNID_PAIR xid, BYTESTRING key, BYTESTRING value) {
+  if (logger == NULL) {
+     return;
+  }
+  if (txn &amp;&amp; !txn-&gt;begin_was_logged) {
+    invariant(!txn_declared_read_only(txn));
+    // 记录txn begin
+    toku_maybe_log_begin_txn_for_write_operation(txn);
+  }
+  if (!logger-&gt;write_log_files) {
+    // logger-&gt;write_log_files为FALSE，表示不写redo，递增lsn就可以返回了。
+    ml_lock(&amp;logger-&gt;input_lock);
+    logger-&gt;lsn.lsn++;
+    if (lsnp) *lsnp=logger-&gt;lsn;
+    ml_unlock(&amp;logger-&gt;input_lock);
+    return;
+  }
+  const unsigned int buflen= (+4 // log entry的长度，参与crc计算
+                              +1 // log命令，对应insert来说是‘I’
+                              +8 // lsn
+                              +toku_logsizeof_FILENUM(filenum) // filenum，表示哪个FT文件
+                              +toku_logsizeof_TXNID_PAIR(xid) // xid，表示txnid
+                              +toku_logsizeof_BYTESTRING(key) // key
+                              +toku_logsizeof_BYTESTRING(value) // data
+                              +8 // crc + len // crc和log entry长度（不参与crc计算）
+                             );
+  struct wbuf wbuf;
+  ml_lock(&amp;logger-&gt;input_lock);
+  toku_logger_make_space_in_inbuf(logger, buflen);
+  wbuf_nocrc_init(&amp;wbuf, logger-&gt;inbuf.buf+logger-&gt;inbuf.n_in_buf, buflen);
+  wbuf_nocrc_int(&amp;wbuf, buflen);
+  wbuf_nocrc_char(&amp;wbuf, 'I');
+  logger-&gt;lsn.lsn++;
+  logger-&gt;inbuf.max_lsn_in_buf = logger-&gt;lsn;
+  wbuf_nocrc_LSN(&amp;wbuf, logger-&gt;lsn);
+  if (lsnp) *lsnp=logger-&gt;lsn;
+  wbuf_nocrc_FILENUM(&amp;wbuf, filenum);
+  wbuf_nocrc_TXNID_PAIR(&amp;wbuf, xid);
+  wbuf_nocrc_BYTESTRING(&amp;wbuf, key);
+  wbuf_nocrc_BYTESTRING(&amp;wbuf, value);
+  wbuf_nocrc_int(&amp;wbuf, toku_x1764_memory(wbuf.buf, wbuf.ndone));
+  wbuf_nocrc_int(&amp;wbuf, buflen);
+  assert(wbuf.ndone==buflen);
+  logger-&gt;inbuf.n_in_buf += buflen;
+  toku_logger_maybe_fsync(logger, logger-&gt;lsn, do_fsync, true);
+}
+</code></pre>
+
+<p>TokuDB的logger有两个buffer：inbuf和outbuf。Inbuf表示接收log entry的buffer，而outbuf表示写到redo log文件的buffer。这两个buffer是如何切换的呢？当inbuf满或者inbuf里的free space无法满足新来的log entry的存储需求时，需要触发redo buffer flush过程，即将inbuf日志flush到redo log文件里。这个过程比较耗时，而且很可能inbuf里面还有free space，只是由于当前这个log entry比较大而无法满足存储需求，TokuDB实现了output permission机制，使得需要free space的请求等待在output permission的条件变量上，其他client thread上下文的redo log请求可以继续使用inbuf写日志。等待上一个flush完成后（即条件变量被signaled），检查当前inbuf的free space，如果可以满足这条redo log entry就直接返回，说明别的线程帮我们flush好了。如果free space不够，需要在当前线程的上下文去做flush，实际上是把inbuf和outbuf互换，然后把outbuf写到redo log文件中。写完之后适当调整inbuf的大小使之满足当前redo log entry请求。最后唤醒等待inbuf提供足够空间的线程（阻塞在output permission上的线程）。简而言之，把redo log buffer拆分成inbuf和outbuf，最重要的作用是在redo log flush的时候不会阻塞新的log entry写入，感兴趣的朋友可以看一下函数<code>toku_logger_maybe_fsync</code>的实现，这里就不一一展开了。函数<code>toku_logger_make_space_in_inbuf</code>的代码片段如下：</p>
+
+<pre><code>void
+toku_logger_make_space_in_inbuf (TOKULOGGER logger, int n_bytes_needed)
+{
+    if (logger-&gt;inbuf.n_in_buf + n_bytes_needed &lt;= LOGGER_MIN_BUF_SIZE) {
+        return;
+    }
+    ml_unlock(&amp;logger-&gt;input_lock);
+    LSN fsynced_lsn;
+    // 等待前面的redo log flush完成
+    grab_output(logger, &amp;fsynced_lsn);
+
+    ml_lock(&amp;logger-&gt;input_lock);
+    if (logger-&gt;inbuf.n_in_buf + n_bytes_needed &lt;= LOGGER_MIN_BUF_SIZE) {
+        // 其他线程帮助flush redo log，直接返回。
+        release_output(logger, fsynced_lsn);
+        return;
+    }
+    if (logger-&gt;inbuf.n_in_buf &gt; 0) {
+        // 交换inbuf，outbuf
+        swap_inbuf_outbuf(logger);
+
+        // 把outbuf里的日志写回
+        write_outbuf_to_logfile(logger, &amp;fsynced_lsn);
+    }
+    // 适当调整inbuf大小
+    if (n_bytes_needed &gt; logger-&gt;inbuf.buf_size) {
+        assert(n_bytes_needed &lt; (1&lt;&lt;30)); // redo log entry必须小于1G
+        int new_size = max_int(logger-&gt;inbuf.buf_size * 2, n_bytes_needed);
+        assert(new_size &lt; (1&lt;&lt;30)); // inbuf必须小于1G
+        XREALLOC_N(new_size, logger-&gt;inbuf.buf);
+        logger-&gt;inbuf.buf_size = new_size;
+    }
+    // 唤醒等待flush redo log的线程
+    release_output(logger, fsynced_lsn);
+}
+</code></pre>
+
+<h2>TokuDB崩溃恢复过程</h2>
+
+<h3>判断是否进行recovery</h3>
+<p>前面提到MySQL重启过程中会调用<code>db_env_create</code>创建env实例，进行参数设置和callback设置，然后调用env-&gt;open来做进一步初始化。同样env-&gt;open也是一个回调函数，它是在<code>db_env_create</code>设置的，指向env_open函数。<br />
+在env_open里调用validate_env判断是否需要进行recovery。validate_env函数返回时表明这个env是否是emptyenv (env目录为空，且不存在rollback文件，不存在数据文件)，是否是newnev (env目录不存在)，是否是emptyrollback (env目录存在，rollback文件为空)。<br />
+如果满足条件 <strong>!emptyenv &amp;&amp; !new_env &amp;&amp; is_set(DB_RECOVERY)</strong> 就尝试进行recovery。简单地说recovery的条件就是env存在，log_dir存在，redo log存在。<br />
+判断是否真正做recovery的函数是<code>tokuft_needs_recovery</code>。代码如下：</p>
+
+<pre><code>int tokuft_needs_recovery(const char *log_dir, bool ignore_log_empty) {
+    int needs_recovery;
+    int r;
+    TOKULOGCURSOR logcursor = NULL;
+
+    r = toku_logcursor_create(&amp;logcursor, log_dir);
+    if (r != 0) {
+        needs_recovery = true; goto exit;
+    }
+
+    struct log_entry *le;
+    le = NULL;
+    r = toku_logcursor_last(logcursor, &amp;le);
+    if (r == 0) {
+        needs_recovery = le-&gt;cmd != LT_shutdown;
+    }
+    else {
+        needs_recovery = !(r == DB_NOTFOUND &amp;&amp; ignore_log_empty);
+    }
+ exit:
+    if (logcursor) {
+        r = toku_logcursor_destroy(&amp;logcursor);
+        assert(r == 0);
+    }
+    return needs_recovery;
+}
+</code></pre>
+
+<p><code>tokuft_needs_recovery</code>尝试读取最后一条redo log entry，如果不是LT_shutdown，就需要真正做recovery。读取最后一条redo log entry的代码片段如下：</p>
+
+<pre><code>int toku_logcursor_last(TOKULOGCURSOR lc, struct log_entry **le) {
+    // 打开最后一个redo log文件
+    if ( !lc-&gt;is_open ) {
+        r = lc_open_logfile(lc, lc-&gt;n_logfiles-1);
+        if (r!=0)
+            return r;
+        lc-&gt;cur_logfiles_index = lc-&gt;n_logfiles-1;
+    }
+    while (1) {
+        // 移到最后一个redo log的文件末尾
+        r = fseek(lc-&gt;cur_fp, 0, SEEK_END);    assert(r==0);
+        // 从当前位置（redo log末尾）向前读一个log entry
+        r = toku_log_fread_backward(lc-&gt;cur_fp, &amp;(lc-&gt;entry));
+        if (r==0) // 读成功
+            break;
+        if (r&gt;0) {
+            // 读失败
+            toku_log_free_log_entry_resources(&amp;(lc-&gt;entry));
+            // 从当前redo log头部开始向后scan直到找到第一非法log Entry的位置，并把redo log文件truncate到那个位置。
+            r = lc_fix_bad_logfile(lc);
+            if ( r != 0 ) {
+                fprintf(stderr, "%.24s TokuFT recovery repair unsuccessful\n", ctime(&amp;tnow));
+                return DB_BADFORMAT;
+            }
+            // 重新读redo log entry
+            r = toku_log_fread_backward(lc-&gt;cur_fp, &amp;(lc-&gt;entry));
+            if (r==0) // 读到好的redo log entry
+                break;
+        }
+        // 当前redo log没有访问的log entry，切换到上一个redo log文件
+        r = lc_close_cur_logfile(lc);
+        if (r!=0)
+            return r;
+        if ( lc-&gt;cur_logfiles_index == 0 )
+            return DB_NOTFOUND;
+        lc-&gt;cur_logfiles_index--;
+        r = lc_open_logfile(lc, lc-&gt;cur_logfiles_index);
+        if (r!=0)
+            return r;
+    }
+}
+</code></pre>
+
+<p>在读最后一个log entry的过程中，在读log entry出错的情况下（crash的时候把redo log写坏了）会调用<code>lc_fix_bad_logfile</code>尝试修复redo log文件。修复的过程很简单：从当前redo log头部开始向后scan直到找到第一非法log entry的位置，并把redo log文件truncate到那个位置。此时，文件指针也指向文件末尾。极端的情况是，修复完redo log，发现当前redo log中的所有entry都是坏的，那样需要切换到前面一个redo log文件。</p>
+
+<h3>Recovery过程</h3>
+<p>如果需要做recovery，TokuDB会调用do_recovery进行恢复，恢复的时候先做redo log apply，然后进行undo rollback。代码片段如下：</p>
+
+<pre><code>static int do_recovery(RECOVER_ENV renv, const char *env_dir, const char *log_dir) {
+    r = toku_logcursor_create(&amp;logcursor, log_dir);
+    assert(r == 0);
+    scan_state_init(&amp;renv-&gt;ss);
+    for (unsigned i=0; 1; i++) {
+        // 读取前一个log entry，第一次读的是最后一个log entry
+        le = NULL;
+        r = toku_logcursor_prev(logcursor, &amp;le);
+        if (r != 0) {
+            if (r == DB_NOTFOUND)
+                break;
+            rr = DB_RUNRECOVERY;
+            goto errorexit;
+        }
+        // backward阶段处理log entry
+        assert(renv-&gt;ss.ss == BACKWARD_BETWEEN_CHECKPOINT_BEGIN_END ||
+               renv-&gt;ss.ss == BACKWARD_NEWER_CHECKPOINT_END);
+        logtype_dispatch_assign(le, toku_recover_backward_, r, renv);
+        if (r != 0) {
+            rr = DB_RUNRECOVERY;
+            goto errorexit;
+        }
+        if (renv-&gt;goforward)
+            break;
+    }
+
+    for (unsigned i=0; 1; i++) {
+        // forward阶段处理log entry，首先处理的是checkpoint begin的那个log entry
+        assert(renv-&gt;ss.ss == FORWARD_BETWEEN_CHECKPOINT_BEGIN_END ||
+           renv-&gt;ss.ss == FORWARD_NEWER_CHECKPOINT_END);
+        logtype_dispatch_assign(le, toku_recover_, r, renv);
+        if (r != 0) {
+                rr = DB_RUNRECOVERY;
+                goto errorexit;
+        }
+
+        // 读取下一个log entry
+        le = NULL;
+        r = toku_logcursor_next(logcursor, &amp;le);
+        if (r != 0) {
+            if (r == DB_NOTFOUND)
+                break;
+            rr = DB_RUNRECOVERY;
+            goto errorexit;
+        }
+    }
+
+    // parse redo log结束
+    assert(renv-&gt;ss.ss == FORWARD_NEWER_CHECKPOINT_END);
+
+    r = toku_logcursor_destroy(&amp;logcursor);
+    assert(r == 0);
+
+    // 重启logger
+    toku_logger_restart(renv-&gt;logger, lastlsn);
+
+    // abort所有未提交的事务
+    recover_abort_all_live_txns(renv);
+    // 在recovery退出前做一个checkpoint
+     r = toku_checkpoint(renv-&gt;cp, renv-&gt;logger, NULL, NULL, NULL, NULL, RECOVERY_CHECKPOINT);
+    assert(r == 0);
+    return 0;
+}
+</code></pre>
+
+<p>Scan log entry分别两个阶段：backward阶段和forward阶段。这两个阶段是由scan_state状态机控制的。在scan开始之前在<code>scan_state_init</code>函数中把状态机ss的初始状态设置为BACKWARD_NEWER_CHECKPOINT_END。</p>
+
+<p><img src="http://img1.tbcdn.cn/L1/461/1/88ecdc0d5f52021ca3269c00a57381a6e9498ee3" alt="screenshot" /></p>
+
+<ul>
+  <li>Backward阶段：从最后一个log entry开始向前读，直到读到checkpoint end。对在这个过程中读到的每一个log entry调用<code>logtype_dispatch_assign(le, toku_recover_backward_, r, renv)</code>。在这个阶段对于checkpoint以外的操作，toku_recover_backward_前缀的处理函数都是noop。当读到checkpoint end的log entry时，会把ss状态设置为BACKWARD_BETWEEN_CHECKPOINT_BEGIN_END，并记录这个checkpoint的begin_lsn和lsn。然后继续向前scan直到读到checkpoint begin的log entry，确保ss中记录的checkpoint_begin_lsn和log entry的lsn是相等的，然后 把ss的状态设置为FORWARD_BETWEEN_CHECKPOINT_BEGIN_END，并设置renv-&gt;goforward为TRUE。</li>
+  <li>Forward阶段：对当前的log entry调用<code>logtype_dispatch_assign(le, toku_recover_, r, renv)</code>重放redo log。然后向后scan直到读到checkpoint end，确保ss中记录的<code>checkpoint_begin_lsn</code>和<code>checkpoint_end_lsn</code>与log entry里面记录的<code>lsn_begin_checkpoint</code>和lsn是相等的，然后把ss的状态设置为FORWARD_NEWER_CHECKPOINT_END。这样，崩溃之前的最后一个checkpoint就回放完成了。下面要做的事情就是，回放committed txn的redo log。代码片段如下：</li>
+</ul>
+
+<pre><code>static void scan_state_init(struct scan_state *ss) {
+    ss-&gt;ss = BACKWARD_NEWER_CHECKPOINT_END;
+    ss-&gt;checkpoint_begin_lsn = ZERO_LSN;
+    ss-&gt;checkpoint_end_lsn = ZERO_LSN;
+    ss-&gt;checkpoint_num_fassociate = 0;
+    ss-&gt;checkpoint_num_xstillopen = 0;
+    ss-&gt;last_xid = 0;
+}
+static int toku_recover_backward_end_checkpoint (struct logtype_end_checkpoint *l, RECOVER_ENV renv) {
+    switch (renv-&gt;ss.ss) {
+    case BACKWARD_NEWER_CHECKPOINT_END:
+        renv-&gt;ss.ss = BACKWARD_BETWEEN_CHECKPOINT_BEGIN_END;
+        renv-&gt;ss.checkpoint_begin_lsn.lsn = l-&gt;lsn_begin_checkpoint.lsn;
+        renv-&gt;ss.checkpoint_end_lsn.lsn   = l-&gt;lsn.lsn;
+        renv-&gt;ss.checkpoint_end_timestamp = l-&gt;timestamp;
+        return 0;
+    case BACKWARD_BETWEEN_CHECKPOINT_BEGIN_END:
+        abort();
+    default:
+        break;
+    }
+    abort();
+}
+static int toku_recover_backward_begin_checkpoint (struct logtype_begin_checkpoint *l, RECOVER_ENV renv) {
+    int r;
+    switch (renv-&gt;ss.ss) {
+    case BACKWARD_NEWER_CHECKPOINT_END:
+        // incomplete checkpoint, nothing to do
+        r = 0;
+        break;
+    case BACKWARD_BETWEEN_CHECKPOINT_BEGIN_END:
+        assert(l-&gt;lsn.lsn == renv-&gt;ss.checkpoint_begin_lsn.lsn);
+        renv-&gt;ss.ss = FORWARD_BETWEEN_CHECKPOINT_BEGIN_END;
+        renv-&gt;ss.checkpoint_begin_timestamp = l-&gt;timestamp;
+        renv-&gt;goforward = true;
+        r = 0;
+        break;
+    default:
+        abort();
+        break;
+    }
+    return r;
+}
+static int toku_recover_begin_checkpoint (struct logtype_begin_checkpoint *l, RECOVER_ENV renv) {
+    int r;
+    TXN_MANAGER mgr = toku_logger_get_txn_manager(renv-&gt;logger);
+    switch (renv-&gt;ss.ss) {
+    case FORWARD_BETWEEN_CHECKPOINT_BEGIN_END:
+        assert(l-&gt;lsn.lsn == renv-&gt;ss.checkpoint_begin_lsn.lsn);
+        invariant(renv-&gt;ss.last_xid == TXNID_NONE);
+        renv-&gt;ss.last_xid = l-&gt;last_xid;
+        toku_txn_manager_set_last_xid_from_recovered_checkpoint(mgr, l-&gt;last_xid);
+        r = 0;
+        break;
+    case FORWARD_NEWER_CHECKPOINT_END:
+        assert(l-&gt;lsn.lsn &gt; renv-&gt;ss.checkpoint_end_lsn.lsn);
+        // Verify last_xid is no older than the previous begin
+        invariant(l-&gt;last_xid &gt;= renv-&gt;ss.last_xid);
+        // Verify last_xid is no older than the newest txn
+        invariant(l-&gt;last_xid &gt;= toku_txn_manager_get_last_xid(mgr));
+        r = 0; // ignore it (log only has a begin checkpoint)
+        break;
+    default:
+        abort();
+        break;
+    }
+    return r;
+}
+static int toku_recover_end_checkpoint (struct logtype_end_checkpoint *l, RECOVER_ENV renv) {
+    int r;
+    switch (renv-&gt;ss.ss) {
+    case FORWARD_BETWEEN_CHECKPOINT_BEGIN_END:
+        assert(l-&gt;lsn_begin_checkpoint.lsn == renv-&gt;ss.checkpoint_begin_lsn.lsn);
+        assert(l-&gt;lsn.lsn == renv-&gt;ss.checkpoint_end_lsn.lsn);
+        assert(l-&gt;num_fassociate_entries == renv-&gt;ss.checkpoint_num_fassociate);
+        assert(l-&gt;num_xstillopen_entries == renv-&gt;ss.checkpoint_num_xstillopen);
+        renv-&gt;ss.ss = FORWARD_NEWER_CHECKPOINT_END;
+        r = 0;
+        break;
+    case FORWARD_NEWER_CHECKPOINT_END:
+        assert(0);
+        return 0;
+    default:
+        assert(0);
+        return 0;
+    }
+    return r;
+}
+</code></pre>
+
+<p>上面我们是TokuDB recovery的过程。对读redo log一笔带过。现在一起看看读log entry的过程：</p>
+
+<ul>
+  <li>向后读：从当前位置读4个字节的长度len1，然后读1个字节cmd。然后按照不同cmd的定义来读log entry。</li>
+  <li>向前读：从当前位置读nocrc的长度len2，把文件指针向前移动len2个字节。从那个位置向后读。</li>
+  <li>Verify：读的过程需要计算crc校验码。Len1是参与crc计算的，而len2不参与crc计算。计算得到的crc应该与log entry里面记录的crc相等。而且len1应该等于len2。</li>
+</ul>
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>

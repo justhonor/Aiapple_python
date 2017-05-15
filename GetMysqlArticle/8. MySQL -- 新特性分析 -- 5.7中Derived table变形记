@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MySQL · 新特性分析 · 5.7中Derived table变形记</title>
+  <meta name="description" content="Derived table实际上是一种特殊的subquery，它位于SQL语句中FROM子句里面，可以看做是一个单独的表。MySQL5.7之前的处理都是对Derived table进行Materialize，生成一个临时表保存Derived table的结果，然后利用临时表来协助完成其他父查询的操作，比如JOIN...">
+
+  <link rel="stylesheet" href="/monthly/css/typo.css">
+  <link rel="stylesheet" href="/monthly/css/animate.css">
+  <link rel="stylesheet" href="/monthly/css/main.css">
+  <link rel="canonical" href="http://mysql.taobao.org//monthly/2017/03/05/">
+  <link rel="alternate" type="application/rss+xml" title="数据库内核月报" href="http://mysql.taobao.org//monthly/feed.xml" />
+
+  <link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/8.3/styles/tomorrow.min.css">
+  <script src="/monthly/js/highlight.min.js"></script>
+  <!-- <link rel="stylesheet" href="/monthly/themes/tomorrow.css">
+  <script src="/monthly/highlight/highlight.pack.js"> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.map"></script>
+
+  <script src="/monthly/scripts/changeTarget.js"></script>
+  
+</head>
+
+
+<!-- Google Analysis -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-62056244-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <body>
+
+    <header>
+
+  <a id="go-back-home" href="/monthly/2017/03">
+    <h1>数据库内核月报 － 2017 / 03</h1>
+  </a>
+
+</header>
+
+
+        <section class="paging">
+  
+  
+  
+
+  
+    
+      <div class="left">
+        <a href="/monthly/2017/03/04/">
+          ‹
+        </a>
+      </div>
+    
+  
+  
+    
+      <div class="right">
+        <a href="/monthly/2017/03/06/">
+          ›
+        </a>
+      </div>
+    
+  
+</section>
+
+
+<div id = "container" class = "animated zoomIn">
+  <div class="block">
+  <nav id="primary_nav_wrap">
+<ul>
+  <li><a href="#">当期文章</a>
+    <ul  class = "animated">
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/03/01/" target="_blank">
+                
+                MySQL · 引擎特性 · InnoDB IO子系统
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/03/02/" target="_blank">
+                
+                PgSQL · 特性分析 · Write-Ahead Logging机制浅析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/03/03/" target="_blank">
+                
+                MySQL · 性能优化 · MySQL常见SQL错误用法
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/03/04/" target="_blank">
+                
+                MSSQL · 特性分析 · 列存储技术做实时分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li class="current-menu-item">
+            
+              <a href="/monthly/2017/03/05/" target="_blank">
+                
+                MySQL · 新特性分析 · 5.7中Derived table变形记
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/03/06/" target="_blank">
+                
+                MySQL · 实现分析 · 对字符集和字符序支持的实现
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/03/07/" target="_blank">
+                
+                MySQL · 源码分析 · MySQL BINLOG半同步复制数据安全性分析
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/03/08/" target="_blank">
+                
+                HybridDB · 性能优化 · Count Distinct的几种实现方式
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/03/09/" target="_blank">
+                
+                PgSQL · 应用案例 · PostgreSQL OLAP加速技术之向量计算
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+            
+              <li>
+            
+              <a href="/monthly/2017/03/10/" target="_blank">
+                
+                MySQL · myrocks · myrocks监控信息
+              </a>
+            </li>
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+          
+          
+
+          
+      
+    </ul>
+  </li>
+</ul>
+</nav>
+
+    <div class="title">
+      <h2>
+        
+        MySQL · 新特性分析 · 5.7中Derived table变形记
+      </h2>
+    </div>
+  </div>
+  <div class="content typo">
+    <section class="post">
+      <p>Derived table实际上是一种特殊的subquery，它位于SQL语句中FROM子句里面，可以看做是一个单独的表。MySQL5.7之前的处理都是对Derived table进行Materialize，生成一个临时表保存Derived table的结果，然后利用临时表来协助完成其他父查询的操作，比如JOIN等操作。MySQL5.7中对Derived table做了一个新特性。该特性允许将符合条件的Derived table中的子表与父查询的表合并进行直接JOIN。下面我们看一下DBT-3中的一条被新特性优化过的执行计划：</p>
+
+<pre><code>SELECT t2.o_clerk, t1.price - t2.o_totalprice
+FROM
+    (SELECT l_orderkey, SUM( l_extendedprice * (1 - l_discount)) price
+     FROM lineitem GROUP by l_orderkey) t1
+JOIN
+    (SELECT o_clerk, o_orderkey, o_totalprice
+     FROM orders 
+     WHERE o_orderdate BETWEEN '1995-01-01' AND '1995-12-31') t2
+ON t1.l_orderkey = t2.o_orderkey WHERE t1.price &gt; t2.o_totalprice;
+</code></pre>
+
+<p>MySQL5.6执行计划如下图所示（下图通过WorkBench的Visual Explain直观的对执行计划进行了展示）：</p>
+
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/5f5bc31eb4d10fefb7e40f7aaf3f4f30.png" alt="MySQL5.6执行计划" /></p>
+
+<p>对应的explain输出结果为：</p>
+
+<pre><code>ID SELECT_TYPE	  TABLE	    TYPE	POSSIBLE_KEYS	KEY	    KEY_LEN	REF	            ROWS	    EXTRA
+1	PRIMARY  	&lt;derived3&gt;	ALL  	NULL	        NULL	NULL	NULL	        4812318	    NULL
+1	PRIMARY	    &lt;derived2&gt;	ref	   &lt;auto_key0&gt;	 &lt;auto_key0&gt;   4	t2.o_orderkey	599860	    Using where; Using index
+3	DERIVED       orders	ALL	   i_o_orderdate	NULL	NULL	NULL	        15000000    Using where
+2	DERIVED	      lineitem	index	PRIMARY, i_l_shipdate, …	PRIMARY	8	NULL	 59986052	NULL   
+</code></pre>
+
+<p>MySQL5.7 Merge derived table特性应用之后，执行计划变成了如下所示：</p>
+
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a3d93479e120082c5baf54e53f4be15e.png" alt="derived-57.png" /></p>
+
+<p>同样explain的输出结果为：</p>
+
+<pre><code>ID  SELECT_TYPE	TABLE	    PARTITIONS  TYPE	POSSIBLE_KEYS	        KEY	    KEY_LEN	REF    	ROWS	    FILTERED	EXTRA
+1	PRIMARY	    &lt;derived2&gt;	NULL	    ALL	    NULL	                NULL	NULL	NULL	59986052	100.00	    NULL
+1	PRIMARY	    orders 	    NULL	    eq_ref	PRIMARY, i_o_orderdate	PRIMARY	4	    t1.l_orderkey	1	10.69	    Using where
+2	DERIVED	    lineitem	NULL	    index	PRIMARY, i_l_shipdate, …PRIMARY	8	    NULL	59986052	100.00	    NULL
+</code></pre>
+
+<p>可以看到orders已经从Derived table的子表里面merge到了父查询中，尽而简化了执行计划，同时也提高了执行效率。看一下MySQL5.6与MySQL5.7对于上面的DBT-3中的这条Query执行性能的对比图：</p>
+
+<p><img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/c6dce532dc191078368a5c6f92ac3e97.png" alt="derived-tutorial.png" /></p>
+
+<p>Merge Derived table有两种方式进行控制。第一种，通过开关optimizer_switch=’derived_merge=on|off’来进行控制。第二种，在CREATE VIEW的时候指定ALGORITHM=MERGE | TEMPTABLE， 默认是MERGE方式。如果指定是TEMPTABLE，将不会对VIEW进行Merge Derived table操作。只要Derived table里不包含如下条件就可以利用该特性进行优化：</p>
+
+<ul>
+  <li>UNION clause</li>
+  <li>GROUP BY</li>
+  <li>DISTINCT</li>
+  <li>Aggregation</li>
+  <li>LIMIT or OFFSET</li>
+  <li>Derived table里面包含用户变量的设置。</li>
+</ul>
+
+<p>那么Merge Derived table在MySQL中是如何实现的呢？下面我们分析一下源码。<br />
+对于Derived table的merge过程是在MySQL的resolve阶段完成的，这意味着对于Merge操作是永久性的，经过resolve阶段之后就不会再对Derived table进行其他的变换。执行的简单流程如下：</p>
+
+<pre><code>SELECT_LEX::prepare
+
+       |
+
+TABLE_LIST::resolve_derived // 这里首先递归对每个Derived table自身进行变换，经过变换后的Derived table开始考虑和最外层的父查询进行Merge
+
+       |
+
+SELECT_LEX::merge_derived // 将Derived table与父查询进行Merge
+</code></pre>
+
+<p>下面我们重点研究一下merge_derived这个函数实现过程：</p>
+
+<pre><code>bool SELECT_LEX::merge_derived(THD *thd, TABLE_LIST *derived_table)
+{   
+  DBUG_ENTER("SELECT_LEX::merge_derived");
+  
+  // 这里首先会判断是不是Derived table（这里view看做是带有名字的Derived table),同时也会看该Derived table是否已经被合并过了
+  if (!derived_table-&gt;is_view_or_derived() || derived_table-&gt;is_merged())
+    DBUG_RETURN(false);
+
+  SELECT_LEX_UNIT *const derived_unit= derived_table-&gt;derived_unit();
+  
+  // A derived table must be prepared before we can merge it
+  DBUG_ASSERT(derived_unit-&gt;is_prepared());
+
+  LEX *const lex= parent_lex;
+  
+  // Check whether the outer query allows merged views
+  if ((master_unit() == lex-&gt;unit &amp;&amp; // 只会在父查询进行merge Derived table操作。
+ 	   // 这里会查看当前命令是否需要进行merge操作，比如CREATE VIEW，SHOW CREATE VIEW等。如果需要再继续
+       !lex-&gt;can_use_merged()) ||  
+      lex-&gt;can_not_use_merged()) 
+    DBUG_RETURN(false);
+
+ // 查看当前的Derived table是否满足merge条件
+  if (!derived_unit-&gt;is_mergeable() ||
+      derived_table-&gt;algorithm == VIEW_ALGORITHM_TEMPTABLE ||
+      (!thd-&gt;optimizer_switch_flag(OPTIMIZER_SWITCH_DERIVED_MERGE) &amp;&amp;
+       derived_table-&gt;algorithm != VIEW_ALGORITHM_MERGE))
+    DBUG_RETURN(false);
+
+  SELECT_LEX *const derived_select= derived_unit-&gt;first_select();
+  /*
+	当前不会对包含 STRAIGHT_JOIN，且Derived table中包含semi-join的query进行merge操作。
+	这是因为MySQL为了保证正确性，必须先做semi-join之后才可以与其他表继续做JOIN。
+	例如：select straight_join * from tt , (select * from tt where a in (select a from t1)) 	as ttt;
+  */
+  if ((active_options() &amp; SELECT_STRAIGHT_JOIN) &amp;&amp; derived_select-&gt;has_sj_nests)
+    DBUG_RETURN(false);
+
+	...
+
+  // 利用Nested_join结构来辅助处理OUTER-JOIN的情况。如果Derived table是OUTER-JOIN的内表，需要将Derived table中的每个表设置为JOIN的时候可以为空。具体请参考propagate_nullability。
+  if (!(derived_table-&gt;nested_join=
+       (NESTED_JOIN *) thd-&gt;mem_calloc(sizeof(NESTED_JOIN))))
+    DBUG_RETURN(true);        /* purecov: inspected */
+  // 这里确保NESTED_JOIN结构是空的，在构造函数处理比较合适
+  derived_table-&gt;nested_join-&gt;join_list.empty();
+  // 该函数会将所有Derived table中的表merge到NESTED_JOIN结构体中
+  if (derived_table-&gt;merge_underlying_tables(derived_select))
+    DBUG_RETURN(true);       /* purecov: inspected */
+
+  // 接下来需要将Derived table中的所有表连接到父查询的table_list列表中，进而将Derived table从父查询中剔除。
+  for (TABLE_LIST **tl= &amp;leaf_tables; *tl; tl= &amp;(*tl)-&gt;next_leaf)
+  {
+    if (*tl == derived_table)
+    {
+      for (TABLE_LIST *leaf= derived_select-&gt;leaf_tables; leaf;
+           leaf= leaf-&gt;next_leaf)
+      {
+        if (leaf-&gt;next_leaf == NULL)
+        {
+          leaf-&gt;next_leaf= (*tl)-&gt;next_leaf;
+          break;
+        }
+      }
+      *tl= derived_select-&gt;leaf_tables;
+      break;
+    }
+  }
+  // 下面会对父查询的所有相关数据结构进行重新计算，进而包含所有从Derived table merge之后的表的相关信息。
+  leaf_table_count+= (derived_select-&gt;leaf_table_count - 1);
+  derived_table_count+= derived_select-&gt;derived_table_count;
+  materialized_derived_table_count+=
+    derived_select-&gt;materialized_derived_table_count;
+  has_sj_nests|= derived_select-&gt;has_sj_nests;
+  partitioned_table_count+= derived_select-&gt;partitioned_table_count;
+  cond_count+= derived_select-&gt;cond_count;
+  between_count+= derived_select-&gt;between_count;
+
+  // Propagate schema table indication:
+  // @todo: Add to BASE options instead
+  if (derived_select-&gt;active_options() &amp; OPTION_SCHEMA_TABLE)
+    add_base_options(OPTION_SCHEMA_TABLE);
+
+  // Propagate nullability for derived tables within outer joins:
+  if (derived_table-&gt;is_inner_table_of_outer_join())
+    propagate_nullability(&amp;derived_table-&gt;nested_join-&gt;join_list, true);
+
+  select_n_having_items+= derived_select-&gt;select_n_having_items;
+
+  // 将Derived table的where条件合并到父查询
+  if (derived_table-&gt;merge_where(thd))
+    DBUG_RETURN(true);        /* purecov: inspected */
+  // 将Derived table的结构从父查询中删除
+  derived_unit-&gt;exclude_level();
+
+  // 这里用来禁止对Derived table的继续访问
+  derived_table-&gt;set_derived_unit((SELECT_LEX_UNIT *)1);
+
+  // 建立对Derived table需要获取的列的引用。在后续函数中会对引用列进行相关处理，请参考函数setup_natural_join_row_types函数
+  if (derived_table-&gt;create_field_translation(thd))  
+    DBUG_RETURN(true); 
+
+  // 将Derived table中的列或者表的重命名合并到父查询
+  merge_contexts(derived_select);
+  repoint_contexts_of_join_nests(derived_select-&gt;top_join_list);
+
+  // 因为已经把Derived table中包含的表merge到了父查询，所以需要对TABLE_LIST中的表所在的位置进行重新定位。
+  remap_tables(thd);
+
+  // 将Derived table合并到父查询之后，需要重新修改原来Derived table中所有对Derived table中所有列的引用，
+  fix_tables_after_pullout(this, derived_select, derived_table, table_adjust);
+
+  // 如果Derived table中包含ORDER By语句，处理原则和正常SubQuery的处理方式类似：
+  //  1. 如果Derived table只包含一个表
+  //  2. 并且Derived table不包含聚集函数
+  // 满足上述两个条件之后，Derived table将会保留ORDER BY。其他情况subquery中的ORDER BY将会被忽略掉，这也是MySQL5.7区别于MySQL5.6的一点。
+
+  //  当Derived table保留了Order by，是否能合并到父查询，需要满足如下条件：
+  // 	1. 父查询允许做Derived table中的ORDER BY。下面几种情况不允许做ORDER BY
+  // 		a) 如果父查询包含有自己的ORDER BY
+  // 		b) 如果父查询包含GROUP BY
+  //         c) 如果父查询包含未被优化掉的DISTINCT
+  // 	2. 父查询不能是UNION操作，因为UNION默认会做DISTINCT操作
+  //     3. 为了简化操作，只有当父查询只包含Derived table的时候（即FROM子句里面只有Derived table一个表）才可以保留ORDER BY。这里有相当大的改进空间可以尽量的来按照Derived table定义的ORDER BY操作来进行父查询的操作。比如有两个表以上，如果父查询没有ORDER BY的要求，也可以按照Derived table来对结果进行排序。
+  if (derived_select-&gt;is_ordered())
+  {
+    if ((lex-&gt;sql_command == SQLCOM_SELECT ||
+         lex-&gt;sql_command == SQLCOM_UPDATE ||
+         lex-&gt;sql_command == SQLCOM_DELETE) &amp;&amp;
+        !(master_unit()-&gt;is_union() ||
+          is_grouped() ||
+          is_distinct() ||
+          is_ordered() ||
+          get_table_list()-&gt;next_local != NULL))
+      order_list.push_back(&amp;derived_select-&gt;order_list);
+  }
+
+  // 对于Derived table中包含的full-text functions需要添加到父查询的查询列表中。
+  if (derived_select-&gt;ftfunc_list-&gt;elements &amp;&amp;
+      add_ftfunc_list(derived_select-&gt;ftfunc_list))
+    DBUG_RETURN(true);        /* purecov: inspected */
+
+  DBUG_RETURN(false);
+}
+
+
+
+</code></pre>
+
+<p>综上所述，本篇文章简要的分析了MySQL Merge Derived table的作用以及实现方式。Merge Derived table的引入可以有效的提升Subquery query的执行效率，更重要的是为以后应对复杂查询提供了新的优化手段。</p>
+
+    </section>
+  </div>
+</div>
+
+
+    <footer>
+  <a href="http://mysql.taobao.org/" target="_blank" class="muted">阿里云RDS-数据库内核组</a>
+  <br>
+  <a href="https://github.com/alibaba/AliSQL" target="_blank" class="muted">欢迎在github上star AliSQL</a>
+</br>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png" /></a><br />本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">知识共享署名-非商业性使用-相同方式共享 3.0 未本地化版本许可协议</a>进行许可。
+</footer>
+
+<script type="text/javascript">
+  jQuery(document).ready(function($){
+    // browser window scroll (in pixels) after which the "back to top" link is shown
+    var offset = 300,
+      //browser window scroll (in pixels) after which the "back to top" link opacity is reduced
+      offset_opacity = 1200,
+      //duration of the top scrolling animation (in ms)
+      scroll_top_duration = 700,
+      //grab the "back to top" link
+      $back_to_top = $('.cd-top');
+
+    //hide or show the "back to top" link
+    $(window).scroll(function(){
+      ( $(this).scrollTop() > offset ) ? $back_to_top.addClass('cd-is-visible') : $back_to_top.removeClass('cd-is-visible cd-fade-out');
+      if( $(this).scrollTop() > offset_opacity ) {
+        $back_to_top.addClass('cd-fade-out');
+      }
+    });
+
+    //smooth scroll to top
+    $back_to_top.on('click', function(event){
+      event.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0 ,
+        }, scroll_top_duration
+      );
+    });
+
+  });
+</script>
+
+
+
+    <a href="#0" class="cd-top"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="10px"
+   width="38px" height="60px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+      <polygon fill="#FFFFFF" points="8,2.8 16,10.7 13.6,13.1 8.1,7.6 2.5,13.2 0,10.7 "/>
+    </svg>
+    </a>
+  </body>
+
+</html>
