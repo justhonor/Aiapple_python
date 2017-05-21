@@ -14,6 +14,10 @@ Introduction
 
 	version: 0.0.3 
 		Using mutil process to acclerate the speed of Donwloading . 
+			Two solutions:
+				1. Map/Reduce
+				2. Produce/Comsume
+			
 Example
 
 Test
